@@ -204,7 +204,9 @@ document.getElementById("cartModal").style.display="none";
 }
 function placeOrder(){
 if(cart.length===0){
-let whatsappNumber="254742333000";
+alert("Please add food first.");
+return;
+}
 
 let whatsappLink=
 "https://wa.me/"+
@@ -219,8 +221,7 @@ let phone=document.getElementById("phone").value.trim();
 let type=document.getElementById("type").value;
 let location=document.getElementById("location").value.trim();
 if(!name||!phone||!location){
-alert("Please enter your name, phone number and location.");
-return;
+window.location.href="https://wa.me/254742333000?text="+encodeURIComponent(message);
 }
 let message="NEW MloHub ORDER\n\n";
 message+="Restaurant: Albaik\n";
