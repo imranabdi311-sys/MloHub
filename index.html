@@ -641,6 +641,16 @@ Total: KSh <span id="modalTotal">0</span>
 <option>Delivery</option>
 <option>Pickup</option>
 </select>
+ <label>Payment Method</label>
+<select id="payment">
+<option value="cash">💵 Cash on Delivery / Pickup</option>
+<option value="till4574509">📱 M-Pesa Till: 4574509</option>
+<option value="till4578247">📱 M-Pesa Till: 4578247</option>
+</select>
+<option value="cash">💵 Cash on Delivery / Pickup</option>
+<option value="till4574509">📱 M-Pesa Till: 4574509</option>
+<option value="till4578247">📱 M-Pesa Till: 4578247</option>
+</select> 
 <label>Location</label>
 <textarea
 id="location"
@@ -755,6 +765,17 @@ alert(
 "Please enter your name, phone number and location."
 );
 return;
+  let payment=document.getElementById("payment").value;
+
+let paymentText="Cash on Delivery / Pickup";
+
+if(payment==="till4574509"){
+  paymentText="M-Pesa Till: 4574509";
+}
+
+if(payment==="till4578247"){
+  paymentText="M-Pesa Till: 4578247";
+}
 }
 let message="NEW MloHub ORDER\n\n";
 message+="Restaurant: "+currentRestaurant+"\n";
@@ -763,6 +784,7 @@ message+="Phone: "+phone+"\n";
 message+="Order type: "+type+"\n";
 message+="Location: "+location+"\n\n";
 message+="ORDER:\n";
+ message+="Payment: "+paymentText+"\n"; 
 let total=0;
 cart.forEach(item=>{
 let itemTotal=item.price*item.qty;
