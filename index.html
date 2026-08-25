@@ -208,7 +208,7 @@ textarea{
   oninput="searchFood()"
 >
 >
-<div class="restaurant">
+<div class="restaurant" id="albaik">
 <h2>🍗 Albaik</h2>
 <p class="location">
 Mweni Rd, Eastleigh, Nairobi
@@ -267,8 +267,7 @@ Add
 </div>
 
 <!-- CHICKING EASTLEIGH -->
-<div class="restaurant">
-
+<div class="restaurant" id="chicking" style="display:none;">
 <h2>🍗 Chicking Eastleigh</h2>
 <!-- CHICKING EASTLEIGH -->
 <div class="restaurant">
@@ -657,6 +656,20 @@ Close
 </div>
 <script>
 let cart=[];
+  let currentRestaurant = "Albaik";
+
+function showRestaurant(restaurant){
+  currentRestaurant = restaurant === "albaik" ? "Albaik" : "Chicking Eastleigh";
+
+  document.getElementById("albaik").style.display =
+    restaurant === "albaik" ? "block" : "none";
+
+  document.getElementById("chicking").style.display =
+    restaurant === "chicking" ? "block" : "none";
+
+  cart = [];
+  updateCart();
+}
 function addToCart(name,price){
 let item=cart.find(x=>x.name===name);
 if(item){
@@ -744,7 +757,7 @@ alert(
 return;
 }
 let message="NEW MloHub ORDER\n\n";
-message+="Restaurant: Albaik\n";
+message+="Restaurant: "+currentRestaurant+"\n";
 message+="Customer: "+name+"\n";
 message+="Phone: "+phone+"\n";
 message+="Order type: "+type+"\n";
@@ -763,7 +776,10 @@ itemTotal+
 "\n";
 });
 message+="\nTOTAL: KSh "+total;
-let whatsappNumber="254742333000";
+let whatsappNumber =
+currentRestaurant === "Albaik"
+? "254742333000"
+: "254116111122";
 let whatsappLink=
 "https://wa.me/"+
 whatsappNumber+
