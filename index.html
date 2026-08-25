@@ -1,220 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MloHub - Food Delivery</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      background: #f7f7f7;
-      color: #222;
-    }
-
-    header {
-      background: #f59e0b;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 30px;
-    }
-
-    header p {
-      margin-top: 6px;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .search {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-
-    .restaurant {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .restaurant h2 {
-      margin-bottom: 8px;
-    }
-
-    .restaurant p {
-      color: #666;
-      margin-bottom: 15px;
-    }
-
-    .menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid #eee;
-      padding: 15px 0;
-      gap: 15px;
-    }
-
-    .menu-item h3 {
-      margin-bottom: 5px;
-    }
-
-    .price {
-      font-weight: bold;
-      color: #f59e0b;
-    }
-
-    button {
-      background: #f59e0b;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: #d97706;
-    }
-
-    .cart {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
-      background: #222;
-      color: white;
-      padding: 15px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 860px;
-      margin: auto;
-    }
-
-    @media (max-width: 600px) {
-      .menu-item {
-        align-items: flex-start;
-      }
-
-      .menu-item button {
-        white-space: nowrap;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MloHub - Food Delivery</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f7f7f7;color:#222;padding-bottom:90px}
+header{background:#f59e0b;color:white;padding:20px;text-align:center}
+header h1{font-size:30px}
+header p{margin-top:6px}
+.container{max-width:900px;margin:auto;padding:20px}
+.search{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;margin-bottom:20px;font-size:16px}
+.restaurant{background:white;padding:20px;border-radius:15px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.restaurant h2{margin-bottom:8px}
+.location{color:#666;margin-bottom:15px}
+.menu-item{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding:15px 0;gap:15px}
+.menu-item h3{margin-bottom:5px}
+.description{color:#666;margin-bottom:8px}
+.price{font-weight:bold;color:#f59e0b}
+button{background:#f59e0b;color:white;border:0;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:bold}
+button:hover{background:#d97706}
+.cart-bar{
+position:fixed;bottom:15px;left:15px;right:15px;
+background:#222;color:white;padding:15px;border-radius:12px;
+max-width:860px;margin:auto;z-index:1000;
+display:flex;justify-content:space-between;align-items:center;gap:10px
+}
+.modal{
+display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+z-index:2000;overflow:auto;padding:20px
+}
+.modal-box{
+background:white;max-width:600px;margin:30px auto;padding:20px;border-radius:15px
+}
+.modal-box h2{margin-bottom:15px}
+.cart-item{
+display:flex;justify-content:space-between;align-items:center;
+gap:10px;border-bottom:1px solid #eee;padding:12px 0
+}
+.quantity{display:flex;align-items:center;gap:7px}
+.quantity button{padding:5px 9px}
+.total{
+font-size:20px;font-weight:bold;text-align:right;margin:20px 0
+}
+label{display:block;font-weight:bold;margin-top:12px;margin-bottom:6px}
+input,select,textarea{
+width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px
+}
+textarea{min-height:80px}
+.checkout{
+width:100%;margin-top:15px;padding:14px;font-size:17px
+}
+.close{
+width:100%;margin-top:10px;background:#555
+}
+@media(max-width:600px){
+.menu-item{align-items:flex-start}
+.menu-item button{white-space:nowrap}
+}
+</style>
 </head>
-
 <body>
-
 <header>
-  <h1>🍽️ MloHub</h1>
-  <p>Discover food. Order easily. Enjoy.</p>
+<h1>🍽️ MloHub</h1>
+<p>Discover food. Order easily. Enjoy.</p>
 </header>
-
 <div class="container">
-
-  <input
-    class="search"
-    type="text"
-    placeholder="Search restaurants or food..."
-  >
-
-  <div class="restaurant">
-
-    <h2>🍗 Albaik</h2>
-
-    <p>Mweni Rd, Eastleigh, Nairobi</p>
-
-    <div class="menu-item">
-      <div>
-        <h3>Al Baik All In One</h3>
-        <p>7pcs Chicken + Family Chips + Medium Pizza + 1.25L Soda</p>
-        <span class="price">KSh 2,100</span>
-      </div>
-
-      <button onclick="addToCart(2100)">
-        Add
-      </button>
-    </div>
-
-    <div class="menu-item">
-      <div>
-        <h3>Value Meal 1</h3>
-        <p>1 pc Chicken + Regular Chips</p>
-        <span class="price">KSh 300</span>
-      </div>
-
-      <button onclick="addToCart(300)">
-        Add
-      </button>
-    </div>
-
-    <div class="menu-item">
-      <div>
-        <h3>Chicken Zinger Burger</h3>
-        <p>Delicious Chicken Zinger Burger</p>
-        <span class="price">KSh 500</span>
-      </div>
-
-      <button onclick="addToCart(500)">
-        Add
-      </button>
-    </div>
-
-    <div class="menu-item">
-      <div>
-        <h3>Chicken Mushroom Pizza</h3>
-        <p>Medium pizza</p>
-        <span class="price">KSh 900</span>
-      </div>
-
-      <button onclick="addToCart(900)">
-        Add
-      </button>
-    </div>
-
-  </div>
-
+<input
+id="search"
+class="search"
+type="text"
+placeholder="Search restaurants or food..."
+oninput="searchFood()"
+>
+<div class="restaurant">
+<h2>🍗 Albaik</h2>
+<p class="location">Mweni Rd, Eastleigh, Nairobi</p>
+<div class="menu-item">
+<div>
+<h3>Al Baik All In One</h3>
+<p class="description">7pcs Chicken + Family Chips + Medium Pizza + 1.25L Soda</p>
+<span class="price">KSh 2,100</span>
 </div>
-
-<div class="cart">
-  <span>🛒 Cart: <strong id="cartCount">0</strong> items</span>
-  <span>Total: <strong>KSh <span id="cartTotal">0</span></strong></span>
+<button onclick="addToCart('Al Baik All In One',2100)">Add</button>
 </div>
-
+<div class="menu-item">
+<div>
+<h3>Value Meal 1</h3>
+<p class="description">1 pc Chicken + Regular Chips</p>
+<span class="price">KSh 300</span>
+</div>
+<button onclick="addToCart('Value Meal 1',300)">Add</button>
+</div>
+<div class="menu-item">
+<div>
+<h3>Chicken Zinger Burger</h3>
+<p class="description">Delicious Chicken Zinger Burger</p>
+<span class="price">KSh 500</span>
+</div>
+<button onclick="addToCart('Chicken Zinger Burger',500)">Add</button>
+</div>
+<div class="menu-item">
+<div>
+<h3>Chicken Mushroom Pizza</h3>
+<p class="description">Medium pizza</p>
+<span class="price">KSh 900</span>
+</div>
+<button onclick="addToCart('Chicken Mushroom Pizza',900)">Add</button>
+</div>
+</div>
+</div>
+<div class="cart-bar">
+<span>🛒 Cart: <strong id="count">0</strong></span>
+<span>KSh <strong id="total">0</strong></span>
+<button onclick="openCart()">View Cart</button>
+</div>
+<div class="modal" id="cartModal">
+<div class="modal-box">
+<h2>🛒 Your Order</h2>
+<div id="items"></div>
+<div class="total">
+Total: KSh <span id="modalTotal">0</span>
+</div>
+<h2>Customer Details</h2>
+<label>Name</label>
+<input id="name" placeholder="Your name">
+<label>Phone Number</label>
+<input id="phone" type="tel" placeholder="07XXXXXXXX">
+<label>Order Type</label>
+<select id="type">
+<option>Delivery</option>
+<option>Pickup</option>
+</select>
+<label>Location</label>
+<textarea id="location" placeholder="Delivery location"></textarea>
+<button class="checkout" onclick="placeOrder()">
+📲 Place Order
+</button>
+<button class="close" onclick="closeCart()">Close</button>
+</div>
+</div>
 <script>
-  let cartCount = 0;
-  let cartTotal = 0;
-
-  function addToCart(price) {
-    cartCount++;
-    cartTotal += price;
-
-    document.getElementById("cartCount").textContent = cartCount;
-    document.getElementById("cartTotal").textContent = cartTotal.toLocaleString();
-  }
+let cart=[];
+function addToCart(name,price){
+let item=cart.find(x=>x.name===name);
+if(item){
+item.qty++;
+}else{
+cart.push({name:name,price:price,qty:1});
+}
+updateCart();
+alert(name+" added to cart!");
+}
+function updateCart(){
+let count=0;
+let total=0;
+cart.forEach(item=>{
+count+=item.qty;
+total+=item.price*item.qty;
+});
+document.getElementById("count").textContent=count;
+document.getElementById("total").textContent=total.toLocaleString();
+document.getElementById("modalTotal").textContent=total.toLocaleString();
+renderCart();
+}
+function renderCart(){
+let box=document.getElementById("items");
+if(cart.length===0){
+box.innerHTML="<p>Your cart is empty.</p>";
+return;
+}
+box.innerHTML="";
+cart.forEach((item,i)=>{
+box.innerHTML+=`
+<div class="cart-item">
+<div>
+<strong>${item.name}</strong><br>
+KSh ${item.price.toLocaleString()}
+</div>
+<div class="quantity">
+<button onclick="changeQty(${i},-1)">−</button>
+<strong>${item.qty}</strong>
+<button onclick="changeQty(${i},1)">+</button>
+</div>
+<strong>KSh ${(item.price*item.qty).toLocaleString()}</strong>
+</div>
+`;
+});
+}
+function changeQty(index,amount){
+cart[index].qty+=amount;
+if(cart[index].qty<=0){
+cart.splice(index,1);
+}
+updateCart();
+}
+function openCart(){
+document.getElementById("cartModal").style.display="block";
+}
+function closeCart(){
+document.getElementById("cartModal").style.display="none";
+}
+function placeOrder(){
+if(cart.length===0){
+alert("Please add food first.");
+return;
+}
+let name=document.getElementById("name").value.trim();
+let phone=document.getElementById("phone").value.trim();
+let type=document.getElementById("type").value;
+let location=document.getElementById("location").value.trim();
+if(!name||!phone||!location){
+alert("Please enter your name, phone number and location.");
+return;
+}
+let message="NEW MloHub ORDER\n\n";
+message+="Restaurant: Albaik\n";
+message+="Customer: "+name+"\n";
+message+="Phone: "+phone+"\n";
+message+="Order type: "+type+"\n";
+message+="Location: "+location+"\n\n";
+message+="ORDER:\n";
+let total=0;
+cart.forEach(item=>{
+let itemTotal=item.price*item.qty;
+total+=itemTotal;
+message+=item.qty+" x "+item.name+" - KSh "+itemTotal+"\n";
+});
+message+="\nTOTAL: KSh "+total;
+alert("Your order is ready!\n\n"+message);
+}
+function searchFood(){
+let search=document.getElementById("search").value.toLowerCase();
+document.querySelectorAll(".menu-item").forEach(item=>{
+item.style.display=
+item.textContent.toLowerCase().includes(search)
+?"flex":"none";
+});
+}
 </script>
-
 </body>
 </html>
+  
