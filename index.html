@@ -1228,7 +1228,15 @@ function renderCart(){
         </div>
 
 
-        <div class="quantity">
+       
+
+
+        <strong>
+          KSh ${(item.price * item.qty).toLocaleString()}
+        </strong>
+
+      </div>
+ <div class="quantity">
 
           <button
             onclick="changeQty(${index},-1)"
@@ -1247,14 +1255,6 @@ function renderCart(){
           </button>
 
         </div>
-
-
-        <strong>
-          KSh ${(item.price * item.qty).toLocaleString()}
-        </strong>
-
-      </div>
-
     `;
 
   });
@@ -1287,7 +1287,17 @@ function changeQty(index, amount){
 
 }
 
+function removeFromCart(index){
 
+  let cart = getCart();
+
+  if(!cart[index]) return;
+
+  cart.splice(index,1);
+
+  updateCart();
+
+}
 /* ===================================
    OPEN CART
 =================================== */
