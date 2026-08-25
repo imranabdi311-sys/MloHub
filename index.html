@@ -609,8 +609,7 @@ Add
 
 </div>
 
-<div class="cart-bar"> 
-<div class="cart-bar">
+<div class="cart-bar" id="cartBar" style="display:none;">
 <span>
 🛒 Cart: <strong id="count">0</strong>
 </span>
@@ -673,7 +672,7 @@ function showRestaurant(restaurant){
 
   document.getElementById("chicking").style.display =
     restaurant === "chicking" ? "block" : "none";
-
+document.getElementById("cartBar").style.display="flex";
   cart = [];
   updateCart();
 }
