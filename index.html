@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>MloHub - Food Delivery</title>
+
 <style>
 *{
   box-sizing:border-box;
@@ -11,28 +13,46 @@
   padding:0;
   font-family:Arial,sans-serif;
 }
+
 body{
   background:#f7f7f7;
   color:#222;
-  padding-bottom:90px;
+  padding-bottom:100px;
 }
+
 header{
   background:#f59e0b;
   color:white;
-  padding:20px;
+  padding:22px 15px;
   text-align:center;
 }
+
 header h1{
   font-size:30px;
 }
+
 header p{
   margin-top:6px;
 }
+
 .container{
   max-width:900px;
   margin:auto;
   padding:20px;
 }
+
+.restaurant-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.restaurant-buttons button{
+  flex:1;
+  min-width:180px;
+}
+
 .search{
   width:100%;
   padding:14px;
@@ -40,7 +60,9 @@ header p{
   border-radius:10px;
   margin-bottom:20px;
   font-size:16px;
+  background:white;
 }
+
 .restaurant{
   background:white;
   padding:20px;
@@ -48,13 +70,23 @@ header p{
   margin-bottom:20px;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
+
 .restaurant h2{
   margin-bottom:8px;
 }
+
 .location{
   color:#666;
   margin-bottom:15px;
 }
+
+.category{
+  margin-top:25px;
+  margin-bottom:5px;
+  padding-top:10px;
+  border-top:2px solid #f59e0b;
+}
+
 .menu-item{
   display:flex;
   justify-content:space-between;
@@ -63,17 +95,22 @@ header p{
   padding:15px 0;
   gap:15px;
 }
+
 .menu-item h3{
   margin-bottom:5px;
 }
+
 .description{
   color:#666;
   margin-bottom:8px;
+  line-height:1.4;
 }
+
 .price{
   font-weight:bold;
   color:#f59e0b;
 }
+
 button{
   background:#f59e0b;
   color:white;
@@ -83,6 +120,11 @@ button{
   cursor:pointer;
   font-weight:bold;
 }
+
+button:active{
+  transform:scale(.97);
+}
+
 .cart-bar{
   position:fixed;
   bottom:15px;
@@ -90,25 +132,32 @@ button{
   right:15px;
   background:#222;
   color:white;
-  padding:15px;
+  padding:14px;
   border-radius:12px;
   max-width:860px;
   margin:auto;
   z-index:1000;
-  display:flex;
+  display:none;
   justify-content:space-between;
   align-items:center;
   gap:10px;
+  box-shadow:0 4px 15px rgba(0,0,0,.25);
 }
+
+.cart-bar button{
+  background:#f59e0b;
+}
+
 .modal{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.6);
+  background:rgba(0,0,0,.65);
   z-index:2000;
   overflow:auto;
   padding:20px;
 }
+
 .modal-box{
   background:white;
   max-width:600px;
@@ -116,9 +165,20 @@ button{
   padding:20px;
   border-radius:15px;
 }
+
 .modal-box h2{
   margin-bottom:15px;
 }
+
+.cart-restaurant{
+  background:#f59e0b;
+  color:white;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+  font-weight:bold;
+}
+
 .cart-item{
   display:flex;
   justify-content:space-between;
@@ -127,695 +187,1400 @@ button{
   border-bottom:1px solid #eee;
   padding:12px 0;
 }
+
 .quantity{
   display:flex;
   align-items:center;
   gap:7px;
 }
+
 .quantity button{
   padding:5px 9px;
 }
+
 .total{
   font-size:20px;
   font-weight:bold;
   text-align:right;
   margin:20px 0;
 }
+
 label{
   display:block;
   font-weight:bold;
   margin-top:12px;
   margin-bottom:6px;
 }
-input,select,textarea{
+
+input,
+select,
+textarea{
   width:100%;
   padding:12px;
   border:1px solid #ddd;
   border-radius:8px;
   font-size:16px;
 }
+
 textarea{
   min-height:80px;
+  resize:vertical;
 }
+
 .checkout{
   width:100%;
   margin-top:15px;
   padding:14px;
   font-size:17px;
 }
+
 .close{
   width:100%;
   margin-top:10px;
   background:#555;
 }
+
+.empty{
+  text-align:center;
+  padding:20px 0;
+  color:#666;
+}
+
+.restaurant-note{
+  background:#fff7e6;
+  border-left:4px solid #f59e0b;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:5px;
+}
+
 @media(max-width:600px){
+
+  .container{
+    padding:12px;
+  }
+
+  .restaurant{
+    padding:15px;
+  }
+
   .menu-item{
     align-items:flex-start;
   }
+
   .menu-item button{
     white-space:nowrap;
+    padding:9px 12px;
+  }
+
+  .cart-bar{
+    left:8px;
+    right:8px;
+    bottom:8px;
+    padding:12px 10px;
+    font-size:14px;
+  }
+
+  .cart-bar button{
+    padding:9px 10px;
+  }
+
+  .modal{
+    padding:10px;
+  }
+
+  .modal-box{
+    margin:10px auto;
+    padding:15px;
   }
 }
 </style>
 </head>
+
 <body>
+
 <header>
   <h1>🍽️ MloHub</h1>
   <p>Discover food. Order easily. Enjoy.</p>
 </header>
+
 <div class="container">
-<div class="container">
 
-<h2 style="margin-bottom:15px;">🍽️ Choose a Restaurant</h2>
+  <h2 style="margin-bottom:15px;">🍽️ Choose a Restaurant</h2>
 
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+  <div class="restaurant-buttons">
 
-<button onclick="showRestaurant('albaik')">
-🍗 Albaik
-</button>
+    <button onclick="showRestaurant('albaik')">
+      🍗 Albaik
+    </button>
 
-<button onclick="showRestaurant('chicking')">
-🍗 Chicking Eastleigh
-</button>
+    <button onclick="showRestaurant('chicking')">
+      🍗 Chicking Eastleigh
+    </button>
 
-</div>
+  </div>
 
-<input
-  id="search"
-  class="search"
-  type="text"
-  placeholder="Search food..."
-  oninput="searchFood()"
->
->
-<div class="restaurant" id="albaik">
-<h2>🍗 Albaik</h2>
-<p class="location">
-Mweni Rd, Eastleigh, Nairobi
-</p>
-<div class="menu-item">
-<div>
-<h3>Al Baik All In One</h3>
-<p class="description">
-7pcs Chicken + Family Chips + Medium Pizza + 1.25L Soda
-</p>
-<span class="price">KSh 2,100</span>
-</div>
-<button onclick="addToCart('Al Baik All In One',2100)">
-Add
-</button>
-</div>
-<div class="menu-item">
-<div>
-<h3>Value Meal 1</h3>
-<p class="description">
-1 pc Chicken + Regular Chips
-</p>
-<span class="price">KSh 300</span>
-</div>
-<button onclick="addToCart('Value Meal 1',300)">
-Add
-</button>
-</div>
-<div class="menu-item">
-<div>
-<h3>Chicken Zinger Burger</h3>
-<p class="description">
-Delicious Chicken Zinger Burger
-</p>
-<span class="price">KSh 500</span>
-</div>
-<button onclick="addToCart('Chicken Zinger Burger',500)">
-Add
-</button>
-</div>
-<div class="menu-item">
-<div>
-<h3>Chicken Mushroom Pizza</h3>
-<p class="description">
-Medium pizza
-</p>
-<span class="price">KSh 900</span>
-</div>
-<button onclick="addToCart('Chicken Mushroom Pizza',900)">
-Add
-</button>
-</div>
-</div>
+  <input
+    id="search"
+    class="search"
+    type="text"
+    placeholder="🔎 Search food..."
+    oninput="searchFood()"
+  >
 
-<!-- CHICKING EASTLEIGH -->
-<div class="restaurant" id="chicking" style="display:none;">
-<h2>🍗 Chicking Eastleigh</h2>
-<!-- CHICKING EASTLEIGH -->
-<div class="restaurant">
+  <!-- ========================= -->
+  <!-- ALBAIK -->
+  <!-- ========================= -->
 
-<h2>🍗 Chicking Eastleigh</h2>
-<p class="location">Eastleigh, Nairobi</p>
+  <div class="restaurant" id="albaik">
 
-<h3>🍯 Honey-Butter Biscuits & Sweet Treats</h3>
+    <h2>🍗 Albaik</h2>
 
-<div class="menu-item">
-<div>
-<h3>Honey-Butter Biscuits (1)</h3>
-<span class="price">KSh 200</span>
-</div>
-<button onclick="addToCart('Chicking Honey-Butter Biscuit (1)',200)">Add</button>
-</div>
+    <p class="location">
+      Mweni Rd, Eastleigh, Nairobi
+    </p>
 
-<div class="menu-item">
-<div>
-<h3>Honey-Butter Biscuits (6)</h3>
-<span class="price">KSh 1,150</span>
-</div>
-<button onclick="addToCart('Chicking Honey-Butter Biscuits (6)',1150)">Add</button>
-</div>
+    <div class="restaurant-note">
+      📍 Ordering from Albaik
+    </div>
 
-<div class="menu-item">
-<div>
-<h3>Sundae</h3>
-<p class="description">Strawberry / Caramel / Chocolate</p>
-<span class="price">KSh 600</span>
-</div>
-<button onclick="addToCart('Chicking Sundae',600)">Add</button>
-</div>
+    <div class="menu-item">
+      <div>
+        <h3>Al Baik All In One</h3>
+        <p class="description">
+          7pcs Chicken + Family Chips + Medium Pizza + 1.25L Soda
+        </p>
+        <span class="price">KSh 2,100</span>
+      </div>
 
-<div class="menu-item">
-<div>
-<h3>Biscuit Sundae</h3>
-<p class="description">Strawberry / Caramel / Chocolate</p>
-<span class="price">KSh 700</span>
-</div>
-<button onclick="addToCart('Chicking Biscuit Sundae',700)">Add</button>
-</div>
+      <button onclick="addToCart('Al Baik All In One',2100)">
+        Add
+      </button>
+    </div>
 
-<div class="menu-item">
-<div>
-<h3>Ice Cream Cone</h3>
-<span class="price">KSh 400</span>
-</div>
-<button onclick="addToCart('Chicking Ice Cream Cone',400)">Add</button>
-</div>
+    <div class="menu-item">
+      <div>
+        <h3>Value Meal 1</h3>
+        <p class="description">
+          1 pc Chicken + Regular Chips
+        </p>
+        <span class="price">KSh 300</span>
+      </div>
 
-<div class="menu-item">
-<div>
-<h3>Apple Pie</h3>
-<span class="price">KSh 330</span>
-</div>
-<button onclick="addToCart('Chicking Apple Pie',330)">Add</button>
-</div>
+      <button onclick="addToCart('Value Meal 1',300)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Chicken Zinger Burger</h3>
+        <p class="description">
+          Delicious Chicken Zinger Burger
+        </p>
+        <span class="price">KSh 500</span>
+      </div>
+
+      <button onclick="addToCart('Chicken Zinger Burger',500)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Chicken Mushroom Pizza</h3>
+        <p class="description">
+          Medium pizza
+        </p>
+        <span class="price">KSh 900</span>
+      </div>
+
+      <button onclick="addToCart('Chicken Mushroom Pizza',900)">
+        Add
+      </button>
+    </div>
+
+  </div>
 
 
-<h3>🥪 Handcrafted Premium Sandwiches</h3>
+  <!-- ========================= -->
+  <!-- CHICKING EASTLEIGH -->
+  <!-- ========================= -->
 
-<div class="menu-item">
-<div>
-<h3>BBQ Chicken Sandwich Combo</h3>
-<p class="description">Thigh</p>
-<span class="price">KSh 1,350</span>
-</div>
-<button onclick="addToCart('Chicking BBQ Chicken Sandwich Combo',1350)">Add</button>
-</div>
+  <div class="restaurant" id="chicking" style="display:none;">
 
-<div class="menu-item">
-<div>
-<h3>Super Spicy Sandwich Combo</h3>
-<p class="description">Breast</p>
-<span class="price">KSh 1,300</span>
-</div>
-<button onclick="addToCart('Chicking Super Spicy Sandwich Combo',1300)">Add</button>
-</div>
+    <h2>🍗 Chicking Eastleigh</h2>
 
-<div class="menu-item">
-<div>
-<h3>Super Chicken Sandwich Combo</h3>
-<p class="description">Breast</p>
-<span class="price">KSh 1,300</span>
-</div>
-<button onclick="addToCart('Chicking Super Chicken Sandwich Combo',1300)">Add</button>
-</div>
+    <p class="location">
+      Eastleigh, Nairobi
+    </p>
 
-<div class="menu-item">
-<div>
-<h3>Super Bold Crunch'R Sandwich Combo</h3>
-<p class="description">Thigh</p>
-<span class="price">KSh 1,300</span>
-</div>
-<button onclick="addToCart('Chicking Super Bold CrunchR Sandwich Combo',1300)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Super Classic Sandwich Combo</h3>
-<p class="description">Thigh</p>
-<span class="price">KSh 1,300</span>
-</div>
-<button onclick="addToCart('Chicking Super Classic Sandwich Combo',1300)">Add</button>
-</div>
+    <div class="restaurant-note">
+      📍 Ordering from Chicking Eastleigh
+    </div>
 
 
-<h3>🥪 Handcrafted Value Sandwiches</h3>
+    <!-- SWEET TREATS -->
 
-<div class="menu-item">
-<div>
-<h3>BBQ Chicken Sandwich Jr. Combo</h3>
-<p class="description">Thigh • Regular Side & Drink</p>
-<span class="price">KSh 1,100</span>
-</div>
-<button onclick="addToCart('Chicking BBQ Chicken Sandwich Jr Combo',1100)">Add</button>
-</div>
+    <h3 class="category">
+      🍯 Honey-Butter Biscuits & Sweet Treats
+    </h3>
 
-<div class="menu-item">
-<div>
-<h3>Bold Crunch'R Sandwich Jr. Combo</h3>
-<p class="description">Thigh • Regular Side & Drink</p>
-<span class="price">KSh 990</span>
-</div>
-<button onclick="addToCart('Chicking Bold CrunchR Sandwich Jr Combo',990)">Add</button>
-</div>
+    <div class="menu-item">
+      <div>
+        <h3>Honey-Butter Biscuits (1)</h3>
+        <span class="price">KSh 200</span>
+      </div>
+      <button onclick="addToCart('Chicking Honey-Butter Biscuit (1)',200)">
+        Add
+      </button>
+    </div>
 
-<div class="menu-item">
-<div>
-<h3>Classic Chicken Sandwich Jr. Combo</h3>
-<p class="description">Thigh • Regular Side & Drink</p>
-<span class="price">KSh 990</span>
-</div>
-<button onclick="addToCart('Chicking Classic Chicken Sandwich Jr Combo',990)">Add</button>
-</div>
+    <div class="menu-item">
+      <div>
+        <h3>Honey-Butter Biscuits (6)</h3>
+        <span class="price">KSh 1,150</span>
+      </div>
+      <button onclick="addToCart('Chicking Honey-Butter Biscuits (6)',1150)">
+        Add
+      </button>
+    </div>
 
+    <div class="menu-item">
+      <div>
+        <h3>Sundae</h3>
+        <p class="description">
+          Strawberry / Caramel / Chocolate
+        </p>
+        <span class="price">KSh 600</span>
+      </div>
+      <button onclick="addToCart('Chicking Sundae',600)">
+        Add
+      </button>
+    </div>
 
-<h3>🍗 Crunchy Chicken</h3>
+    <div class="menu-item">
+      <div>
+        <h3>Biscuit Sundae</h3>
+        <p class="description">
+          Strawberry / Caramel / Chocolate
+        </p>
+        <span class="price">KSh 700</span>
+      </div>
+      <button onclick="addToCart('Chicking Biscuit Sundae',700)">
+        Add
+      </button>
+    </div>
 
-<div class="menu-item">
-<div>
-<h3>2 PC Combo</h3>
-<p class="description">Original or Spicy</p>
-<span class="price">KSh 1,150</span>
-</div>
-<button onclick="addToCart('Chicking 2 PC Combo',1150)">Add</button>
-</div>
+    <div class="menu-item">
+      <div>
+        <h3>Ice Cream Cone</h3>
+        <span class="price">KSh 400</span>
+      </div>
+      <button onclick="addToCart('Chicking Ice Cream Cone',400)">
+        Add
+      </button>
+    </div>
 
-<div class="menu-item">
-<div>
-<h3>3 PC Combo</h3>
-<p class="description">Original or Spicy</p>
-<span class="price">KSh 1,500</span>
-</div>
-<button onclick="addToCart('Chicking 3 PC Combo',1500)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>5 Piece Combo</h3>
-<p class="description">2 Regular Sides + 4 Honey-Butter Biscuits</p>
-<span class="price">KSh 2,990</span>
-</div>
-<button onclick="addToCart('Chicking 5 Piece Combo',2990)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>6 Piece Combo</h3>
-<p class="description">3 Regular Sides + 3 Honey-Butter Biscuits</p>
-<span class="price">KSh 3,250</span>
-</div>
-<button onclick="addToCart('Chicking 6 Piece Combo',3250)">Add</button>
-</div>
-
-
-<h3>🍗 Savory Tenders</h3>
-
-<div class="menu-item">
-<div>
-<h3>3 Tenders Combo</h3>
-<p class="description">1 Regular Side + Biscuit + Regular Drink</p>
-<span class="price">KSh 1,190</span>
-</div>
-<button onclick="addToCart('Chicking 3 Tenders Combo',1190)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>5 Tenders Combo</h3>
-<p class="description">1 Regular Side + Biscuit + Regular Drink</p>
-<span class="price">KSh 1,590</span>
-</div>
-<button onclick="addToCart('Chicking 5 Tenders Combo',1590)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>8 Tenders Combo</h3>
-<p class="description">2 Large Sides + 4 Honey-Butter Biscuits</p>
-<span class="price">KSh 3,200</span>
-</div>
-<button onclick="addToCart('Chicking 8 Tenders Combo',3200)">Add</button>
-</div>
+    <div class="menu-item">
+      <div>
+        <h3>Apple Pie</h3>
+        <span class="price">KSh 330</span>
+      </div>
+      <button onclick="addToCart('Chicking Apple Pie',330)">
+        Add
+      </button>
+    </div>
 
 
-<h3>🍗 Meals</h3>
+    <!-- PREMIUM SANDWICHES -->
 
-<div class="menu-item">
-<div>
-<h3>8 Piece Meal</h3>
-<p class="description">2 Large Sides + 4 Biscuits + 2L Drink</p>
-<span class="price">KSh 4,500</span>
-</div>
-<button onclick="addToCart('Chicking 8 Piece Meal',4500)">Add</button>
+    <h3 class="category">
+      🥪 Handcrafted Premium Sandwiches
+    </h3>
+
+    <div class="menu-item">
+      <div>
+        <h3>BBQ Chicken Sandwich Combo</h3>
+        <p class="description">Thigh</p>
+        <span class="price">KSh 1,350</span>
+      </div>
+      <button onclick="addToCart('Chicking BBQ Chicken Sandwich Combo',1350)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Super Spicy Sandwich Combo</h3>
+        <p class="description">Breast</p>
+        <span class="price">KSh 1,300</span>
+      </div>
+      <button onclick="addToCart('Chicking Super Spicy Sandwich Combo',1300)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Super Chicken Sandwich Combo</h3>
+        <p class="description">Breast</p>
+        <span class="price">KSh 1,300</span>
+      </div>
+      <button onclick="addToCart('Chicking Super Chicken Sandwich Combo',1300)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Super Bold Crunch'R Sandwich Combo</h3>
+        <p class="description">Thigh</p>
+        <span class="price">KSh 1,300</span>
+      </div>
+      <button onclick="addToCart('Chicking Super Bold CrunchR Sandwich Combo',1300)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Super Classic Sandwich Combo</h3>
+        <p class="description">Thigh</p>
+        <span class="price">KSh 1,300</span>
+      </div>
+      <button onclick="addToCart('Chicking Super Classic Sandwich Combo',1300)">
+        Add
+      </button>
+    </div>
+
+
+    <!-- VALUE SANDWICHES -->
+
+    <h3 class="category">
+      🥪 Handcrafted Value Sandwiches
+    </h3>
+
+    <div class="menu-item">
+      <div>
+        <h3>BBQ Chicken Sandwich Jr. Combo</h3>
+        <p class="description">
+          Thigh • Regular Side & Drink
+        </p>
+        <span class="price">KSh 1,100</span>
+      </div>
+      <button onclick="addToCart('Chicking BBQ Chicken Sandwich Jr Combo',1100)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Bold Crunch'R Sandwich Jr. Combo</h3>
+        <p class="description">
+          Thigh • Regular Side & Drink
+        </p>
+        <span class="price">KSh 990</span>
+      </div>
+      <button onclick="addToCart('Chicking Bold CrunchR Sandwich Jr Combo',990)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Classic Chicken Sandwich Jr. Combo</h3>
+        <p class="description">
+          Thigh • Regular Side & Drink
+        </p>
+        <span class="price">KSh 990</span>
+      </div>
+      <button onclick="addToCart('Chicking Classic Chicken Sandwich Jr Combo',990)">
+        Add
+      </button>
+    </div>
+
+
+    <!-- CRUNCHY CHICKEN -->
+
+    <h3 class="category">
+      🍗 Crunchy Chicken
+    </h3>
+
+    <div class="menu-item">
+      <div>
+        <h3>2 PC Combo</h3>
+        <p class="description">Original or Spicy</p>
+        <span class="price">KSh 1,150</span>
+      </div>
+      <button onclick="addToCart('Chicking 2 PC Combo',1150)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>3 PC Combo</h3>
+        <p class="description">Original or Spicy</p>
+        <span class="price">KSh 1,500</span>
+      </div>
+      <button onclick="addToCart('Chicking 3 PC Combo',1500)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>5 Piece Combo</h3>
+        <p class="description">
+          2 Regular Sides + 4 Honey-Butter Biscuits
+        </p>
+        <span class="price">KSh 2,990</span>
+      </div>
+      <button onclick="addToCart('Chicking 5 Piece Combo',2990)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>6 Piece Combo</h3>
+        <p class="description">
+          3 Regular Sides + 3 Honey-Butter Biscuits
+        </p>
+        <span class="price">KSh 3,250</span>
+      </div>
+      <button onclick="addToCart('Chicking 6 Piece Combo',3250)">
+        Add
+      </button>
+    </div>
+
+
+    <!-- TENDERS -->
+
+    <h3 class="category">
+      🍗 Savory Tenders
+    </h3>
+
+    <div class="menu-item">
+      <div>
+        <h3>3 Tenders Combo</h3>
+        <p class="description">
+          1 Regular Side + Biscuit + Regular Drink
+        </p>
+        <span class="price">KSh 1,190</span>
+      </div>
+      <button onclick="addToCart('Chicking 3 Tenders Combo',1190)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>5 Tenders Combo</h3>
+        <p class="description">
+          1 Regular Side + Biscuit + Regular Drink
+        </p>
+        <span class="price">KSh 1,590</span>
+      </div>
+      <button onclick="addToCart('Chicking 5 Tenders Combo',1590)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>8 Tenders Combo</h3>
+        <p class="description">
+          2 Large Sides + 4 Honey-Butter Biscuits
+        </p>
+        <span class="price">KSh 3,200</span>
+      </div>
+      <button onclick="addToCart('Chicking 8 Tenders Combo',3200)">
+        Add
+      </button>
+    </div>
+
+
+    <!-- MEALS -->
+
+    <h3 class="category">
+      🍗 Meals
+    </h3>
+
+    <div class="menu-item">
+      <div>
+        <h3>8 Piece Meal</h3>
+        <p class="description">
+          2 Large Sides + 4 Biscuits + 2L Drink
+        </p>
+        <span class="price">KSh 4,500</span>
+      </div>
+      <button onclick="addToCart('Chicking 8 Piece Meal',4500)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>10 Piece Meal</h3>
+        <p class="description">
+          3 Large Sides + 5 Biscuits + 2L Drink
+        </p>
+        <span class="price">KSh 5,500</span>
+      </div>
+      <button onclick="addToCart('Chicking 10 Piece Meal',5500)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>12 Piece Meal</h3>
+        <p class="description">
+          3 Large Sides + 6 Biscuits + 2L Drink
+        </p>
+        <span class="price">KSh 6,500</span>
+      </div>
+      <button onclick="addToCart('Chicking 12 Piece Meal',6500)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>15 Piece & 2L</h3>
+        <span class="price">KSh 6,500</span>
+      </div>
+      <button onclick="addToCart('Chicking 15 Piece & 2L',6500)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>21 Piece & 2L</h3>
+        <span class="price">KSh 8,700</span>
+      </div>
+      <button onclick="addToCart('Chicking 21 Piece & 2L',8700)">
+        Add
+      </button>
+    </div>
+
+
+    <!-- SIDES -->
+
+    <h3 class="category">
+      🍟 Classic Sides
+    </h3>
+
+    <div class="menu-item">
+      <div>
+        <h3>Fries - Regular</h3>
+        <span class="price">KSh 290</span>
+      </div>
+      <button onclick="addToCart('Chicking Fries Regular',290)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Fries - Large</h3>
+        <span class="price">KSh 390</span>
+      </div>
+      <button onclick="addToCart('Chicking Fries Large',390)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Fries - Family</h3>
+        <span class="price">KSh 1,100</span>
+      </div>
+      <button onclick="addToCart('Chicking Fries Family',1100)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Zesty Rice - Regular</h3>
+        <span class="price">KSh 290</span>
+      </div>
+      <button onclick="addToCart('Chicking Zesty Rice Regular',290)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Zesty Rice - Large</h3>
+        <span class="price">KSh 575</span>
+      </div>
+      <button onclick="addToCart('Chicking Zesty Rice Large',575)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Coleslaw - Regular</h3>
+        <span class="price">KSh 350</span>
+      </div>
+      <button onclick="addToCart('Chicking Coleslaw Regular',350)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Coleslaw - Large</h3>
+        <span class="price">KSh 425</span>
+      </div>
+      <button onclick="addToCart('Chicking Coleslaw Large',425)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Coleslaw - Family</h3>
+        <span class="price">KSh 1,100</span>
+      </div>
+      <button onclick="addToCart('Chicking Coleslaw Family',1100)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Seasoned Sweet Corn - Regular</h3>
+        <span class="price">KSh 490</span>
+      </div>
+      <button onclick="addToCart('Chicking Seasoned Sweet Corn Regular',490)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Jalapeño Bombers - 4PC</h3>
+        <span class="price">KSh 400</span>
+      </div>
+      <button onclick="addToCart('Chicking Jalapeno Bombers 4PC',400)">
+        Add
+      </button>
+    </div>
+
+    <div class="menu-item">
+      <div>
+        <h3>Jalapeño Bombers - 10PC</h3>
+        <p class="description">
+          Price not available
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- CART BAR -->
+  <!-- ========================= -->
+
+  <div class="cart-bar" id="cartBar">
+
+    <span>
+      🛒 Cart:
+      <strong id="count">0</strong>
+    </span>
+
+    <span>
+      KSh
+      <strong id="total">0</strong>
+    </span>
+
+    <button onclick="openCart()">
+      View Cart
+    </button>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- CART MODAL -->
+  <!-- ========================= -->
+
+  <div class="modal" id="cartModal">
+
+    <div class="modal-box">
+
+      <h2>🛒 Your Order</h2>
+
+      <div class="cart-restaurant" id="cartRestaurant">
+        Restaurant
+      </div>
+
+      <div id="items"></div>
+
+      <div class="total">
+        Total: KSh
+        <span id="modalTotal">0</span>
+      </div>
+
+
+      <h2>Customer Details</h2>
+
+      <label>Name</label>
+
+      <input
+        id="name"
+        placeholder="Your name"
+      >
+
+
+      <label>Phone Number</label>
+
+      <input
+        id="phone"
+        type="tel"
+        placeholder="07XXXXXXXX"
+      >
+
+
+      <label>Order Type</label>
+
+      <select id="type">
+
+        <option value="Delivery">
+          🚚 Delivery
+        </option>
+
+        <option value="Pickup">
+          🏪 Pickup
+        </option>
+
+      </select>
+
+
+      <label>Payment Method</label>
+
+      <select id="payment">
+
+        <option value="cash">
+          💵 Cash on Delivery / Pickup
+        </option>
+
+        <option value="till4574509">
+          📱 M-Pesa Till: 4574509
+        </option>
+
+        <option value="till4578247">
+          📱 M-Pesa Till: 4578247
+        </option>
+
+      </select>
+
+
+      <label>Location</label>
+
+      <textarea
+        id="location"
+        placeholder="Enter delivery location"
+      ></textarea>
+
+
+      <button
+        class="checkout"
+        onclick="placeOrder()"
+      >
+        📲 Place Order on WhatsApp
+      </button>
+
+
+      <button
+        class="close"
+        onclick="closeCart()"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+
 </div>
 
-<div class="menu-item">
-<div>
-<h3>10 Piece Meal</h3>
-<p class="description">3 Large Sides + 5 Biscuits + 2L Drink</p>
-<span class="price">KSh 5,500</span>
-</div>
-<button onclick="addToCart('Chicking 10 Piece Meal',5500)">Add</button>
-</div>
 
-<div class="menu-item">
-<div>
-<h3>12 Piece Meal</h3>
-<p class="description">3 Large Sides + 6 Biscuits + 2L Drink</p>
-<span class="price">KSh 6,500</span>
-</div>
-<button onclick="addToCart('Chicking 12 Piece Meal',6500)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>15 Piece & 2L</h3>
-<span class="price">KSh 6,500</span>
-</div>
-<button onclick="addToCart('Chicking 15 Piece & 2L',6500)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>21 Piece & 2L</h3>
-<span class="price">KSh 8,700</span>
-</div>
-<button onclick="addToCart('Chicking 21 Piece & 2L',8700)">Add</button>
-</div>
-
-
-<h3>🍟 Classic Sides</h3>
-
-<div class="menu-item">
-<div>
-<h3>Fries - Regular</h3>
-<span class="price">KSh 290</span>
-</div>
-<button onclick="addToCart('Chicking Fries Regular',290)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Fries - Large</h3>
-<span class="price">KSh 390</span>
-</div>
-<button onclick="addToCart('Chicking Fries Large',390)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Fries - Family</h3>
-<span class="price">KSh 1,100</span>
-</div>
-<button onclick="addToCart('Chicking Fries Family',1100)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Zesty Rice - Regular</h3>
-<span class="price">KSh 290</span>
-</div>
-<button onclick="addToCart('Chicking Zesty Rice Regular',290)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Zesty Rice - Large</h3>
-<span class="price">KSh 575</span>
-</div>
-<button onclick="addToCart('Chicking Zesty Rice Large',575)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Coleslaw - Regular</h3>
-<span class="price">KSh 350</span>
-</div>
-<button onclick="addToCart('Chicking Coleslaw Regular',350)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Coleslaw - Large</h3>
-<span class="price">KSh 425</span>
-</div>
-<button onclick="addToCart('Chicking Coleslaw Large',425)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Coleslaw - Family</h3>
-<span class="price">KSh 1,100</span>
-</div>
-<button onclick="addToCart('Chicking Coleslaw Family',1100)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Seasoned Sweet Corn - Regular</h3>
-<span class="price">KSh 490</span>
-</div>
-<button onclick="addToCart('Chicking Seasoned Sweet Corn Regular',490)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Jalapeño Bombers - 4PC</h3>
-<span class="price">KSh 400</span>
-</div>
-<button onclick="addToCart('Chicking Jalapeno Bombers 4PC',400)">Add</button>
-</div>
-
-<div class="menu-item">
-<div>
-<h3>Jalapeño Bombers - 10PC</h3>
-<p class="description">Price not available</p>
-</div>
-</div>
-
-</div>
-
-<div class="cart-bar" id="cartBar" style="display:none;">
-<span>
-🛒 Cart: <strong id="count">0</strong>
-</span>
-<span>
-KSh <strong id="total">0</strong>
-</span>
-<button onclick="openCart()">
-View Cart
-</button>
-</div>
-<div class="modal" id="cartModal">
-<div class="modal-box">
-<h2>🛒 Your Order</h2>
-<div id="items"></div>
-<div class="total">
-Total: KSh <span id="modalTotal">0</span>
-</div>
-<h2>Customer Details</h2>
-<label>Name</label>
-<input id="name" placeholder="Your name">
-<label>Phone Number</label>
-<input id="phone" type="tel" placeholder="07XXXXXXXX">
-<label>Order Type</label>
-<select id="type">
-<option>Delivery</option>
-<option>Pickup</option>
-</select>
- <label>Payment Method</label>
-<select id="payment">
-<option value="cash">💵 Cash on Delivery / Pickup</option>
-<option value="till4574509">📱 M-Pesa Till: 4574509</option>
-<option value="till4578247">📱 M-Pesa Till: 4578247</option>
-</select>
-<option value="cash">💵 Cash on Delivery / Pickup</option>
-<option value="till4574509">📱 M-Pesa Till: 4574509</option>
-<option value="till4578247">📱 M-Pesa Till: 4578247</option>
-</select> 
-<label>Location</label>
-<textarea
-id="location"
-placeholder="Delivery location">
-</textarea>
-<button class="checkout" onclick="placeOrder()">
-📲 Place Order
-</button>
-<button class="close" onclick="closeCart()">
-Close
-</button>
-</div>
-</div>
 <script>
-let cart=[];
-  let currentRestaurant = "Albaik";
+
+/* ===================================
+   MloHub Restaurant System
+=================================== */
+
+let currentRestaurant = "Albaik";
+
+let carts = {
+  "Albaik": [],
+  "Chicking Eastleigh": []
+};
+
+
+/* ===================================
+   RESTAURANT WHATSAPP NUMBERS
+=================================== */
+
+const restaurantWhatsApp = {
+
+  "Albaik": "254742333000",
+
+  "Chicking Eastleigh": "254116111122"
+
+};
+
+
+/* ===================================
+   SHOW RESTAURANT
+=================================== */
 
 function showRestaurant(restaurant){
-  currentRestaurant = restaurant === "albaik" ? "Albaik" : "Chicking Eastleigh";
 
-  document.getElementById("albaik").style.display =
-    restaurant === "albaik" ? "block" : "none";
+  if(restaurant === "albaik"){
 
-  document.getElementById("chicking").style.display =
-    restaurant === "chicking" ? "block" : "none";
-document.getElementById("cartBar").style.display="flex";
-  cart = [];
+    currentRestaurant = "Albaik";
+
+    document.getElementById("albaik").style.display = "block";
+
+    document.getElementById("chicking").style.display = "none";
+
+  }
+
+  else{
+
+    currentRestaurant = "Chicking Eastleigh";
+
+    document.getElementById("albaik").style.display = "none";
+
+    document.getElementById("chicking").style.display = "block";
+
+  }
+
+  document.getElementById("search").value = "";
+
+  searchFood();
+
   updateCart();
+
 }
-function addToCart(name,price){
-let item=cart.find(x=>x.name===name);
-if(item){
-item.qty++;
-}else{
-cart.push({
-name:name,
-price:price,
-qty:1
-});
+
+
+/* ===================================
+   GET CURRENT CART
+=================================== */
+
+function getCart(){
+
+  return carts[currentRestaurant];
+
 }
-updateCart();
-alert(name+" added to cart!");
+
+
+/* ===================================
+   ADD TO CART
+=================================== */
+
+function addToCart(name, price){
+
+  let cart = getCart();
+
+  let item = cart.find(
+    item => item.name === name
+  );
+
+  if(item){
+
+    item.qty++;
+
+  }
+
+  else{
+
+    cart.push({
+
+      name:name,
+
+      price:price,
+
+      qty:1
+
+    });
+
+  }
+
+  updateCart();
+
 }
+
+
+/* ===================================
+   UPDATE CART
+=================================== */
+
 function updateCart(){
-let count=0;
-let total=0;
-cart.forEach(item=>{
-count+=item.qty;
-total+=item.price*item.qty;
-});
-document.getElementById("count").textContent=count;
-document.getElementById("total").textContent=
-total.toLocaleString();
-document.getElementById("modalTotal").textContent=
-total.toLocaleString();
-renderCart();
+
+  let cart = getCart();
+
+  let count = 0;
+
+  let total = 0;
+
+  cart.forEach(item => {
+
+    count += item.qty;
+
+    total += item.price * item.qty;
+
+  });
+
+
+  document.getElementById("count").textContent =
+    count;
+
+
+  document.getElementById("total").textContent =
+    total.toLocaleString();
+
+
+  document.getElementById("modalTotal").textContent =
+    total.toLocaleString();
+
+
+  document.getElementById("cartRestaurant").textContent =
+    "🍽️ " + currentRestaurant;
+
+
+  if(count > 0){
+
+    document.getElementById("cartBar").style.display =
+      "flex";
+
+  }
+
+  else{
+
+    document.getElementById("cartBar").style.display =
+      "none";
+
+  }
+
+
+  renderCart();
+
 }
+
+
+/* ===================================
+   RENDER CART
+=================================== */
+
 function renderCart(){
-let box=document.getElementById("items");
-if(cart.length===0){
-box.innerHTML="<p>Your cart is empty.</p>";
-return;
+
+  let box =
+    document.getElementById("items");
+
+  let cart = getCart();
+
+
+  if(cart.length === 0){
+
+    box.innerHTML =
+      '<div class="empty">🛒 Your cart is empty.</div>';
+
+    return;
+
+  }
+
+
+  box.innerHTML = "";
+
+
+  cart.forEach((item,index) => {
+
+    box.innerHTML += `
+
+      <div class="cart-item">
+
+        <div style="flex:1;">
+
+          <strong>
+            ${item.name}
+          </strong>
+
+          <br>
+
+          <small>
+            KSh ${item.price.toLocaleString()} each
+          </small>
+
+        </div>
+
+
+        <div class="quantity">
+
+          <button
+            onclick="changeQty(${index},-1)"
+          >
+            −
+          </button>
+
+          <strong>
+            ${item.qty}
+          </strong>
+
+          <button
+            onclick="changeQty(${index},1)"
+          >
+            +
+          </button>
+
+        </div>
+
+
+        <strong>
+          KSh ${(item.price * item.qty).toLocaleString()}
+        </strong>
+
+      </div>
+
+    `;
+
+  });
+
 }
-box.innerHTML="";
-cart.forEach((item,i)=>{
-box.innerHTML+=`
-<div class="cart-item">
-<div>
-<strong>${item.name}</strong><br>
-KSh ${item.price.toLocaleString()}
-</div>
-<div class="quantity">
-<button onclick="changeQty(${i},-1)">
-−
-</button>
-<strong>${item.qty}</strong>
-<button onclick="changeQty(${i},1)">
-+
-</button>
-</div>
-<strong>
-KSh ${(item.price*item.qty).toLocaleString()}
-</strong>
-</div>
-`;
-});
+
+
+/* ===================================
+   CHANGE QUANTITY
+=================================== */
+
+function changeQty(index, amount){
+
+  let cart = getCart();
+
+  if(!cart[index]) return;
+
+
+  cart[index].qty += amount;
+
+
+  if(cart[index].qty <= 0){
+
+    cart.splice(index,1);
+
+  }
+
+
+  updateCart();
+
 }
-function changeQty(index,amount){
-cart[index].qty+=amount;
-if(cart[index].qty<=0){
-cart.splice(index,1);
-}
-updateCart();
-}
+
+
+/* ===================================
+   OPEN CART
+=================================== */
+
 function openCart(){
-document.getElementById("cartModal").style.display="block";
+
+  let cart = getCart();
+
+
+  if(cart.length === 0){
+
+    alert(
+      "Your " +
+      currentRestaurant +
+      " cart is empty. Please add food first."
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById("cartModal").style.display =
+    "block";
+
 }
+
+
+/* ===================================
+   CLOSE CART
+=================================== */
+
 function closeCart(){
-document.getElementById("cartModal").style.display="none";
+
+  document.getElementById("cartModal").style.display =
+    "none";
+
 }
+
+
+/* ===================================
+   PLACE ORDER
+=================================== */
+
 function placeOrder(){
-if(cart.length===0){
-alert("Please add food first.");
-return;
-}
-let name=document.getElementById("name").value.trim();
-let phone=document.getElementById("phone").value.trim();
-let type=document.getElementById("type").value;
-let location=document.getElementById("location").value.trim();
-if(!name || !phone || !location){
-alert(
-"Please enter your name, phone number and location."
-);
-return;
-  let payment=document.getElementById("payment").value;
 
-let paymentText="Cash on Delivery / Pickup";
+  let cart = getCart();
 
-if(payment==="till4574509"){
-  paymentText="M-Pesa Till: 4574509";
+
+  if(cart.length === 0){
+
+    alert("Please add food first.");
+
+    return;
+
+  }
+
+
+  let name =
+    document.getElementById("name")
+    .value.trim();
+
+
+  let phone =
+    document.getElementById("phone")
+    .value.trim();
+
+
+  let type =
+    document.getElementById("type")
+    .value;
+
+
+  let payment =
+    document.getElementById("payment")
+    .value;
+
+
+  let location =
+    document.getElementById("location")
+    .value.trim();
+
+
+  if(!name){
+
+    alert("Please enter your name.");
+
+    return;
+
+  }
+
+
+  if(!phone){
+
+    alert("Please enter your phone number.");
+
+    return;
+
+  }
+
+
+  if(type === "Delivery" && !location){
+
+    alert("Please enter your delivery location.");
+
+    return;
+
+  }
+
+
+  let paymentText =
+    "Cash on Delivery / Pickup";
+
+
+  if(payment === "till4574509"){
+
+    paymentText =
+      "M-Pesa Till: 4574509";
+
+  }
+
+
+  if(payment === "till4578247"){
+
+    paymentText =
+      "M-Pesa Till: 4578247";
+
+  }
+
+
+  let message =
+    "NEW MloHub ORDER\n\n";
+
+
+  message +=
+    "Restaurant: " +
+    currentRestaurant +
+    "\n";
+
+
+  message +=
+    "Customer: " +
+    name +
+    "\n";
+
+
+  message +=
+    "Phone: " +
+    phone +
+    "\n";
+
+
+  message +=
+    "Order Type: " +
+    type +
+    "\n";
+
+
+  if(location){
+
+    message +=
+      "Location: " +
+      location +
+      "\n";
+
+  }
+
+
+  message +=
+    "Payment: " +
+    paymentText +
+    "\n\n";
+
+
+  message +=
+    "ORDER:\n";
+
+
+  let total = 0;
+
+
+  cart.forEach(item => {
+
+    let itemTotal =
+      item.price * item.qty;
+
+
+    total += itemTotal;
+
+
+    message +=
+      item.qty +
+      " x " +
+      item.name +
+      " - KSh " +
+      itemTotal.toLocaleString() +
+      "\n";
+
+  });
+
+
+  message +=
+    "\nTOTAL: KSh " +
+    total.toLocaleString();
+
+
+  let whatsappNumber =
+    restaurantWhatsApp[currentRestaurant];
+
+
+  let whatsappLink =
+    "https://wa.me/" +
+    whatsappNumber +
+    "?text=" +
+    encodeURIComponent(message);
+
+
+  window.open(
+    whatsappLink,
+    "_blank"
+  );
+
 }
 
-if(payment==="till4578247"){
-  paymentText="M-Pesa Till: 4578247";
-}
-}
-let message="NEW MloHub ORDER\n\n";
-message+="Restaurant: "+currentRestaurant+"\n";
-message+="Customer: "+name+"\n";
-message+="Phone: "+phone+"\n";
-message+="Order type: "+type+"\n";
-message+="Location: "+location+"\n\n";
-message+="ORDER:\n";
- message+="Payment: "+paymentText+"\n"; 
-let total=0;
-cart.forEach(item=>{
-let itemTotal=item.price*item.qty;
-total+=itemTotal;
-message+=
-item.qty+
-" x "+
-item.name+
-" - KSh "+
-itemTotal+
-"\n";
-});
-message+="\nTOTAL: KSh "+total;
-let whatsappNumber =
-currentRestaurant === "Albaik"
-? "254742333000"
-: "254116111122";
-let whatsappLink=
-"https://wa.me/"+
-whatsappNumber+
-"?text="+
-encodeURIComponent(message);
-window.location.href=whatsappLink;
-}
+
+/* ===================================
+   SEARCH FOOD
+=================================== */
+
 function searchFood(){
-let search=
-document.getElementById("search").value.toLowerCase();
-document.querySelectorAll(".menu-item").forEach(item=>{
-item.style.display=
-item.textContent.toLowerCase().includes(search)
-?"flex"
-:"none";
-});
+
+  let search =
+    document.getElementById("search")
+    .value
+    .toLowerCase()
+    .trim();
+
+
+  let activeRestaurant =
+    document.getElementById(
+      currentRestaurant === "Albaik"
+        ? "albaik"
+        : "chicking"
+    );
+
+
+  activeRestaurant
+    .querySelectorAll(".menu-item")
+    .forEach(item => {
+
+      let text =
+        item.textContent.toLowerCase();
+
+
+      item.style.display =
+        text.includes(search)
+          ? "flex"
+          : "none";
+
+    });
+
 }
+
+
+/* ===================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+=================================== */
+
+window.addEventListener(
+  "click",
+  function(event){
+
+    let modal =
+      document.getElementById("cartModal");
+
+
+    if(event.target === modal){
+
+      closeCart();
+
+    }
+
+  }
+);
+
+
+/* ===================================
+   START WITH ALBAIK
+=================================== */
+
+showRestaurant("albaik");
+
 </script>
+
 </body>
-</html> 
-  
+</html>
