@@ -204,8 +204,15 @@ document.getElementById("cartModal").style.display="none";
 }
 function placeOrder(){
 if(cart.length===0){
-alert("Please add food first.");
-return;
+let whatsappNumber="254742333000";
+
+let whatsappLink=
+"https://wa.me/"+
+whatsappNumber+
+"?text="+
+encodeURIComponent(message);
+
+window.open(whatsappLink,"_blank");
 }
 let name=document.getElementById("name").value.trim();
 let phone=document.getElementById("phone").value.trim();
