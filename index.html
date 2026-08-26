@@ -1025,7 +1025,53 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+async function loadAlbaikMenu(){
 
+  const { data, error } = await supabaseClient
+    .from("menu_items")
+    .select("id,name,description,price,available")
+    .eq("restaurant_id", 1)
+    .eq("available", true)
+    .order("created_at", { ascending: true });
+
+  if(error){
+    console.error("Menu loading error:", error);
+    return;
+  }
+
+  const restaurant = document.getElementById("albaik");
+
+  if(!restaurant) return;
+
+  restaurant.querySelectorAll(".menu-item").forEach(item => {
+    item.remove();
+  });
+
+  data.forEach(item => {
+
+    const menuItem = document.createElement("div");
+
+    menuItem.className = "menu-item";
+
+    menuItem.innerHTML = `
+      <div>
+        <h3>${item.name}</h3>
+        <p class="description">${item.description || ""}</p>
+        <span class="price">
+          KSh ${Number(item.price).toLocaleString()}
+        </span>
+      </div>
+
+      <button>Add</button>
+    `;
+
+    menuItem.querySelector("button").onclick = function(){
+      addToCart(item.name, Number(item.price));
+    };
+
+    restaurant.appendChild(menuItem);
+  });
+}
 /* ===================================
    MloHub Restaurant System
 =================================== */
