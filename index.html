@@ -1014,15 +1014,24 @@ textarea{
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
+const SUPABASE_URL = "https://bhvzpycbztngtwuhxxex.supabase.co";
+const SUPABASE_KEY = "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 /* ===================================
    MloHub Restaurant System
 =================================== */
 
 let currentRestaurant = "Albaik";
-
+  
 let carts = {
   "Albaik": [],
   "Chicking Eastleigh": []
@@ -1588,9 +1597,6 @@ window.addEventListener(
 /* ===================================
    START WITH ALBAIK
 =================================== */
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
 
 const SUPABASE_URL = "https://bhvzpycbztngtwuhxxex.supabase.co";
 
@@ -1600,7 +1606,8 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-  async function loadAlbaikMenu(){
+
+async function loadAlbaikMenu(){
 
   const { data, error } =
     await supabaseClient
@@ -1621,76 +1628,50 @@ const supabaseClient = window.supabase.createClient(
     return;
   }
 
-  const restaurant =
-    document.getElementById("albaik");
+  const restaurant = document.getElementById("albaik");
 
-  const oldItems =
-    restaurant.querySelectorAll(".menu-item");
+  const oldItems = restaurant.querySelectorAll(".menu-item");
 
   oldItems.forEach(item => item.remove());
 
   data.forEach(item => {
 
-    const menuItem =
-      document.createElement("div");
+    const menuItem = document.createElement("div");
 
     menuItem.className = "menu-item";
 
     menuItem.innerHTML = `
-
       <div>
-
         <h3>${escapeHTML(item.name)}</h3>
-
-        <p class="description">
-          ${escapeHTML(item.description || "")}
-        </p>
-
+        <p class="description">${escapeHTML(item.description || "")}</p>
         <span class="price">
           KSh ${Number(item.price).toLocaleString()}
         </span>
-
       </div>
-
-      <button>
-        Add
-      </button>
-
+      <button>Add</button>
     `;
 
-    menuItem
-      .querySelector("button")
-      .addEventListener("click", () => {
-
-        addToCart(
-          item.name,
-          Number(item.price)
-        );
-
-      });
+    menuItem.querySelector("button").addEventListener("click", () => {
+      addToCart(item.name, Number(item.price));
+    });
 
     restaurant.appendChild(menuItem);
 
   });
-
 }
 
-
 function escapeHTML(value){
-
   return String(value)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
 }
-showRestaurant("albaik");
 
+showRestaurant("albaik");
 loadAlbaikMenu();
 
 </script>
-
 </body>
 </html>
