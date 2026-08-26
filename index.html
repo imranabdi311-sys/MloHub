@@ -1587,10 +1587,23 @@ window.addEventListener(
 /* ===================================
    START WITH ALBAIK
 =================================== */
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 showRestaurant("albaik");
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+ const SUPABASE_URL =
+  "https://bhvzpycbztngtwuhxxex.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  ); 
 </body>
 </html>
