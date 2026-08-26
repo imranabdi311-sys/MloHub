@@ -1025,6 +1025,18 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> 
+/* ===================================
+   MloHub Restaurant System
+=================================== */
+
+let currentRestaurant = "Albaik";
+  
+let carts = {
+  "Albaik": [],
+  "Chicking Eastleigh": []
+};
 async function loadAlbaikMenu(){
 
   const { data, error } = await supabaseClient
@@ -1072,18 +1084,6 @@ async function loadAlbaikMenu(){
     restaurant.appendChild(menuItem);
   });
 }
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> 
-/* ===================================
-   MloHub Restaurant System
-=================================== */
-
-let currentRestaurant = "Albaik";
-  
-let carts = {
-  "Albaik": [],
-  "Chicking Eastleigh": []
-};
-
 
 /* ===================================
    RESTAURANT WHATSAPP NUMBERS
