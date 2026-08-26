@@ -1613,7 +1613,7 @@ async function loadAlbaikMenu(){
     await supabaseClient
       .from("menu_items")
       .select("id,name,description,price,available")
-      .eq("restaurant_id", 2)
+      .eq("restaurant_id", 1)
       .eq("available", true)
       .order("created_at", {
         ascending: true
