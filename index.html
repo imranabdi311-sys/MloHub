@@ -316,9 +316,8 @@ textarea{
 
 <h2 style="margin-bottom:15px;">🍽️ Choose a Restaurant</h2>
 
-<div class="restaurant-buttons">
-  <button onclick="showRestaurant('albaik')">🍗 Albaik</button>
-  <button onclick="showRestaurant('chicking')">🍗 Chicking Eastleigh</button>
+<div class="restaurant-buttons" id="restaurantButtons">
+  <p>Loading restaurants...</p>
 </div>
 
 <input
@@ -823,22 +822,33 @@ let carts = {
 ========================================= */
 
 let restaurantData = {};
-  async function loadRestaurants(){
+ async function loadRestaurants(){
+
+  const box =
+    document.getElementById("restaurantButtons");
+
+  box.innerHTML =
+    "<p>Loading restaurants...</p>";
 
   const { data, error } =
     await supabaseClient
       .from("restaurants")
-      .select("id,name,whatsapp");
+      .select("id,name,whatsapp")
+      .order("id", { ascending:true });
 
   if(error){
 
-    console.error("Restaurant loading error:", error);
+    console.error(error);
+
+    box.innerHTML =
+      "<p>❌ Could not load restaurants.</p>";
 
     return;
-
   }
 
   restaurantData = {};
+
+  box.innerHTML = "";
 
   data.forEach(restaurant => {
 
@@ -847,13 +857,56 @@ let restaurantData = {};
       whatsapp: restaurant.whatsapp
     };
 
+    const button =
+      document.createElement("button");
+
+    button.textContent =
+      "🍽️ " + restaurant.name;
+
+    button.onclick = function(){
+
+      selectRestaurant(
+        restaurant.id,
+        restaurant.name
+      );
+
+    };
+
+    box.appendChild(button);
+
   });
 
-  console.log("Restaurants loaded:", restaurantData);
 }
-};
+function selectRestaurant(id, name){
 
+  currentRestaurant = name;
 
+  console.log(
+    "Selected restaurant:",
+    id,
+    name
+  );
+
+  document
+    .querySelectorAll(".restaurant")
+    .forEach(r => {
+      r.style.display = "none";
+    });
+
+  const restaurantBox =
+    document.getElementById(
+      name.toLowerCase().replace(/\s+/g,"")
+    );
+
+  if(restaurantBox){
+
+    restaurantBox.style.display = "block";
+
+  }
+
+  updateCart();
+
+}
 /* =========================================
    SHOW RESTAURANT
 ========================================= */
