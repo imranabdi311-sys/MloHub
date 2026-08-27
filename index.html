@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
 <title>MloHub - Food Delivery</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -35,9 +41,13 @@ header p{
 }
 
 .container{
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
   padding:20px;
+}
+
+h2{
+  margin-bottom:15px;
 }
 
 .restaurant-buttons{
@@ -50,6 +60,7 @@ header p{
 .restaurant-buttons button{
   flex:1;
   min-width:180px;
+  font-size:16px;
 }
 
 .search{
@@ -71,12 +82,40 @@ header p{
 }
 
 .restaurant h2{
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
 
 .location{
   color:#666;
   margin-bottom:15px;
+}
+
+.restaurant-note{
+  background:#fff7e6;
+  border-left:4px solid #f59e0b;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:5px;
+}
+
+.status-open{
+  display:inline-block;
+  background:#d1e7dd;
+  color:#0f5132;
+  padding:7px 12px;
+  border-radius:20px;
+  font-weight:bold;
+  margin-bottom:12px;
+}
+
+.status-closed{
+  display:inline-block;
+  background:#f8d7da;
+  color:#842029;
+  padding:7px 12px;
+  border-radius:20px;
+  font-weight:bold;
+  margin-bottom:12px;
 }
 
 .category{
@@ -124,12 +163,9 @@ button:active{
   transform:scale(.97);
 }
 
-.restaurant-note{
-  background:#fff7e6;
-  border-left:4px solid #f59e0b;
-  padding:10px;
-  margin-bottom:15px;
-  border-radius:5px;
+button:disabled{
+  background:#999;
+  cursor:not-allowed;
 }
 
 .cart-bar{
@@ -141,7 +177,7 @@ button:active{
   color:white;
   padding:14px;
   border-radius:12px;
-  max-width:860px;
+  max-width:900px;
   margin:auto;
   z-index:1000;
   display:none;
@@ -167,7 +203,7 @@ button:active{
 
 .modal-box{
   background:white;
-  max-width:600px;
+  max-width:650px;
   margin:30px auto;
   padding:20px;
   border-radius:15px;
@@ -249,13 +285,17 @@ textarea{
 
 .empty{
   text-align:center;
-  padding:20px 0;
+  padding:20px;
   color:#666;
 }
 
 .remove{
   background:#dc2626;
   padding:6px 9px;
+}
+
+.restaurant-card-button{
+  width:100%;
 }
 
 @media(max-width:600px){
@@ -301,419 +341,77 @@ textarea{
   .cart-item{
     grid-template-columns:1fr;
   }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <header>
+
   <h1>🍽️ MloHub</h1>
-  <p>Discover food. Order easily. Enjoy.</p>
+
+  <p>
+    Discover food. Order easily. Enjoy.
+  </p>
+
 </header>
+
 
 <div class="container">
 
-<h2 style="margin-bottom:15px;">🍽️ Choose a Restaurant</h2>
+  <h2>
+    🍽️ Choose a Restaurant
+  </h2>
 
-<div class="restaurant-buttons" id="restaurantButtons">
-  <p>Loading restaurants...</p>
-</div>
 
-<input
-  id="search"
-  class="search"
-  type="text"
-  placeholder="🔎 Search food..."
-  oninput="searchFood()"
->
+  <!-- AUTOMATIC RESTAURANTS -->
 
-<div id="restaurantArea">
+  <div
+    class="restaurant-buttons"
+    id="restaurantButtons"
+  >
 
-  <div class="empty">
-    Loading restaurants...
+    <p>
+      Loading restaurants...
+    </p>
+
   </div>
 
-</div>
 
-<div class="restaurant" id="albaik">
+  <!-- SEARCH -->
 
-  <h2>🍗 Albaik</h2>
+  <input
+    id="search"
+    class="search"
+    type="text"
+    placeholder="🔎 Search food..."
+    oninput="searchFood()"
+  >
 
-  <p class="location">
-    Mweni Rd, Eastleigh, Nairobi
-  </p>
 
-  <div class="restaurant-note">
-    📍 Ordering from Albaik
-  </div>
+  <!-- AUTOMATIC RESTAURANT AREA -->
 
-  <div id="albaikMenu">
-    <div class="empty">Loading Albaik menu...</div>
-  </div>
+  <div id="restaurantArea">
 
-</div>
+    <div class="empty">
+      Loading restaurants...
+    </div>
 
-<div id="restaurantArea">
-
-  <div class="empty">
-    Loading restaurants...
   </div>
 
 </div>
 
-<div class="restaurant" id="chicking" style="display:none;">
-
-  <h2>🍗 Chicking Eastleigh</h2>
-
-  <p class="location">
-    Eastleigh, Nairobi
-  </p>
-
-  <div class="restaurant-note">
-    📍 Ordering from Chicking Eastleigh
-  </div>
-
-  <h3 class="category">🍯 Honey-Butter Biscuits & Sweet Treats</h3>
-
-  <div class="menu-item">
-    <div>
-      <h3>Honey-Butter Biscuits (1)</h3>
-      <span class="price">KSh 200</span>
-    </div>
-    <button onclick="addToCart('Chicking Honey-Butter Biscuit (1)',200)">
-      Add
-    </button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Honey-Butter Biscuits (6)</h3>
-      <span class="price">KSh 1,150</span>
-    </div>
-    <button onclick="addToCart('Chicking Honey-Butter Biscuits (6)',1150)">
-      Add
-    </button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Sundae</h3>
-      <p class="description">Strawberry / Caramel / Chocolate</p>
-      <span class="price">KSh 600</span>
-    </div>
-    <button onclick="addToCart('Chicking Sundae',600)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Biscuit Sundae</h3>
-      <p class="description">Strawberry / Caramel / Chocolate</p>
-      <span class="price">KSh 700</span>
-    </div>
-    <button onclick="addToCart('Chicking Biscuit Sundae',700)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Ice Cream Cone</h3>
-      <span class="price">KSh 400</span>
-    </div>
-    <button onclick="addToCart('Chicking Ice Cream Cone',400)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Apple Pie</h3>
-      <span class="price">KSh 330</span>
-    </div>
-    <button onclick="addToCart('Chicking Apple Pie',330)">Add</button>
-  </div>
-
-  <h3 class="category">🥪 Handcrafted Premium Sandwiches</h3>
-
-  <div class="menu-item">
-    <div>
-      <h3>BBQ Chicken Sandwich Combo</h3>
-      <p class="description">Thigh</p>
-      <span class="price">KSh 1,350</span>
-    </div>
-    <button onclick="addToCart('Chicking BBQ Chicken Sandwich Combo',1350)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Super Spicy Sandwich Combo</h3>
-      <p class="description">Breast</p>
-      <span class="price">KSh 1,300</span>
-    </div>
-    <button onclick="addToCart('Chicking Super Spicy Sandwich Combo',1300)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Super Chicken Sandwich Combo</h3>
-      <p class="description">Breast</p>
-      <span class="price">KSh 1,300</span>
-    </div>
-    <button onclick="addToCart('Chicking Super Chicken Sandwich Combo',1300)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Super Bold Crunch'R Sandwich Combo</h3>
-      <p class="description">Thigh</p>
-      <span class="price">KSh 1,300</span>
-    </div>
-    <button onclick="addToCart('Chicking Super Bold CrunchR Sandwich Combo',1300)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Super Classic Sandwich Combo</h3>
-      <p class="description">Thigh</p>
-      <span class="price">KSh 1,300</span>
-    </div>
-    <button onclick="addToCart('Chicking Super Classic Sandwich Combo',1300)">Add</button>
-  </div>
-
-  <h3 class="category">🥪 Handcrafted Value Sandwiches</h3>
-
-  <div class="menu-item">
-    <div>
-      <h3>BBQ Chicken Sandwich Jr. Combo</h3>
-      <p class="description">Thigh • Regular Side & Drink</p>
-      <span class="price">KSh 1,100</span>
-    </div>
-    <button onclick="addToCart('Chicking BBQ Chicken Sandwich Jr Combo',1100)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Bold Crunch'R Sandwich Jr. Combo</h3>
-      <p class="description">Thigh • Regular Side & Drink</p>
-      <span class="price">KSh 990</span>
-    </div>
-    <button onclick="addToCart('Chicking Bold CrunchR Sandwich Jr Combo',990)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Classic Chicken Sandwich Jr. Combo</h3>
-      <p class="description">Thigh • Regular Side & Drink</p>
-      <span class="price">KSh 990</span>
-    </div>
-    <button onclick="addToCart('Chicking Classic Chicken Sandwich Jr Combo',990)">Add</button>
-  </div>
-
-  <h3 class="category">🍗 Crunchy Chicken</h3>
-
-  <div class="menu-item">
-    <div>
-      <h3>2 PC Combo</h3>
-      <p class="description">Original or Spicy</p>
-      <span class="price">KSh 1,150</span>
-    </div>
-    <button onclick="addToCart('Chicking 2 PC Combo',1150)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>3 PC Combo</h3>
-      <p class="description">Original or Spicy</p>
-      <span class="price">KSh 1,500</span>
-    </div>
-    <button onclick="addToCart('Chicking 3 PC Combo',1500)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>5 Piece Combo</h3>
-      <p class="description">2 Regular Sides + 4 Honey-Butter Biscuits</p>
-      <span class="price">KSh 2,990</span>
-    </div>
-    <button onclick="addToCart('Chicking 5 Piece Combo',2990)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>6 Piece Combo</h3>
-      <p class="description">3 Regular Sides + 3 Honey-Butter Biscuits</p>
-      <span class="price">KSh 3,250</span>
-    </div>
-    <button onclick="addToCart('Chicking 6 Piece Combo',3250)">Add</button>
-  </div>
-
-  <h3 class="category">🍗 Savory Tenders</h3>
-
-  <div class="menu-item">
-    <div>
-      <h3>3 Tenders Combo</h3>
-      <p class="description">1 Regular Side + Biscuit + Regular Drink</p>
-      <span class="price">KSh 1,190</span>
-    </div>
-    <button onclick="addToCart('Chicking 3 Tenders Combo',1190)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>5 Tenders Combo</h3>
-      <p class="description">1 Regular Side + Biscuit + Regular Drink</p>
-      <span class="price">KSh 1,590</span>
-    </div>
-    <button onclick="addToCart('Chicking 5 Tenders Combo',1590)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>8 Tenders Combo</h3>
-      <p class="description">2 Large Sides + 4 Honey-Butter Biscuits</p>
-      <span class="price">KSh 3,200</span>
-    </div>
-    <button onclick="addToCart('Chicking 8 Tenders Combo',3200)">Add</button>
-  </div>
-
-  <h3 class="category">🍗 Meals</h3>
-
-  <div class="menu-item">
-    <div>
-      <h3>8 Piece Meal</h3>
-      <p class="description">2 Large Sides + 4 Biscuits + 2L Drink</p>
-      <span class="price">KSh 4,500</span>
-    </div>
-    <button onclick="addToCart('Chicking 8 Piece Meal',4500)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>10 Piece Meal</h3>
-      <p class="description">3 Large Sides + 5 Biscuits + 2L Drink</p>
-      <span class="price">KSh 5,500</span>
-    </div>
-    <button onclick="addToCart('Chicking 10 Piece Meal',5500)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>12 Piece Meal</h3>
-      <p class="description">3 Large Sides + 6 Biscuits + 2L Drink</p>
-      <span class="price">KSh 6,500</span>
-    </div>
-    <button onclick="addToCart('Chicking 12 Piece Meal',6500)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>15 Piece & 2L</h3>
-      <span class="price">KSh 6,500</span>
-    </div>
-    <button onclick="addToCart('Chicking 15 Piece & 2L',6500)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>21 Piece & 2L</h3>
-      <span class="price">KSh 8,700</span>
-    </div>
-    <button onclick="addToCart('Chicking 21 Piece & 2L',8700)">Add</button>
-  </div>
-
-  <h3 class="category">🍟 Classic Sides</h3>
-
-  <div class="menu-item">
-    <div>
-      <h3>Fries - Regular</h3>
-      <span class="price">KSh 290</span>
-    </div>
-    <button onclick="addToCart('Chicking Fries Regular',290)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Fries - Large</h3>
-      <span class="price">KSh 390</span>
-    </div>
-    <button onclick="addToCart('Chicking Fries Large',390)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Fries - Family</h3>
-      <span class="price">KSh 1,100</span>
-    </div>
-    <button onclick="addToCart('Chicking Fries Family',1100)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Zesty Rice - Regular</h3>
-      <span class="price">KSh 290</span>
-    </div>
-    <button onclick="addToCart('Chicking Zesty Rice Regular',290)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Zesty Rice - Large</h3>
-      <span class="price">KSh 575</span>
-    </div>
-    <button onclick="addToCart('Chicking Zesty Rice Large',575)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Coleslaw - Regular</h3>
-      <span class="price">KSh 350</span>
-    </div>
-    <button onclick="addToCart('Chicking Coleslaw Regular',350)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Coleslaw - Large</h3>
-      <span class="price">KSh 425</span>
-    </div>
-    <button onclick="addToCart('Chicking Coleslaw Large',425)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Coleslaw - Family</h3>
-      <span class="price">KSh 1,100</span>
-    </div>
-    <button onclick="addToCart('Chicking Coleslaw Family',1100)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Seasoned Sweet Corn - Regular</h3>
-      <span class="price">KSh 490</span>
-    </div>
-    <button onclick="addToCart('Chicking Seasoned Sweet Corn Regular',490)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Jalapeño Bombers - 4PC</h3>
-      <span class="price">KSh 400</span>
-    </div>
-    <button onclick="addToCart('Chicking Jalapeno Bombers 4PC',400)">Add</button>
-  </div>
-
-  <div class="menu-item">
-    <div>
-      <h3>Jalapeño Bombers - 10PC</h3>
-      <p class="description">Price not available</p>
-    </div>
-  </div>
-
-</div>
-
-</div>
 
 <!-- CART BAR -->
 
-<div class="cart-bar" id="cartBar">
+<div
+  class="cart-bar"
+  id="cartBar"
+>
 
   <span>
     🛒 Cart:
@@ -725,63 +423,135 @@ textarea{
     <strong id="total">0</strong>
   </span>
 
-  <button onclick="openCart()">View Cart</button>
+  <button onclick="openCart()">
+    View Cart
+  </button>
 
 </div>
 
+
 <!-- CART MODAL -->
 
-<div class="modal" id="cartModal">
+<div
+  class="modal"
+  id="cartModal"
+>
 
   <div class="modal-box">
 
-    <h2>🛒 Your Order</h2>
+    <h2>
+      🛒 Your Order
+    </h2>
 
-    <div class="cart-restaurant" id="cartRestaurant">
+
+    <div
+      class="cart-restaurant"
+      id="cartRestaurant"
+    >
       Restaurant
     </div>
 
+
     <div id="items"></div>
 
+
     <div class="total">
-      Total: KSh <span id="modalTotal">0</span>
+
+      Total:
+      KSh
+      <span id="modalTotal">
+        0
+      </span>
+
     </div>
 
-    <h2>Customer Details</h2>
 
-    <label>Name</label>
-    <input id="name" placeholder="Your name">
+    <h2>
+      Customer Details
+    </h2>
 
-    <label>Phone Number</label>
-    <input id="phone" type="tel" placeholder="07XXXXXXXX">
 
-    <label>Order Type</label>
+    <label>
+      Name
+    </label>
+
+    <input
+      id="name"
+      placeholder="Your name"
+    >
+
+
+    <label>
+      Phone Number
+    </label>
+
+    <input
+      id="phone"
+      type="tel"
+      placeholder="07XXXXXXXX"
+    >
+
+
+    <label>
+      Order Type
+    </label>
 
     <select id="type">
-      <option value="Delivery">🚚 Delivery</option>
-      <option value="Pickup">🏪 Pickup</option>
+
+      <option value="Delivery">
+        🚚 Delivery
+      </option>
+
+      <option value="Pickup">
+        🏪 Pickup
+      </option>
+
     </select>
 
-    <label>Payment Method</label>
+
+    <label>
+      Payment Method
+    </label>
 
     <select id="payment">
-      <option value="cash">💵 Cash on Delivery / Pickup</option>
-      <option value="till4574509">📱 M-Pesa Till: 4574509</option>
-      <option value="till4578247">📱 M-Pesa Till: 4578247</option>
+
+      <option value="cash">
+        💵 Cash on Delivery / Pickup
+      </option>
+
+      <option value="till4574509">
+        📱 M-Pesa Till: 4574509
+      </option>
+
+      <option value="till4578247">
+        📱 M-Pesa Till: 4578247
+      </option>
+
     </select>
 
-    <label>Location</label>
+
+    <label>
+      Location
+    </label>
 
     <textarea
       id="location"
       placeholder="Enter delivery location"
     ></textarea>
 
-    <button class="checkout" onclick="placeOrder()">
+
+    <button
+      class="checkout"
+      onclick="placeOrder()"
+    >
       📲 Place Order on WhatsApp
     </button>
 
-    <button class="close" onclick="closeCart()">
+
+    <button
+      class="close"
+      onclick="closeCart()"
+    >
       Close
     </button>
 
@@ -789,9 +559,11 @@ textarea{
 
 </div>
 
-<!-- ONLY ONE SUPABASE SCRIPT -->
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -816,176 +588,70 @@ const supabaseClient =
    CURRENT RESTAURANT
 ========================================= */
 
-let currentRestaurant = "Albaik";
+let currentRestaurant = null;
+
+let currentRestaurantId = null;
 
 
 /* =========================================
-   SEPARATE CART FOR EACH RESTAURANT
-========================================= */
-
-let carts = {
-  "Albaik": [],
-  "Chicking Eastleigh": []
-};
-
-
-/* =========================================
-   WHATSAPP NUMBERS
+   RESTAURANT DATA
 ========================================= */
 
 let restaurantData = {};
+
+
+/* =========================================
+   CARTS
+========================================= */
+
+let carts = {};
+
+
+/* =========================================
+   LOAD RESTAURANTS
+========================================= */
+
 async function loadRestaurants(){
 
-  const area =
-    document.getElementById("restaurantArea");
-
   const buttons =
-    document.getElementById("restaurantButtons");
-
-  area.innerHTML =
-    '<div class="empty">Loading restaurants...</div>';
-
-  buttons.innerHTML =
-    '<p>Loading restaurants...</p>';
-
-  const { data, error } =
-    await supabaseClient
-      .from("restaurants")
-      .select("id,name,whatsapp")
-      .order("id", {
-        ascending:true
-      });
-
-  if(error){
-
-    console.error(error);
-
-    buttons.innerHTML =
-      "❌ Could not load restaurants.";
-
-    area.innerHTML =
-      '<div class="empty">Could not load restaurants.</div>';
-
-    return;
-  }
-
-  restaurantData = {};
-
-  buttons.innerHTML = "";
-
-  area.innerHTML = "";
-
-  data.forEach(restaurant => {
-
-    restaurantData[restaurant.name] = {
-      id: restaurant.id,
-      whatsapp: restaurant.whatsapp
-    };
-
-
-    /* RESTAURANT BUTTON */
-
-    const button =
-      document.createElement("button");
-
-    button.textContent =
-      "🍽️ " + restaurant.name;
-
-    button.onclick = function(){
-
-      selectRestaurant(
-        restaurant.id,
-        restaurant.name
-      );
-
-    };
-
-    buttons.appendChild(button);
-
-
-    /* RESTAURANT CARD */
-
-    const restaurantBox =
-      document.createElement("div");
-
-    restaurantBox.className =
-      "restaurant";
-
-    restaurantBox.id =
-      "restaurant-" + restaurant.id;
-
-    restaurantBox.style.display =
-      "none";
-
-
-    restaurantBox.innerHTML = `
-
-      <h2>
-        🍽️ ${escapeHTML(restaurant.name)}
-      </h2>
-
-      <div class="restaurant-note">
-        📍 Ordering from ${escapeHTML(restaurant.name)}
-      </div>
-
-      <div id="menu-${restaurant.id}">
-        <div class="empty">
-          Loading menu...
-        </div>
-      </div>
-
-    `;
-
-    area.appendChild(restaurantBox);
-
-  });
-
-
-  /* OPEN FIRST RESTAURANT */
-
-  if(data.length > 0){
-
-    selectRestaurant(
-      data[0].id,
-      data[0].name
+    document.getElementById(
+      "restaurantButtons"
     );
 
-  }else{
-
-    area.innerHTML =
-      '<div class="empty">No restaurants available.</div>';
-
-  }
-
-}
- async function loadRestaurants(){
-
   const area =
-    document.getElementById("restaurantArea");
+    document.getElementById(
+      "restaurantArea"
+    );
 
-  const buttons =
-    document.getElementById("restaurantButtons");
+
+  buttons.innerHTML =
+    "<p>Loading restaurants...</p>";
 
   area.innerHTML =
     '<div class="empty">Loading restaurants...</div>';
 
-  buttons.innerHTML =
-    '<p>Loading restaurants...</p>';
-
 
   const { data, error } =
     await supabaseClient
+
       .from("restaurants")
-      .select("id,name,whatsapp,is_open")
-      .order("id", {
-        ascending:true
-      });
+
+      .select(
+        "id,name,whatsapp,is_open"
+      )
+
+      .order(
+        "id",
+        {
+          ascending:true
+        }
+      );
 
 
   if(error){
 
     console.error(
-      "Restaurant loading error:",
+      "Restaurant error:",
       error
     );
 
@@ -996,10 +662,26 @@ async function loadRestaurants(){
       '<div class="empty">Could not load restaurants.</div>';
 
     return;
+
+  }
+
+
+  if(!data || data.length === 0){
+
+    buttons.innerHTML =
+      "<p>No restaurants available.</p>";
+
+    area.innerHTML =
+      '<div class="empty">No restaurants available.</div>';
+
+    return;
+
   }
 
 
   restaurantData = {};
+
+  carts = {};
 
   buttons.innerHTML = "";
 
@@ -1008,76 +690,103 @@ async function loadRestaurants(){
 
   data.forEach(restaurant => {
 
-    restaurantData[restaurant.name] = {
+    restaurantData[restaurant.id] =
+      restaurant;
 
-      id: restaurant.id,
-
-      whatsapp: restaurant.whatsapp,
-
-      is_open: restaurant.is_open
-
-    };
+    carts[restaurant.id] = [];
 
 
-    /* RESTAURANT BUTTON */
+    /* =========================
+       RESTAURANT BUTTON
+    ========================= */
 
     const button =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
+
 
     button.textContent =
       "🍽️ " + restaurant.name;
 
-    button.onclick = function(){
 
-      selectRestaurant(
-        restaurant.id,
-        restaurant.name
-      );
+    button.onclick =
+      function(){
 
-    };
+        selectRestaurant(
+          restaurant.id
+        );
+
+      };
+
 
     buttons.appendChild(button);
 
 
-    /* RESTAURANT CARD */
+    /* =========================
+       RESTAURANT CARD
+    ========================= */
 
-    const restaurantBox =
-      document.createElement("div");
+    const card =
+      document.createElement(
+        "div"
+      );
 
-    restaurantBox.className =
+
+    card.className =
       "restaurant";
 
-    restaurantBox.id =
-      "restaurant-" + restaurant.id;
 
-    restaurantBox.style.display =
+    card.id =
+      "restaurant-" +
+      restaurant.id;
+
+
+    card.style.display =
       "none";
 
 
-    const status =
-      restaurant.is_open
-        ? "🟢 Open"
-        : "🔴 Closed";
+    const statusHTML =
+      restaurant.is_open === false
+
+        ? `
+          <div class="status-closed">
+            🔴 Closed
+          </div>
+        `
+
+        : `
+          <div class="status-open">
+            🟢 Open
+          </div>
+        `;
 
 
-    restaurantBox.innerHTML = `
+    card.innerHTML = `
 
       <h2>
-        🍽️ ${escapeHTML(restaurant.name)}
+        🍽️
+        ${escapeHTML(
+          restaurant.name
+        )}
       </h2>
 
-      <p class="location">
-        ${status}
-      </p>
+      ${statusHTML}
 
       <div class="restaurant-note">
 
         📍 Ordering from
-        ${escapeHTML(restaurant.name)}
+        <strong>
+          ${escapeHTML(
+            restaurant.name
+          )}
+        </strong>
 
       </div>
 
-      <div id="menu-${restaurant.id}">
+      <div
+        id="menu-${restaurant.id}"
+      >
 
         <div class="empty">
           Loading menu...
@@ -1088,85 +797,268 @@ async function loadRestaurants(){
     `;
 
 
-    area.appendChild(restaurantBox);
+    area.appendChild(card);
 
   });
 
 
-  /* OPEN FIRST RESTAURANT */
+  /* =========================
+     OPEN FIRST RESTAURANT
+  ========================= */
 
-  if(data.length > 0){
-
-    selectRestaurant(
-      data[0].id,
-      data[0].name
-    );
-
-  }
-
-}
-function selectRestaurant(id, name){
-
-  currentRestaurant = name;
-
-  console.log(
-    "Selected restaurant:",
-    id,
-    name
+  selectRestaurant(
+    data[0].id
   );
 
-  document
-    .querySelectorAll(".restaurant")
-    .forEach(r => {
-      r.style.display = "none";
-    });
+}
 
-  const restaurantBox =
-    document.getElementById(
-      name.toLowerCase().replace(/\s+/g,"")
+
+/* =========================================
+   SELECT RESTAURANT
+========================================= */
+
+async function selectRestaurant(id){
+
+  const restaurant =
+    restaurantData[id];
+
+
+  if(!restaurant){
+
+    alert(
+      "Restaurant information not found."
     );
 
-  if(restaurantBox){
-
-    restaurantBox.style.display = "block";
+    return;
 
   }
+
+
+  currentRestaurantId =
+    restaurant.id;
+
+
+  currentRestaurant =
+    restaurant.name;
+
+
+  document
+    .querySelectorAll(
+      ".restaurant"
+    )
+    .forEach(card => {
+
+      card.style.display =
+        "none";
+
+    });
+
+
+  const selected =
+    document.getElementById(
+      "restaurant-" +
+      restaurant.id
+    );
+
+
+  if(selected){
+
+    selected.style.display =
+      "block";
+
+  }
+
+
+  document.getElementById(
+    "search"
+  ).value = "";
+
 
   updateCart();
 
-}
-/* =========================================
-   SHOW RESTAURANT
-========================================= */
 
-function showRestaurant(restaurant){
+  await loadRestaurantMenu(
+    restaurant.id
+  );
 
-  if(restaurant === "albaik"){
-
-    currentRestaurant = "Albaik";
-
-    document.getElementById("albaik").style.display =
-      "block";
-
-    document.getElementById("chicking").style.display =
-      "none";
-
-  }else{
-
-    currentRestaurant = "Chicking Eastleigh";
-
-    document.getElementById("albaik").style.display =
-      "none";
-
-    document.getElementById("chicking").style.display =
-      "block";
-  }
-
-  document.getElementById("search").value = "";
 
   searchFood();
 
-  updateCart();
+}
+
+
+/* =========================================
+   LOAD MENU
+========================================= */
+
+async function loadRestaurantMenu(
+  restaurantId
+){
+
+  const menuBox =
+    document.getElementById(
+      "menu-" +
+      restaurantId
+    );
+
+
+  if(!menuBox){
+
+    return;
+
+  }
+
+
+  menuBox.innerHTML =
+    '<div class="empty">Loading menu...</div>';
+
+
+  const { data, error } =
+    await supabaseClient
+
+      .from("menu_items")
+
+      .select(
+        "id,name,description,price,available,created_at"
+      )
+
+      .eq(
+        "restaurant_id",
+        restaurantId
+      )
+
+      .eq(
+        "available",
+        true
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
+
+
+  if(error){
+
+    console.error(
+      "Menu error:",
+      error
+    );
+
+    menuBox.innerHTML =
+      `
+      <div class="empty">
+        ❌ Could not load menu.
+      </div>
+      `;
+
+    return;
+
+  }
+
+
+  if(!data || data.length === 0){
+
+    menuBox.innerHTML =
+      `
+      <div class="empty">
+        No food items available yet.
+      </div>
+      `;
+
+    return;
+
+  }
+
+
+  menuBox.innerHTML = "";
+
+
+  data.forEach(item => {
+
+    const row =
+      document.createElement(
+        "div"
+      );
+
+
+    row.className =
+      "menu-item";
+
+
+    row.innerHTML = `
+
+      <div>
+
+        <h3>
+          ${escapeHTML(
+            item.name
+          )}
+        </h3>
+
+        <p class="description">
+          ${escapeHTML(
+            item.description || ""
+          )}
+        </p>
+
+        <span class="price">
+          KSh
+          ${Number(
+            item.price
+          ).toLocaleString()}
+        </span>
+
+      </div>
+
+      <button>
+        Add
+      </button>
+
+    `;
+
+
+    const addButton =
+      row.querySelector(
+        "button"
+      );
+
+
+    /* CLOSED RESTAURANT */
+
+    if(
+      restaurantData[restaurantId] &&
+      restaurantData[restaurantId].is_open === false
+    ){
+
+      addButton.disabled =
+        true;
+
+      addButton.textContent =
+        "Closed";
+
+    }
+
+
+    addButton.onclick =
+      function(){
+
+        addToCart(
+          item.name,
+          Number(item.price),
+          item.id,
+          restaurantId
+        );
+
+      };
+
+
+    menuBox.appendChild(row);
+
+  });
+
 }
 
 
@@ -1176,7 +1068,28 @@ function showRestaurant(restaurant){
 
 function getCart(){
 
-  return carts[currentRestaurant];
+  if(
+    !currentRestaurantId
+  ){
+
+    return [];
+
+  }
+
+
+  if(
+    !carts[currentRestaurantId]
+  ){
+
+    carts[currentRestaurantId] =
+      [];
+
+  }
+
+
+  return carts[
+    currentRestaurantId
+  ];
 
 }
 
@@ -1184,13 +1097,59 @@ function getCart(){
 /* =========================================
    ADD TO CART
 ========================================= */
-function addToCart(name, price, menuItemId = null){
 
-  const cart = getCart();
+function addToCart(
+  name,
+  price,
+  menuItemId,
+  restaurantId
+){
 
-  const existing = cart.find(
-    item => item.name === name
-  );
+  if(
+    restaurantId !==
+    currentRestaurantId
+  ){
+
+    alert(
+      "Please select this restaurant first."
+    );
+
+    return;
+
+  }
+
+
+  const restaurant =
+    restaurantData[
+      restaurantId
+    ];
+
+
+  if(
+    restaurant &&
+    restaurant.is_open === false
+  ){
+
+    alert(
+      "This restaurant is currently closed."
+    );
+
+    return;
+
+  }
+
+
+  const cart =
+    getCart();
+
+
+  const existing =
+    cart.find(
+      item =>
+        item.menu_item_id ===
+        menuItemId
+    );
+
 
   if(existing){
 
@@ -1199,37 +1158,64 @@ function addToCart(name, price, menuItemId = null){
   }else{
 
     cart.push({
-      name: name,
-      price: Number(price),
-      qty: 1,
-      menu_item_id: menuItemId
+
+      name:name,
+
+      price:Number(price),
+
+      qty:1,
+
+      menu_item_id:
+        menuItemId,
+
+      restaurant_id:
+        restaurantId
+
     });
 
   }
+
 
   updateCart();
 
 }
 
 
-
 /* =========================================
    CHANGE QUANTITY
 ========================================= */
 
-function changeQty(index,amount){
+function changeQty(
+  index,
+  amount
+){
 
-  const cart = getCart();
+  const cart =
+    getCart();
 
-  if(!cart[index]) return;
 
-  cart[index].qty += amount;
+  if(!cart[index]){
 
-  if(cart[index].qty <= 0){
-
-    cart.splice(index,1);
+    return;
 
   }
+
+
+  cart[index].qty +=
+    amount;
+
+
+  if(
+    cart[index].qty <= 0
+  ){
+
+    cart.splice(
+      index,
+      1
+    );
+
+  }
+
 
   updateCart();
 
@@ -1240,13 +1226,26 @@ function changeQty(index,amount){
    REMOVE ITEM
 ========================================= */
 
-function removeFromCart(index){
+function removeFromCart(
+  index
+){
 
-  const cart = getCart();
+  const cart =
+    getCart();
 
-  if(!cart[index]) return;
 
-  cart.splice(index,1);
+  if(!cart[index]){
+
+    return;
+
+  }
+
+
+  cart.splice(
+    index,
+    1
+  );
+
 
   updateCart();
 
@@ -1259,33 +1258,62 @@ function removeFromCart(index){
 
 function updateCart(){
 
-  const cart = getCart();
+  const cart =
+    getCart();
+
 
   let count = 0;
+
   let total = 0;
+
 
   cart.forEach(item => {
 
-    count += item.qty;
+    count +=
+      Number(item.qty);
 
-    total += item.price * item.qty;
+    total +=
+      Number(item.price) *
+      Number(item.qty);
 
   });
 
-  document.getElementById("count").textContent =
+
+  document.getElementById(
+    "count"
+  ).textContent =
     count;
 
-  document.getElementById("total").textContent =
+
+  document.getElementById(
+    "total"
+  ).textContent =
     total.toLocaleString();
 
-  document.getElementById("modalTotal").textContent =
+
+  document.getElementById(
+    "modalTotal"
+  ).textContent =
     total.toLocaleString();
 
-  document.getElementById("cartRestaurant").textContent =
-    "🍽️ " + currentRestaurant;
 
-  document.getElementById("cartBar").style.display =
-    count > 0 ? "flex" : "none";
+  document.getElementById(
+    "cartRestaurant"
+  ).textContent =
+    "🍽️ " +
+    (
+      currentRestaurant ||
+      "Restaurant"
+    );
+
+
+  document.getElementById(
+    "cartBar"
+  ).style.display =
+    count > 0
+      ? "flex"
+      : "none";
+
 
   renderCart();
 
@@ -1299,76 +1327,133 @@ function updateCart(){
 function renderCart(){
 
   const box =
-    document.getElementById("items");
+    document.getElementById(
+      "items"
+    );
 
-  const cart = getCart();
 
-  if(cart.length === 0){
+  const cart =
+    getCart();
+
+
+  if(
+    cart.length === 0
+  ){
 
     box.innerHTML =
-      '<div class="empty">🛒 Your cart is empty.</div>';
+      `
+      <div class="empty">
+        🛒 Your cart is empty.
+      </div>
+      `;
 
     return;
+
   }
+
 
   box.innerHTML = "";
 
-  cart.forEach((item,index) => {
 
-    const row =
-      document.createElement("div");
+  cart.forEach(
+    (item,index) => {
 
-    row.className = "cart-item";
+      const row =
+        document.createElement(
+          "div"
+        );
 
-    row.innerHTML = `
 
-      <div>
+      row.className =
+        "cart-item";
 
-        <strong>${escapeHTML(item.name)}</strong>
 
-        <br>
+      row.innerHTML = `
 
-        <small>
-          KSh ${item.price.toLocaleString()} each
-        </small>
+        <div>
 
-      </div>
+          <strong>
+            ${escapeHTML(
+              item.name
+            )}
+          </strong>
 
-      <div class="quantity">
+          <br>
 
-        <button onclick="changeQty(${index},-1)">
-          −
-        </button>
+          <small>
+            KSh
+            ${Number(
+              item.price
+            ).toLocaleString()}
+            each
+          </small>
 
-        <strong>
-          ${item.qty}
-        </strong>
+        </div>
 
-        <button onclick="changeQty(${index},1)">
-          +
-        </button>
 
-      </div>
+        <div class="quantity">
 
-      <div>
+          <button
+            onclick="
+              changeQty(
+                ${index},
+                -1
+              )
+            "
+          >
+            −
+          </button>
 
-        <strong>
-          KSh ${(item.price * item.qty).toLocaleString()}
-        </strong>
+          <strong>
+            ${item.qty}
+          </strong>
 
-        <button
-          class="remove"
-          onclick="removeFromCart(${index})"
-        >
-          ×
-        </button>
+          <button
+            onclick="
+              changeQty(
+                ${index},
+                1
+              )
+            "
+          >
+            +
+          </button>
 
-      </div>
-    `;
+        </div>
 
-    box.appendChild(row);
 
-  });
+        <div>
+
+          <strong>
+            KSh
+            ${(
+              item.price *
+              item.qty
+            ).toLocaleString()}
+          </strong>
+
+          <button
+            class="remove"
+            onclick="
+              removeFromCart(
+                ${index}
+              )
+            "
+          >
+            ×
+          </button>
+
+        </div>
+
+      `;
+
+
+      box.appendChild(
+        row
+      );
+
+    }
+  );
 
 }
 
@@ -1379,18 +1464,22 @@ function renderCart(){
 
 function openCart(){
 
-  if(getCart().length === 0){
+  if(
+    getCart().length === 0
+  ){
 
     alert(
-      "Your " +
-      currentRestaurant +
-      " cart is empty. Please add food first."
+      "Please add food to your cart first."
     );
 
     return;
+
   }
 
-  document.getElementById("cartModal").style.display =
+
+  document.getElementById(
+    "cartModal"
+  ).style.display =
     "block";
 
 }
@@ -1402,7 +1491,9 @@ function openCart(){
 
 function closeCart(){
 
-  document.getElementById("cartModal").style.display =
+  document.getElementById(
+    "cartModal"
+  ).style.display =
     "none";
 
 }
@@ -1411,91 +1502,187 @@ function closeCart(){
 /* =========================================
    PLACE ORDER
 ========================================= */
+
 async function placeOrder(){
 
-  const cart = getCart();
+  const cart =
+    getCart();
 
-  if(cart.length === 0){
-    alert("Please add food first.");
+
+  if(
+    cart.length === 0
+  ){
+
+    alert(
+      "Please add food first."
+    );
+
     return;
+
   }
 
+
+  const restaurant =
+    restaurantData[
+      currentRestaurantId
+    ];
+
+
+  if(!restaurant){
+
+    alert(
+      "Restaurant information not found."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    restaurant.is_open === false
+  ){
+
+    alert(
+      "This restaurant is currently closed."
+    );
+
+    return;
+
+  }
+
+
   const name =
-    document.getElementById("name").value.trim();
+    document.getElementById(
+      "name"
+    ).value.trim();
+
 
   const phone =
-    document.getElementById("phone").value.trim();
+    document.getElementById(
+      "phone"
+    ).value.trim();
+
 
   const type =
-    document.getElementById("type").value;
+    document.getElementById(
+      "type"
+    ).value;
+
 
   const payment =
-    document.getElementById("payment").value;
+    document.getElementById(
+      "payment"
+    ).value;
+
 
   const location =
-    document.getElementById("location").value.trim();
+    document.getElementById(
+      "location"
+    ).value.trim();
 
 
   if(!name){
-    alert("Please enter your name.");
+
+    alert(
+      "Please enter your name."
+    );
+
     return;
+
   }
+
 
   if(!phone){
-    alert("Please enter your phone number.");
+
+    alert(
+      "Please enter your phone number."
+    );
+
     return;
+
   }
 
-  if(type === "Delivery" && !location){
-    alert("Please enter your delivery location.");
+
+  if(
+    type === "Delivery" &&
+    !location
+  ){
+
+    alert(
+      "Please enter your delivery location."
+    );
+
     return;
+
   }
 
 
-  /* RESTAURANT ID */
+  if(
+    !restaurant.whatsapp
+  ){
 
-const restaurant = restaurantData[currentRestaurant];
+    alert(
+      "This restaurant does not have a WhatsApp number configured yet."
+    );
 
-if(!restaurant){
+    return;
 
-  alert(
-    "Restaurant information could not be found."
-  );
-
-  return;
-
-}
-
-const restaurantId = restaurant.id;
+  }
 
 
-  /* TOTAL */
+  /* =====================================
+     TOTAL
+  ===================================== */
 
   let total = 0;
 
+
   cart.forEach(item => {
-    total += Number(item.price) * Number(item.qty);
+
+    total +=
+      Number(item.price) *
+      Number(item.qty);
+
   });
 
 
-  /* SAVE CUSTOMER */
+  /* =====================================
+     SAVE CUSTOMER
+  ===================================== */
 
-  const { data: customer, error: customerError } =
-    await supabaseClient
-      .from("customers")
-      .insert({
-        full_name: name,
-        phone: phone,
-        email: null,
-        address: location || "Pickup"
-      })
-      .select()
-      .single();
+  const {
+    data:customer,
+    error:customerError
+  } = await supabaseClient
+
+    .from("customers")
+
+    .insert({
+
+      full_name:name,
+
+      phone:phone,
+
+      email:null,
+
+      address:
+        location ||
+        "Pickup"
+
+    })
+
+    .select()
+
+    .single();
 
 
   if(customerError){
 
-    console.error("Customer error:", customerError);
+    console.error(
+      "Customer error:",
+      customerError
+    );
 
     alert(
       "Customer could not be saved.\n\n" +
@@ -1503,30 +1690,58 @@ const restaurantId = restaurant.id;
     );
 
     return;
+
   }
 
 
-  /* SAVE ORDER */
+  /* =====================================
+     SAVE ORDER
+  ===================================== */
 
-  const { data: order, error: orderError } =
-    await supabaseClient
-      .from("orders")
-      .insert({
-        restaurant_id: restaurantId,
-        customer_id: customer.id,
-        customer_name: name,
-        customer_phone: phone,
-        delivery_address: location || "Pickup",
-        order_status: "pending",
-        total_amount: total
-      })
-      .select()
-      .single();
+  const {
+    data:order,
+    error:orderError
+  } = await supabaseClient
+
+    .from("orders")
+
+    .insert({
+
+      restaurant_id:
+        restaurant.id,
+
+      customer_id:
+        customer.id,
+
+      customer_name:
+        name,
+
+      customer_phone:
+        phone,
+
+      delivery_address:
+        location ||
+        "Pickup",
+
+      order_status:
+        "pending",
+
+      total_amount:
+        total
+
+    })
+
+    .select()
+
+    .single();
 
 
   if(orderError){
 
-
+    console.error(
+      "Order error:",
+      orderError
+    );
 
     alert(
       "Order could not be saved.\n\n" +
@@ -1534,35 +1749,45 @@ const restaurantId = restaurant.id;
     );
 
     return;
+
   }
 
 
-  /* SAVE ORDER ITEMS */
+  /* =====================================
+     SAVE ORDER ITEMS
+  ===================================== */
 
-  const orderItems = [];
+  const orderItems =
+    cart.map(item => ({
 
-  cart.forEach(item => {
+      order_id:
+        order.id,
 
-    if(item.menu_item_id){
+      menu_item_id:
+        item.menu_item_id,
 
-      orderItems.push({
-        order_id: order.id,
-        menu_item_id: item.menu_item_id,
-        quantity: item.qty,
-        price: item.price
-      });
+      quantity:
+        item.qty,
 
-    }
+      price:
+        item.price
 
-  });
+    }));
 
 
-  if(orderItems.length > 0){
+  if(
+    orderItems.length > 0
+  ){
 
-    const { error: itemsError } =
-      await supabaseClient
-        .from("order_items")
-        .insert(orderItems);
+    const {
+      error:itemsError
+    } = await supabaseClient
+
+      .from("order_items")
+
+      .insert(
+        orderItems
+      );
 
 
     if(itemsError){
@@ -1572,62 +1797,88 @@ const restaurantId = restaurant.id;
         itemsError
       );
 
+
       alert(
         "Order #" +
         order.id +
-        " was created, but the food items failed to save.\n\n" +
+        " was created, but order items could not be saved.\n\n" +
         itemsError.message
       );
 
       return;
+
     }
 
   }
 
 
-  /* PAYMENT */
+  /* =====================================
+     PAYMENT TEXT
+  ===================================== */
 
   let paymentText =
     "Cash on Delivery / Pickup";
 
-  if(payment === "till4574509"){
-    paymentText = "M-Pesa Till: 4574509";
+
+  if(
+    payment ===
+    "till4574509"
+  ){
+
+    paymentText =
+      "M-Pesa Till: 4574509";
+
   }
 
-  if(payment === "till4578247"){
-    paymentText = "M-Pesa Till: 4578247";
+
+  if(
+    payment ===
+    "till4578247"
+  ){
+
+    paymentText =
+      "M-Pesa Till: 4578247";
+
   }
 
 
-  /* WHATSAPP MESSAGE */
+  /* =====================================
+     WHATSAPP MESSAGE
+  ===================================== */
 
   let message =
     "NEW MloHub ORDER\n\n";
+
 
   message +=
     "Order ID: #" +
     order.id +
     "\n";
 
+
   message +=
     "Restaurant: " +
-    currentRestaurant +
+    restaurant.name +
     "\n";
+
 
   message +=
     "Customer: " +
     name +
     "\n";
 
+
   message +=
     "Phone: " +
     phone +
     "\n";
 
+
   message +=
     "Order Type: " +
     type +
     "\n";
+
 
   if(location){
 
@@ -1638,18 +1889,23 @@ const restaurantId = restaurant.id;
 
   }
 
+
   message +=
     "Payment: " +
     paymentText +
     "\n\n";
 
-  message += "ORDER:\n";
+
+  message +=
+    "ORDER:\n";
 
 
   cart.forEach(item => {
 
     const itemTotal =
-      item.price * item.qty;
+      Number(item.price) *
+      Number(item.qty);
+
 
     message +=
       item.qty +
@@ -1667,32 +1923,64 @@ const restaurantId = restaurant.id;
     total.toLocaleString();
 
 
-/* OPEN WHATSAPP */
+  /* =====================================
+     WHATSAPP
+  ===================================== */
 
-const whatsappNumber =
-  restaurant.whatsapp;
+  const whatsappNumber =
+    String(
+      restaurant.whatsapp
+    ).replace(
+      /\D/g,
+      ""
+    );
 
-if(!whatsappNumber){
-  alert("WhatsApp number is not configured for this restaurant.");
-  return;
+
+  const whatsappLink =
+    "https://wa.me/" +
+    whatsappNumber +
+    "?text=" +
+    encodeURIComponent(
+      message
+    );
+
+
+  /* =====================================
+     CLEAR CART
+  ===================================== */
+
+  carts[
+    currentRestaurantId
+  ] = [];
+
+
+  updateCart();
+
+
+  closeCart();
+
+
+  /* =====================================
+     SUCCESS
+  ===================================== */
+
+  alert(
+    "✅ MloHub Order #" +
+    order.id +
+    " saved successfully!"
+  );
+
+
+  /* =====================================
+     OPEN WHATSAPP DIRECTLY
+  ===================================== */
+
+  window.location.href =
+    whatsappLink;
+
 }
 
-const whatsappLink =
-  "https://wa.me/" +
-  whatsappNumber +
-  "?text=" +
-  encodeURIComponent(message);
 
-alert(
-  "✅ Order #" +
-  order.id +
-  " saved successfully.\n\n" +
-  "WhatsApp will now open."
-);
-
-/* Open WhatsApp */
-window.location.href = whatsappLink;
-}
 /* =========================================
    SEARCH FOOD
 ========================================= */
@@ -1700,22 +1988,46 @@ window.location.href = whatsappLink;
 function searchFood(){
 
   const search =
-    document.getElementById("search")
-      .value
+    document.getElementById(
+      "search"
+    ).value
       .toLowerCase()
       .trim();
 
+
+  if(
+    !currentRestaurantId
+  ){
+
+    return;
+
+  }
+
+
   const activeRestaurant =
-    currentRestaurant === "Albaik"
-      ? document.getElementById("albaik")
-      : document.getElementById("chicking");
+    document.getElementById(
+      "restaurant-" +
+      currentRestaurantId
+    );
+
+
+  if(!activeRestaurant){
+
+    return;
+
+  }
+
 
   activeRestaurant
-    .querySelectorAll(".menu-item")
+    .querySelectorAll(
+      ".menu-item"
+    )
     .forEach(item => {
 
       const text =
-        item.textContent.toLowerCase();
+        item.textContent
+          .toLowerCase();
+
 
       item.style.display =
         text.includes(search)
@@ -1736,9 +2048,14 @@ window.addEventListener(
   function(event){
 
     const modal =
-      document.getElementById("cartModal");
+      document.getElementById(
+        "cartModal"
+      );
 
-    if(event.target === modal){
+
+    if(
+      event.target === modal
+    ){
 
       closeCart();
 
@@ -1754,139 +2071,34 @@ window.addEventListener(
 
 function escapeHTML(value){
 
-  return String(value)
+  return String(
+    value
+  )
 
-    .replace(/&/g,"&amp;")
+  .replace(
+    /&/g,
+    "&amp;"
+  )
 
-    .replace(/</g,"&lt;")
+  .replace(
+    /</g,
+    "&lt;"
+  )
 
-    .replace(/>/g,"&gt;")
+  .replace(
+    />/g,
+    "&gt;"
+  )
 
-    .replace(/"/g,"&quot;")
+  .replace(
+    /"/g,
+    "&quot;"
+  )
 
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================
-   LOAD ALBAIK MENU FROM SUPABASE
-========================================= */
-
-async function loadAlbaikMenu(){
-
-  const menuBox =
-    document.getElementById("albaikMenu");
-
-  const { data, error } =
-    await supabaseClient
-
-      .from("menu_items")
-
-      .select(
-        "id,name,description,price,available"
-      )
-
-      .eq("restaurant_id",2)
-
-      .eq("available",true)
-
-      .order(
-        "created_at",
-        {
-          ascending:true
-        }
-      );
-
-
-  if(error){
-
-    console.error(
-      "Albaik menu loading error:",
-      error
-    );
-
-    menuBox.innerHTML = `
-      <div class="empty">
-        Unable to load Albaik menu.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  if(!data || data.length === 0){
-
-    menuBox.innerHTML = `
-      <div class="empty">
-        No Albaik menu items available.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  menuBox.innerHTML = "";
-
-
-  data.forEach(item => {
-
-    const menuItem =
-      document.createElement("div");
-
-    menuItem.className =
-      "menu-item";
-
-    menuItem.innerHTML = `
-
-      <div>
-
-        <h3>
-          ${escapeHTML(item.name)}
-        </h3>
-
-        <p class="description">
-          ${escapeHTML(
-            item.description || ""
-          )}
-        </p>
-
-        <span class="price">
-          KSh ${Number(item.price).toLocaleString()}
-        </span>
-
-      </div>
-
-      <button>
-        Add
-      </button>
-
-    `;
-
-
-   menuItem
-  .querySelector("button")
-  .addEventListener(
-    "click",
-    function(){
-
-      addToCart(
-        item.name,
-        Number(item.price),
-        item.id
-      );
-
-    }
+  .replace(
+    /'/g,
+    "&#039;"
   );
-
-    menuBox.appendChild(menuItem);
-
-  });
-
-
-  searchFood();
 
 }
 
@@ -1894,12 +2106,11 @@ async function loadAlbaikMenu(){
 /* =========================================
    START MLOHUB
 ========================================= */
-loadRestaurants();
-showRestaurant("albaik");
 
 loadRestaurants();
 
 </script>
 
 </body>
+
 </html>
