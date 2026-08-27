@@ -1150,8 +1150,8 @@ async function placeOrder(){
 
   /* RESTAURANT ID */
 
-  const restaurantId =
-    currentRestaurant === "Albaik" ? 1 : 2;
+ const restaurantId =
+  currentRestaurant === "Albaik" ? 2 : 1;
 
 
   /* TOTAL */
@@ -1471,7 +1471,7 @@ async function loadAlbaikMenu(){
         "id,name,description,price,available"
       )
 
-      .eq("restaurant_id",1)
+      .eq("restaurant_id",2)
 
       .eq("available",true)
 
