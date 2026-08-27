@@ -958,28 +958,26 @@ async function loadRestaurants(){
   }
 
 }
-  async function loadRestaurantMenu(restaurantId){
+ async function loadRestaurants(){
 
-  const menuBox =
-    document.getElementById(
-      "menu-" + restaurantId
-    );
+  const area =
+    document.getElementById("restaurantArea");
 
-  if(!menuBox) return;
+  const buttons =
+    document.getElementById("restaurantButtons");
 
-  menuBox.innerHTML =
-    '<div class="empty">Loading menu...</div>';
+  area.innerHTML =
+    '<div class="empty">Loading restaurants...</div>';
+
+  buttons.innerHTML =
+    '<p>Loading restaurants...</p>';
 
 
   const { data, error } =
     await supabaseClient
-      .from("menu_items")
-      .select(
-        "id,name,description,price,available"
-      )
-      .eq("restaurant_id", restaurantId)
-      .eq("available", true)
-      .order("created_at", {
+      .from("restaurants")
+      .select("id,name,whatsapp,is_open")
+      .order("id", {
         ascending:true
       });
 
@@ -987,81 +985,124 @@ async function loadRestaurants(){
   if(error){
 
     console.error(
-      "Menu loading error:",
+      "Restaurant loading error:",
       error
     );
 
-    menuBox.innerHTML =
-      '<div class="empty">❌ Could not load menu.</div>';
+    buttons.innerHTML =
+      "❌ Could not load restaurants.";
+
+    area.innerHTML =
+      '<div class="empty">Could not load restaurants.</div>';
 
     return;
   }
 
 
-  if(!data || data.length === 0){
+  restaurantData = {};
 
-    menuBox.innerHTML =
-      '<div class="empty">No food available yet.</div>';
+  buttons.innerHTML = "";
 
-    return;
-  }
+  area.innerHTML = "";
 
 
-  menuBox.innerHTML = "";
+  data.forEach(restaurant => {
+
+    restaurantData[restaurant.name] = {
+
+      id: restaurant.id,
+
+      whatsapp: restaurant.whatsapp,
+
+      is_open: restaurant.is_open
+
+    };
 
 
-  data.forEach(item => {
+    /* RESTAURANT BUTTON */
 
-    const row =
+    const button =
+      document.createElement("button");
+
+    button.textContent =
+      "🍽️ " + restaurant.name;
+
+    button.onclick = function(){
+
+      selectRestaurant(
+        restaurant.id,
+        restaurant.name
+      );
+
+    };
+
+    buttons.appendChild(button);
+
+
+    /* RESTAURANT CARD */
+
+    const restaurantBox =
       document.createElement("div");
 
-    row.className =
-      "menu-item";
+    restaurantBox.className =
+      "restaurant";
+
+    restaurantBox.id =
+      "restaurant-" + restaurant.id;
+
+    restaurantBox.style.display =
+      "none";
 
 
-    row.innerHTML = `
+    const status =
+      restaurant.is_open
+        ? "🟢 Open"
+        : "🔴 Closed";
 
-      <div>
 
-        <h3>
-          ${escapeHTML(item.name)}
-        </h3>
+    restaurantBox.innerHTML = `
 
-        <p class="description">
-          ${escapeHTML(
-            item.description || ""
-          )}
-        </p>
+      <h2>
+        🍽️ ${escapeHTML(restaurant.name)}
+      </h2>
 
-        <span class="price">
-          KSh ${Number(item.price).toLocaleString()}
-        </span>
+      <p class="location">
+        ${status}
+      </p>
+
+      <div class="restaurant-note">
+
+        📍 Ordering from
+        ${escapeHTML(restaurant.name)}
 
       </div>
 
-      <button>
-        Add
-      </button>
+      <div id="menu-${restaurant.id}">
+
+        <div class="empty">
+          Loading menu...
+        </div>
+
+      </div>
 
     `;
 
 
-    row
-      .querySelector("button")
-      .onclick = function(){
-
-        addToCart(
-          item.name,
-          Number(item.price),
-          item.id
-        );
-
-      };
-
-
-    menuBox.appendChild(row);
+    area.appendChild(restaurantBox);
 
   });
+
+
+  /* OPEN FIRST RESTAURANT */
+
+  if(data.length > 0){
+
+    selectRestaurant(
+      data[0].id,
+      data[0].name
+    );
+
+  }
 
 }
 function selectRestaurant(id, name){
