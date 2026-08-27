@@ -1,465 +1,459 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<title>MloHub - Albaik Restaurant Dashboard</title>
 
-<title>MloHub Restaurant Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 
 *{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:Arial,sans-serif;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
 }
 
 body{
-background:#f5f6f8;
-color:#222;
+  background:#f5f6f8;
+  color:#222;
 }
 
 header{
-height:65px;
-background:#f59e0b;
-color:white;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 25px;
-position:sticky;
-top:0;
-z-index:100;
+  background:#f59e0b;
+  color:white;
+  padding:18px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
 .logo{
-font-size:25px;
-font-weight:bold;
+  font-size:25px;
+  font-weight:bold;
 }
 
 .restaurant-name{
-font-weight:bold;
+  font-size:16px;
 }
 
 .layout{
-display:flex;
-min-height:calc(100vh - 65px);
+  display:flex;
+  min-height:calc(100vh - 65px);
 }
 
 .sidebar{
-width:235px;
-background:#202020;
-color:white;
-padding:20px 10px;
+  width:230px;
+  background:#222;
+  color:white;
+  padding:20px 10px;
+  flex-shrink:0;
 }
 
 .sidebar h3{
-padding:10px;
-margin-bottom:10px;
-font-size:14px;
-color:#aaa;
+  padding:10px;
+  margin-bottom:10px;
 }
 
 .sidebar button{
-width:100%;
-border:0;
-background:transparent;
-color:white;
-padding:14px 12px;
-text-align:left;
-border-radius:8px;
-cursor:pointer;
-font-size:15px;
-margin-bottom:5px;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:white;
+  padding:14px 12px;
+  text-align:left;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+  margin-bottom:5px;
 }
 
 .sidebar button:hover,
 .sidebar button.active{
-background:#f59e0b;
+  background:#f59e0b;
 }
 
 .main{
-flex:1;
-padding:25px;
-overflow:auto;
+  flex:1;
+  padding:25px;
+  overflow:auto;
 }
 
 .page{
-display:none;
+  display:none;
 }
 
 .page.active{
-display:block;
+  display:block;
 }
 
 h1{
-margin-bottom:20px;
-}
-
-h2{
-margin-bottom:10px;
+  margin-bottom:20px;
 }
 
 .cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
-margin-bottom:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:25px;
 }
 
 .card{
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.07);
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .card .icon{
-font-size:28px;
+  font-size:28px;
 }
 
 .card h2{
-margin:8px 0;
+  margin:8px 0;
 }
 
 .card p{
-color:#666;
+  color:#666;
 }
 
 .panel{
-background:white;
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 2px 8px rgba(0,0,0,.07);
-}
-
-.restaurant-status{
-display:inline-block;
-padding:7px 12px;
-border-radius:20px;
-background:#d1e7dd;
-color:#0f5132;
-margin-bottom:15px;
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .order{
-border:1px solid #eee;
-padding:18px;
-border-radius:10px;
-margin-bottom:15px;
-background:#fff;
+  border:1px solid #eee;
+  padding:18px;
+  border-radius:12px;
+  margin-bottom:15px;
+  background:white;
 }
 
 .order-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
 }
 
-.order-number{
-font-size:18px;
-font-weight:bold;
+.order-top h3{
+  font-size:18px;
 }
 
 .status{
-padding:6px 10px;
-border-radius:20px;
-font-size:13px;
-font-weight:bold;
+  padding:6px 11px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:bold;
 }
 
 .status.pending{
-background:#fff3cd;
-color:#856404;
+  background:#fff3cd;
+  color:#856404;
 }
 
 .status.preparing{
-background:#cfe2ff;
-color:#084298;
+  background:#cfe2ff;
+  color:#084298;
 }
 
 .status.ready{
-background:#d1e7dd;
-color:#0f5132;
+  background:#d1e7dd;
+  color:#0f5132;
 }
 
 .status.completed{
-background:#e2e3e5;
-color:#41464b;
+  background:#198754;
+  color:white;
+}
+
+.status.cancelled{
+  background:#f8d7da;
+  color:#842029;
 }
 
 .customer-info{
-line-height:1.8;
-margin-bottom:12px;
+  line-height:1.8;
+  margin-bottom:12px;
 }
 
 .order-items{
-border-top:1px solid #eee;
-border-bottom:1px solid #eee;
-padding:12px 0;
-margin:12px 0;
+  background:#f8f9fa;
+  padding:12px;
+  border-radius:8px;
+  margin:12px 0;
 }
 
 .order-item{
-display:flex;
-justify-content:space-between;
-padding:5px 0;
+  display:flex;
+  justify-content:space-between;
+  padding:7px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.order-item:last-child{
+  border-bottom:0;
 }
 
 .order-total{
-font-size:18px;
-font-weight:bold;
-margin-top:10px;
+  font-size:18px;
+  font-weight:bold;
+  margin-top:12px;
 }
 
-.order-date{
-font-size:13px;
-color:#777;
-margin-top:8px;
+.order-time{
+  color:#777;
+  font-size:13px;
+  margin-top:8px;
 }
 
 .order-actions{
-margin-top:15px;
-display:flex;
-gap:8px;
-flex-wrap:wrap;
+  margin-top:15px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
 }
 
 button.action{
-border:0;
-padding:10px 14px;
-border-radius:7px;
-cursor:pointer;
-font-weight:bold;
-background:#f59e0b;
-color:white;
+  border:0;
+  padding:10px 14px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:bold;
+  background:#f59e0b;
+  color:white;
 }
 
 button.action:hover{
-opacity:.9;
+  opacity:.9;
 }
 
 button.green{
-background:#198754;
+  background:#198754;
 }
 
 button.blue{
-background:#0d6efd;
+  background:#0d6efd;
 }
 
 button.dark{
-background:#333;
+  background:#333;
 }
 
 button.red{
-background:#dc3545;
+  background:#dc3545;
+}
+
+button.whatsapp{
+  background:#25D366;
+  color:white;
 }
 
 button:disabled{
-opacity:.6;
-cursor:not-allowed;
-}
-
-.whatsapp{
-background:#25D366 !important;
-color:white;
+  opacity:.6;
+  cursor:not-allowed;
 }
 
 .menu-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 0;
-border-bottom:1px solid #eee;
-gap:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 0;
+  border-bottom:1px solid #eee;
+  gap:10px;
 }
 
 .menu-row:last-child{
-border-bottom:0;
+  border-bottom:0;
 }
 
 .price{
-color:#f59e0b;
-font-weight:bold;
+  color:#f59e0b;
+  font-weight:bold;
 }
 
 input,
-select{
-width:100%;
-padding:12px;
-border:1px solid #ddd;
-border-radius:8px;
-margin-top:6px;
-margin-bottom:14px;
-font-size:15px;
+select,
+textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  margin-top:6px;
+  margin-bottom:14px;
+  font-size:15px;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
 }
 
 label{
-font-weight:bold;
+  font-weight:bold;
 }
 
 .form-button{
-background:#f59e0b;
-color:white;
-border:0;
-padding:12px 18px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
+  background:#f59e0b;
+  color:white;
+  border:0;
+  padding:12px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
 .report-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
 }
 
 .report-box{
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.07);
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.restaurant-status{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:20px;
+  background:#d1e7dd;
+  color:#0f5132;
+  margin-bottom:15px;
+}
+
+.refresh-info{
+  color:#666;
+  font-size:13px;
+  margin-bottom:15px;
 }
 
 .empty{
-padding:30px;
-text-align:center;
-color:#777;
+  text-align:center;
+  padding:30px;
+  color:#777;
 }
 
-.loading{
-padding:20px;
-text-align:center;
-color:#777;
+@media(max-width:800px){
+
+  .sidebar{
+    width:75px;
+  }
+
+  .sidebar h3{
+    font-size:12px;
+    text-align:center;
+  }
+
+  .sidebar button{
+    text-align:center;
+    font-size:20px;
+    padding:12px 5px;
+  }
+
+  .sidebar button span{
+    display:none;
+  }
+
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
 }
 
-@media(max-width:900px){
+@media(max-width:500px){
 
-.cards{
-grid-template-columns:repeat(2,1fr);
-}
+  header{
+    padding:15px;
+  }
 
-.sidebar{
-width:190px;
-}
+  .logo{
+    font-size:20px;
+  }
 
-}
+  .restaurant-name{
+    font-size:12px;
+  }
 
-@media(max-width:600px){
+  .main{
+    padding:12px;
+  }
 
-header{
-padding:0 12px;
-}
+  .cards{
+    grid-template-columns:1fr;
+  }
 
-.logo{
-font-size:20px;
-}
+  .report-grid{
+    grid-template-columns:1fr;
+  }
 
-.restaurant-name{
-font-size:13px;
-}
-
-.layout{
-display:block;
-}
-
-.sidebar{
-width:100%;
-display:flex;
-overflow-x:auto;
-padding:8px;
-}
-
-.sidebar h3{
-display:none;
-}
-
-.sidebar button{
-min-width:110px;
-text-align:center;
-margin:0 4px;
-}
-
-.main{
-padding:12px;
-}
-
-.cards{
-grid-template-columns:1fr 1fr;
-}
-
-.report-grid{
-grid-template-columns:1fr;
-}
-
-.order-top{
-align-items:flex-start;
-}
+  .order-top{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
 }
 
 </style>
-
 </head>
-
 
 <body>
 
-
 <header>
 
-<div class="logo">
-🍽️ MloHub
-</div>
+  <div class="logo">
+    🍽️ MloHub
+  </div>
 
-<div class="restaurant-name">
-🍗 Albaik Restaurant
-</div>
+  <div class="restaurant-name">
+    🍗 Albaik Restaurant
+  </div>
 
 </header>
 
-
 <div class="layout">
-
-
-<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
-<h3>RESTAURANT</h3>
+  <h3>RESTAURANT</h3>
 
-<button class="active"
-onclick="showPage('dashboard',this)">
-📊 Dashboard
-</button>
+  <button class="active" onclick="showPage('dashboard',this)">
+    📊 <span>Dashboard</span>
+  </button>
 
-<button onclick="showPage('orders',this)">
-🛒 Orders
-</button>
+  <button onclick="showPage('orders',this)">
+    🛒 <span>Orders</span>
+  </button>
 
-<button onclick="showPage('menu',this)">
-🍔 Menu
-</button>
+  <button onclick="showPage('menu',this)">
+    🍔 <span>Menu</span>
+  </button>
 
-<button onclick="showPage('sales',this)">
-📈 Sales & Reports
-</button>
+  <button onclick="showPage('sales',this)">
+    📈 <span>Sales & Reports</span>
+  </button>
 
-<button onclick="showPage('profile',this)">
-🏪 Restaurant Profile
-</button>
+  <button onclick="showPage('profile',this)">
+    🏪 <span>Restaurant Profile</span>
+  </button>
 
-<button onclick="showPage('settings',this)">
-⚙️ Settings
-</button>
+  <button onclick="showPage('settings',this)">
+    ⚙️ <span>Settings</span>
+  </button>
 
 </aside>
 
@@ -471,347 +465,250 @@ onclick="showPage('dashboard',this)">
 
 <section id="dashboard" class="page active">
 
-<h1>Dashboard</h1>
+  <h1>Dashboard</h1>
 
-<div class="restaurant-status">
-🟢 Restaurant is Open
-</div>
+  <div class="restaurant-status">
+    🟢 Restaurant is Open
+  </div>
 
+  <div class="refresh-info">
+    🔄 Orders refresh automatically every 5 seconds.
+  </div>
 
-<div class="cards">
+  <div class="cards">
 
-<div class="card">
+    <div class="card">
+      <div class="icon">🛒</div>
+      <h2 id="todayOrders">0</h2>
+      <p>Today's Orders</p>
+    </div>
 
-<div class="icon">🛒</div>
+    <div class="card">
+      <div class="icon">💰</div>
+      <h2 id="todaySales">KSh 0</h2>
+      <p>Today's Sales</p>
+    </div>
 
-<h2 id="todayOrders">
-0
-</h2>
+    <div class="card">
+      <div class="icon">⏳</div>
+      <h2 id="pendingOrders">0</h2>
+      <p>Pending Orders</p>
+    </div>
 
-<p>Today's Orders</p>
+    <div class="card">
+      <div class="icon">⭐</div>
+      <h2>4.8</h2>
+      <p>Restaurant Rating</p>
+    </div>
 
-</div>
-
-
-<div class="card">
-
-<div class="icon">💰</div>
-
-<h2 id="todaySales">
-KSh 0
-</h2>
-
-<p>Today's Sales</p>
-
-</div>
-
-
-<div class="card">
-
-<div class="icon">⏳</div>
-
-<h2 id="pendingOrders">
-0
-</h2>
-
-<p>Pending Orders</p>
-
-</div>
+  </div>
 
 
-<div class="card">
+  <div class="panel">
 
-<div class="icon">⭐</div>
+    <h2>Recent Orders</h2>
 
-<h2>
-4.8
-</h2>
+    <br>
 
-<p>Restaurant Rating</p>
+    <div id="recentOrders">
+      <p>Loading orders...</p>
+    </div>
 
-</div>
-
-</div>
-
-
-<div class="panel">
-
-<h2>Recent Orders</h2>
-
-<div id="recentOrders"
-class="loading">
-
-Loading orders...
-
-</div>
-
-</div>
+  </div>
 
 </section>
-
 
 
 <!-- ================= ORDERS ================= -->
 
 <section id="orders" class="page">
 
-<h1>🛒 Orders</h1>
+  <h1>🛒 Orders</h1>
 
-<div class="panel">
+  <div class="panel">
 
-<h2>Albaik Orders</h2>
+    <h2>Albaik Orders</h2>
 
-<div id="allOrders"
-class="loading">
+    <br>
 
-Loading orders...
+    <div class="refresh-info">
+      Restaurant ID: <strong>2</strong>
+    </div>
 
-</div>
+    <div id="allOrders">
+      <p>Loading orders...</p>
+    </div>
 
-</div>
+  </div>
 
 </section>
-
 
 
 <!-- ================= MENU ================= -->
 
 <section id="menu" class="page">
 
-<h1>🍔 Menu Management</h1>
+  <h1>🍔 Menu Management</h1>
+
+  <div class="panel">
+
+    <h2>Add New Food Item</h2>
+
+    <br>
+
+    <label>Food Name</label>
+
+    <input
+      id="foodName"
+      placeholder="Example: Chicken Burger"
+    >
+
+    <label>Price</label>
+
+    <input
+      id="foodPrice"
+      type="number"
+      placeholder="Example: 550"
+    >
+
+    <label>Description</label>
+
+    <textarea
+      id="foodDescription"
+      placeholder="Food description"
+    ></textarea>
+
+    <button
+      class="form-button"
+      onclick="addFood()">
+      + Add Food
+    </button>
+
+  </div>
 
 
-<div class="panel">
+  <div class="panel">
 
-<h2>Add New Food Item</h2>
+    <h2>Current Menu</h2>
 
-<br>
+    <div id="menuList">
+      <p>Loading menu...</p>
+    </div>
 
-<label>Food Name</label>
-
-<input
-id="foodName"
-placeholder="Example: Chicken Burger"
->
-
-
-<label>Price</label>
-
-<input
-id="foodPrice"
-type="number"
-placeholder="Example: 550"
->
-
-
-<label>Description</label>
-
-<input
-id="foodDescription"
-placeholder="Food description"
->
-
-
-<button
-class="form-button"
-onclick="addFood()">
-
-+ Add Food
-
-</button>
-
-</div>
-
-
-<div class="panel">
-
-<h2>Albaik Menu</h2>
-
-<div id="menuList"
-class="loading">
-
-Loading menu...
-
-</div>
-
-</div>
+  </div>
 
 </section>
-
 
 
 <!-- ================= SALES ================= -->
 
 <section id="sales" class="page">
 
-<h1>📈 Sales & Reports</h1>
+  <h1>📈 Sales & Reports</h1>
 
-<div class="report-grid">
+  <div class="report-grid">
 
-<div class="report-box">
+    <div class="report-box">
+      <h3>Today's Sales</h3>
+      <br>
+      <h2 id="reportTodaySales">KSh 0</h2>
+      <p id="reportTodayOrders">0 orders</p>
+    </div>
 
-<h3>Today's Sales</h3>
+    <div class="report-box">
+      <h3>Total Orders</h3>
+      <br>
+      <h2 id="reportTotalOrders">0</h2>
+      <p>All Albaik orders</p>
+    </div>
 
-<h2 id="reportTodaySales">
-KSh 0
-</h2>
+    <div class="report-box">
+      <h3>Total Sales</h3>
+      <br>
+      <h2 id="reportTotalSales">KSh 0</h2>
+      <p>All recorded sales</p>
+    </div>
 
-<p id="reportTodayOrders">
-0 orders
-</p>
+    <div class="report-box">
+      <h3>Average Order</h3>
+      <br>
+      <h2 id="reportAverage">KSh 0</h2>
+      <p>Average order value</p>
+    </div>
 
-</div>
-
-
-<div class="report-box">
-
-<h3>Pending Orders</h3>
-
-<h2 id="reportPending">
-0
-</h2>
-
-<p>Orders waiting for action</p>
-
-</div>
-
-
-<div class="report-box">
-
-<h3>Total Orders</h3>
-
-<h2 id="reportTotalOrders">
-0
-</h2>
-
-<p>All restaurant orders</p>
-
-</div>
-
-
-<div class="report-box">
-
-<h3>Average Order</h3>
-
-<h2 id="reportAverage">
-KSh 0
-</h2>
-
-<p>Average order value</p>
-
-</div>
-
-</div>
+  </div>
 
 </section>
-
 
 
 <!-- ================= PROFILE ================= -->
 
 <section id="profile" class="page">
 
-<h1>🏪 Restaurant Profile</h1>
+  <h1>🏪 Restaurant Profile</h1>
 
-<div class="panel">
+  <div class="panel">
 
-<label>Restaurant Name</label>
+    <label>Restaurant Name</label>
 
-<input
-id="restaurantName"
-value="Albaik"
->
+    <input value="Albaik">
 
+    <label>Location</label>
 
-<label>Location</label>
+    <input value="Mweni Rd, Eastleigh, Nairobi">
 
-<input
-id="restaurantLocation"
-value="Mweni Rd, Eastleigh, Nairobi"
->
+    <label>Phone Number</label>
 
+    <input value="0742333000">
 
-<label>Phone Number</label>
+    <label>Opening Hours</label>
 
-<input
-id="restaurantPhone"
-value="0742333000"
->
+    <input value="10:00 AM - 11:00 PM">
 
+    <button
+      class="form-button"
+      onclick="alert('Profile saved')">
+      Save Changes
+    </button>
 
-<label>Opening Hours</label>
-
-<input
-id="openingHours"
-value="10:00 AM - 11:00 PM"
->
-
-
-<button
-class="form-button"
-onclick="saveProfile()">
-
-Save Changes
-
-</button>
-
-</div>
+  </div>
 
 </section>
-
 
 
 <!-- ================= SETTINGS ================= -->
 
 <section id="settings" class="page">
 
-<h1>⚙️ Settings</h1>
+  <h1>⚙️ Settings</h1>
 
-<div class="panel">
+  <div class="panel">
 
-<h2>Restaurant Settings</h2>
+    <h2>Restaurant Settings</h2>
 
-<br>
+    <br>
 
-<label>Restaurant Status</label>
+    <label>Restaurant Status</label>
 
-<select id="restaurantStatus">
+    <select id="restaurantStatus">
+      <option>Open</option>
+      <option>Closed</option>
+    </select>
 
-<option value="open">
-Open
-</option>
+    <label>Order Notifications</label>
 
-<option value="closed">
-Closed
-</option>
+    <select>
+      <option>Enabled</option>
+      <option>Disabled</option>
+    </select>
 
-</select>
+    <button
+      class="form-button"
+      onclick="saveSettings()">
+      Save Settings
+    </button>
 
-
-<label>Order Notifications</label>
-
-<select id="notifications">
-
-<option value="enabled">
-Enabled
-</option>
-
-<option value="disabled">
-Disabled
-</option>
-
-</select>
-
-
-<button
-class="form-button"
-onclick="saveSettings()">
-
-Save Settings
-
-</button>
-
-</div>
+  </div>
 
 </section>
 
@@ -821,1399 +718,981 @@ Save Settings
 </div>
 
 
-
-<!-- SUPABASE -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
 
-
-/* ========================================
+/* ==========================================
    SUPABASE CONNECTION
-======================================== */
+========================================== */
 
 const SUPABASE_URL =
-"https://bhvzpycbztngtwuhxxex.supabase.co";
-
+  "https://bhvzpycbztngtwuhxxex.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
-
+  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
 
 const supabaseClient =
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
-/* ========================================
-   ALBAIK RESTAURANT
-======================================== */
+/* ==========================================
+   ALBAIK RESTAURANT ID
+========================================== */
 
 const ALBAIK_ID = 2;
 
 
-/* ========================================
+/* ==========================================
    PAGE NAVIGATION
-======================================== */
+========================================== */
 
 function showPage(page,button){
 
-document.querySelectorAll(".page")
-.forEach(p=>{
-p.classList.remove("active");
-});
+  document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
 
+  const selected =
+    document.getElementById(page);
 
-const selected =
-document.getElementById(page);
+  if(selected){
+    selected.classList.add("active");
+  }
 
-if(selected){
-selected.classList.add("active");
-}
+  document.querySelectorAll(".sidebar button")
+    .forEach(b => b.classList.remove("active"));
 
+  if(button){
+    button.classList.add("active");
+  }
 
-document.querySelectorAll(".sidebar button")
-.forEach(b=>{
-b.classList.remove("active");
-});
+  if(page === "orders"){
+    loadOrders();
+  }
 
+  if(page === "menu"){
+    loadMenu();
+  }
 
-if(button){
-button.classList.add("active");
-}
-
-
-if(page==="orders"){
-loadOrders();
-}
-
-
-if(page==="dashboard"){
-loadOrders();
-}
-
-
-if(page==="menu"){
-loadMenu();
-}
-
-
-if(page==="sales"){
-loadOrders();
-}
+  if(page === "sales"){
+    loadSales();
+  }
 
 }
 
 
-
-/* ========================================
+/* ==========================================
    LOAD ORDERS
-======================================== */
+========================================== */
 
 async function loadOrders(){
 
-const recentBox =
-document.getElementById("recentOrders");
+  const recentBox =
+    document.getElementById("recentOrders");
 
-const allBox =
-document.getElementById("allOrders");
+  const allBox =
+    document.getElementById("allOrders");
 
+  if(recentBox){
+    recentBox.innerHTML =
+      "<p>🔄 Loading orders...</p>";
+  }
 
-if(recentBox){
-recentBox.innerHTML =
-'<div class="loading">Loading orders...</div>';
-}
-
-
-if(allBox){
-allBox.innerHTML =
-'<div class="loading">Loading orders...</div>';
-}
+  if(allBox){
+    allBox.innerHTML =
+      "<p>🔄 Loading orders...</p>";
+  }
 
 
-const result =
-await supabaseClient
-.from("orders")
-.select("*")
-.eq("restaurant_id",ALBAIK_ID)
-.order("created_at",{
-ascending:false
-});
+  const { data: orders, error } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .eq("restaurant_id", ALBAIK_ID)
+      .order("created_at", {
+        ascending:false
+      });
 
 
-const orders =
-result.data;
+  if(error){
 
-const error =
-result.error;
+    console.error("Orders error:",error);
 
+    const message =
+      `<p>❌ Could not load orders.<br>
+      ${escapeHTML(error.message)}</p>`;
 
-if(error){
+    if(recentBox){
+      recentBox.innerHTML = message;
+    }
 
-console.error("Orders error:",error);
+    if(allBox){
+      allBox.innerHTML = message;
+    }
 
-const message =
-"❌ Could not load orders: " +
-error.message;
-
-if(recentBox){
-recentBox.innerHTML =
-'<div class="empty">'+
-escapeHTML(message)+
-'</div>';
-}
-
-if(allBox){
-allBox.innerHTML =
-'<div class="empty">'+
-escapeHTML(message)+
-'</div>';
-}
-
-return;
-
-}
+    return;
+  }
 
 
-/* ========================================
-   UPDATE DASHBOARD NUMBERS
-======================================== */
+  if(!orders || orders.length === 0){
 
-updateStatistics(orders || []);
+    if(recentBox){
+      recentBox.innerHTML =
+        `<div class="empty">
+          No orders yet.
+        </div>`;
+    }
 
+    if(allBox){
+      allBox.innerHTML =
+        `<div class="empty">
+          No orders yet.
+        </div>`;
+    }
 
-if(!orders || orders.length===0){
+    updateStats([]);
 
-if(recentBox){
-recentBox.innerHTML =
-'<div class="empty">No orders yet.</div>';
-}
-
-if(allBox){
-allBox.innerHTML =
-'<div class="empty">No orders yet.</div>';
-}
-
-return;
-
-}
+    return;
+  }
 
 
-/* ========================================
-   GET ORDER ITEMS
-======================================== */
-
-const orderIds =
-orders.map(order=>order.id);
+  const recentOrders =
+    orders.slice(0,5);
 
 
-const itemsResult =
-await supabaseClient
-.from("order_items")
-.select("*")
-.in("order_id",orderIds);
+  if(recentBox){
+
+    recentBox.innerHTML = "";
+
+    for(const order of recentOrders){
+
+      recentBox.innerHTML +=
+        await createOrderHTML(order);
+
+    }
+
+  }
 
 
-if(itemsResult.error){
+  if(allBox){
 
-console.error(
-"Order items error:",
-itemsResult.error
-);
+    allBox.innerHTML = "";
+
+    for(const order of orders){
+
+      allBox.innerHTML +=
+        await createOrderHTML(order);
+
+    }
+
+  }
+
+
+  updateStats(orders);
 
 }
 
 
-/* ========================================
-   GET MENU ITEMS
-======================================== */
+/* ==========================================
+   CREATE ORDER DISPLAY
+========================================== */
 
-const orderItems =
-itemsResult.data || [];
+async function createOrderHTML(order){
 
+  let itemsHTML = "";
 
-const menuIds =
-[
-...new Set(
-orderItems
-.map(item=>item.menu_item_id)
-.filter(id=>id!==null)
-)
-];
+  const { data: items, error } =
+    await supabaseClient
+      .from("order_items")
+      .select("*")
+      .eq("order_id", order.id);
 
 
-let menuItems=[];
+  if(error){
 
+    console.error(
+      "Order items error:",
+      error
+    );
 
-if(menuIds.length>0){
+    itemsHTML =
+      `<p>❌ Could not load order items.</p>`;
 
-const menuResult =
-await supabaseClient
-.from("menu_items")
-.select("id,name")
-.in("id",menuIds);
+  }
 
+  else if(!items || items.length === 0){
 
-if(menuResult.error){
+    itemsHTML =
+      `<p>No order items found.</p>`;
 
-console.error(
-"Menu item lookup error:",
-menuResult.error
-);
+  }
 
-}else{
+  else{
 
-menuItems =
-menuResult.data || [];
+    for(const item of items){
 
-}
+      let itemName =
+        "Food item";
 
-}
+      /*
+        Try to get the food name from menu_items.
+      */
 
+      const { data: menuItem } =
+        await supabaseClient
+          .from("menu_items")
+          .select("name")
+          .eq("id",item.menu_item_id)
+          .maybeSingle();
 
-/* ========================================
-   CREATE ORDER HTML
-======================================== */
+      if(menuItem && menuItem.name){
 
-const orderHTML =
-orders.map(order=>{
+        itemName = menuItem.name;
 
-const items =
-orderItems.filter(
-item=>Number(item.order_id) === Number(order.id)
-);
+      }
 
+      const quantity =
+        Number(item.quantity || 1);
 
-return renderOrder(
-order,
-items,
-menuItems
-);
+      const price =
+        Number(item.price || 0);
 
-}).join("");
+      itemsHTML += `
 
+        <div class="order-item">
 
-if(allBox){
+          <span>
+            🍔 ${quantity} ×
+            ${escapeHTML(itemName)}
+          </span>
 
-allBox.innerHTML =
-orderHTML;
+          <strong>
+            KSh ${(quantity * price).toLocaleString()}
+          </strong>
 
-}
+        </div>
 
+      `;
 
-/* ========================================
-   RECENT ORDERS
-======================================== */
+    }
 
-if(recentBox){
+  }
 
-const recent =
-orders.slice(0,5);
 
-recentBox.innerHTML =
-recent.map(order=>{
+  const status =
+    String(order.order_status || "pending")
+      .toLowerCase();
 
-const items =
-orderItems.filter(
-item=>Number(item.order_id) === Number(order.id)
-);
 
-return renderOrder(
-order,
-items,
-menuItems
-);
+  const statusClass =
+    status.replace(/\s+/g,"-");
 
-}).join("");
 
-}
+  const customerName =
+    order.customer_name || "Customer";
 
-}
 
+  const phone =
+    order.customer_phone || "";
 
 
-/* ========================================
-   RENDER ONE ORDER
-======================================== */
+  const address =
+    order.delivery_address || "No address";
 
-function renderOrder(
-order,
-orderItems,
-menuItems
-){
 
-const status =
-String(
-order.order_status ||
-"pending"
-).toLowerCase();
+  const total =
+    Number(order.total_amount || 0);
 
 
-let statusClass =
-"pending";
+  const created =
+    order.created_at
+      ? new Date(order.created_at)
+          .toLocaleString()
+      : "";
 
 
-if(status==="preparing"){
-statusClass="preparing";
-}
+  let nextButton = "";
 
 
-if(status==="ready"){
-statusClass="ready";
-}
+  if(status === "pending"){
 
+    nextButton = `
+      <button
+        class="action green"
+        onclick="updateOrderStatus(${order.id},'preparing')">
+        Accept Order
+      </button>
+    `;
 
-if(status==="completed"){
-statusClass="completed";
-}
+  }
 
 
-/* ========================================
-   ITEMS
-======================================== */
+  else if(status === "preparing"){
 
-let itemsHTML="";
+    nextButton = `
+      <button
+        class="action blue"
+        onclick="updateOrderStatus(${order.id},'ready')">
+        Mark Ready
+      </button>
+    `;
 
+  }
 
-if(orderItems.length===0){
 
-itemsHTML =
-'<p style="color:#777;">'+
-'No order items found.'+
-'</p>';
+  else if(status === "ready"){
 
-}else{
+    nextButton = `
+      <button
+        class="action green"
+        onclick="updateOrderStatus(${order.id},'completed')">
+        Complete
+      </button>
+    `;
 
-itemsHTML =
-orderItems.map(item=>{
+  }
 
-const menu =
-menuItems.find(
-m=>Number(m.id) ===
-Number(item.menu_item_id)
-);
 
+  let whatsappButton = "";
 
-const name =
-menu
-? menu.name
-: "Food Item";
+  if(phone){
 
+    const cleanPhone =
+      phone
+        .replace(/\D/g,"")
+        .replace(/^0/,"254");
 
-const quantity =
-Number(item.quantity || 1);
+    const message =
+      encodeURIComponent(
+        `Hello ${customerName}, your MloHub order #${order.id} from Albaik is currently ${status}.`
+      );
 
+    whatsappButton = `
+      <button
+        class="action whatsapp"
+        onclick="openWhatsApp('${cleanPhone}','${message}')">
+        💬 WhatsApp
+      </button>
+    `;
 
-const price =
-Number(item.price || 0);
+  }
 
 
-return `
+  return `
 
-<div class="order-item">
+    <div class="order">
 
-<span>
-🍔 ${quantity} ×
-${escapeHTML(name)}
-</span>
+      <div class="order-top">
 
-<strong>
-KSh ${(
-quantity * price
-).toLocaleString()}
-</strong>
+        <h3>
+          MloHub Order #${order.id}
+        </h3>
 
-</div>
+        <span class="status ${statusClass}">
+          ${escapeHTML(status)}
+        </span>
 
-`;
+      </div>
 
-}).join("");
 
-}
+      <div class="customer-info">
 
+        <div>
+          👤 <strong>Customer:</strong>
+          ${escapeHTML(customerName)}
+        </div>
 
-/* ========================================
-   CUSTOMER PHONE
-======================================== */
+        <div>
+          📞 <strong>Phone:</strong>
+          ${escapeHTML(phone || "Not provided")}
+        </div>
 
-const phone =
-order.customer_phone || "";
+        <div>
+          📍 <strong>Address:</strong>
+          ${escapeHTML(address)}
+        </div>
 
+      </div>
 
-/* ========================================
-   WHATSAPP LINK
-======================================== */
 
-const whatsappNumber =
-formatKenyaPhone(phone);
+      <strong>Order Items</strong>
 
+      <div class="order-items">
 
-const whatsappMessage =
-encodeURIComponent(
-"MloHub Order #" +
-order.id +
-" - Albaik Restaurant"
-);
+        ${itemsHTML}
 
+      </div>
 
-let whatsappButton="";
 
+      <div class="order-total">
 
-if(whatsappNumber){
+        💰 Total:
+        KSh ${total.toLocaleString()}
 
-whatsappButton = `
+      </div>
 
-<button
-class="action whatsapp"
-onclick="openWhatsApp('${whatsappNumber}','${whatsappMessage}')">
 
-💬 WhatsApp Customer
+      <div class="order-time">
 
-</button>
+        ${escapeHTML(created)}
 
-`;
+      </div>
 
-}
 
+      <div class="order-actions">
 
-/* ========================================
-   ACTION BUTTONS
-======================================== */
+        ${nextButton}
 
-let buttonsHTML="";
+        ${whatsappButton}
 
+      </div>
 
-if(status==="pending"){
+    </div>
 
-buttonsHTML += `
-
-<button
-class="action green"
-onclick="acceptOrder(${order.id},this)">
-
-✅ Accept Order
-
-</button>
-
-`;
+  `;
 
 }
 
 
-if(status==="preparing"){
+/* ==========================================
+   UPDATE ORDER STATUS
+========================================== */
 
-buttonsHTML += `
+async function updateOrderStatus(orderId,newStatus){
 
-<button
-class="action blue"
-onclick="markReady(${order.id},this)">
-
-🍽️ Mark Ready
-
-</button>
-
-`;
-
-}
+  if(!orderId){
+    return;
+  }
 
 
-if(status==="ready"){
-
-buttonsHTML += `
-
-<button
-class="action dark"
-onclick="completeOrder(${order.id},this)">
-
-✅ Complete
-
-</button>
-
-`;
-
-}
+  const { error } =
+    await supabaseClient
+      .from("orders")
+      .update({
+        order_status:newStatus
+      })
+      .eq("id",orderId)
+      .eq("restaurant_id",ALBAIK_ID);
 
 
-if(status==="completed"){
+  if(error){
 
-buttonsHTML += `
+    console.error(
+      "Status update error:",
+      error
+    );
 
-<span style="
-padding:10px;
-font-weight:bold;
-color:#198754;
-">
+    alert(
+      "❌ Could not update order.\n\n" +
+      error.message
+    );
 
-✓ Order Completed
+    return;
 
-</span>
+  }
 
-`;
+
+  await loadOrders();
 
 }
 
 
-return `
+/* ==========================================
+   WHATSAPP
+========================================== */
 
-<div class="order"
-data-order-id="${order.id}">
+function openWhatsApp(phone,message){
 
-<div class="order-top">
+  if(!phone){
 
-<div class="order-number">
+    alert("Customer phone number is missing.");
 
-MloHub Order #${order.id}
+    return;
 
-</div>
+  }
 
-<span class="status ${statusClass}">
+  const url =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    message;
 
-${capitalize(status)}
-
-</span>
-
-</div>
-
-
-<div class="customer-info">
-
-👤 <strong>Customer:</strong>
-${escapeHTML(order.customer_name || "Customer")}
-
-<br>
-
-📞 <strong>Phone:</strong>
-${escapeHTML(order.customer_phone || "Not provided")}
-
-<br>
-
-📍 <strong>Address:</strong>
-${escapeHTML(order.delivery_address || "Not provided")}
-
-</div>
-
-
-<div class="order-items">
-
-<strong>Order Items</strong>
-
-<br><br>
-
-${itemsHTML}
-
-</div>
-
-
-<div class="order-total">
-
-💰 Total:
-KSh ${Number(
-order.total_amount || 0
-).toLocaleString()}
-
-</div>
-
-
-<div class="order-date">
-
-${formatDate(order.created_at)}
-
-</div>
-
-
-<div class="order-actions">
-
-${buttonsHTML}
-
-${whatsappButton}
-
-</div>
-
-</div>
-
-`;
+  window.open(
+    url,
+    "_blank"
+  );
 
 }
 
 
+/* ==========================================
+   DASHBOARD STATISTICS
+========================================== */
 
-/* ========================================
-   ACCEPT ORDER
-======================================== */
+function updateStats(orders){
 
-async function acceptOrder(
-orderId,
-button
-){
+  const now =
+    new Date();
 
-button.disabled=true;
-
-button.textContent=
-"Updating...";
+  const today =
+    now.toISOString()
+      .split("T")[0];
 
 
-const result =
-await supabaseClient
-.from("orders")
-.update({
-order_status:"preparing"
-})
-.eq("id",orderId)
-.eq("restaurant_id",ALBAIK_ID)
-.select();
+  let todayOrders = 0;
+  let todaySales = 0;
+  let pending = 0;
+  let totalSales = 0;
 
 
-if(result.error){
+  orders.forEach(order => {
 
-console.error(
-"Accept order error:",
-result.error
-);
+    const amount =
+      Number(order.total_amount || 0);
 
-alert(
-"❌ Could not accept order.\n\n"+
-result.error.message
-);
+    totalSales += amount;
 
-button.disabled=false;
 
-button.textContent=
-"✅ Accept Order";
+    const date =
+      order.created_at
+        ? new Date(order.created_at)
+            .toISOString()
+            .split("T")[0]
+        : "";
 
-return;
+
+    if(date === today){
+
+      todayOrders++;
+      todaySales += amount;
+
+    }
+
+
+    const status =
+      String(order.order_status || "")
+        .toLowerCase();
+
+
+    if(status === "pending"){
+
+      pending++;
+
+    }
+
+  });
+
+
+  const average =
+    orders.length
+      ? totalSales / orders.length
+      : 0;
+
+
+  document.getElementById("todayOrders")
+    .textContent =
+    todayOrders;
+
+
+  document.getElementById("todaySales")
+    .textContent =
+    "KSh " +
+    todaySales.toLocaleString();
+
+
+  document.getElementById("pendingOrders")
+    .textContent =
+    pending;
+
+
+  const reportTodaySales =
+    document.getElementById(
+      "reportTodaySales"
+    );
+
+  if(reportTodaySales){
+
+    reportTodaySales.textContent =
+      "KSh " +
+      todaySales.toLocaleString();
+
+  }
+
+
+  const reportTodayOrders =
+    document.getElementById(
+      "reportTodayOrders"
+    );
+
+  if(reportTodayOrders){
+
+    reportTodayOrders.textContent =
+      todayOrders +
+      " orders";
+
+  }
+
+
+  const reportTotalOrders =
+    document.getElementById(
+      "reportTotalOrders"
+    );
+
+  if(reportTotalOrders){
+
+    reportTotalOrders.textContent =
+      orders.length;
+
+  }
+
+
+  const reportTotalSales =
+    document.getElementById(
+      "reportTotalSales"
+    );
+
+  if(reportTotalSales){
+
+    reportTotalSales.textContent =
+      "KSh " +
+      totalSales.toLocaleString();
+
+  }
+
+
+  const reportAverage =
+    document.getElementById(
+      "reportAverage"
+    );
+
+  if(reportAverage){
+
+    reportAverage.textContent =
+      "KSh " +
+      Math.round(average).toLocaleString();
+
+  }
 
 }
 
 
-if(!result.data ||
-result.data.length===0){
+/* ==========================================
+   SALES
+========================================== */
 
-alert(
-"❌ Order was not updated.\n\n"+
-"Check the Supabase RLS UPDATE policy."
-);
+async function loadSales(){
 
-button.disabled=false;
-
-button.textContent=
-"✅ Accept Order";
-
-return;
+  await loadOrders();
 
 }
 
 
-await loadOrders();
-
-}
-
-
-
-/* ========================================
-   MARK READY
-======================================== */
-
-async function markReady(
-orderId,
-button
-){
-
-button.disabled=true;
-
-button.textContent=
-"Updating...";
-
-
-const result =
-await supabaseClient
-.from("orders")
-.update({
-order_status:"ready"
-})
-.eq("id",orderId)
-.eq("restaurant_id",ALBAIK_ID)
-.select();
-
-
-if(result.error){
-
-console.error(
-"Ready order error:",
-result.error
-);
-
-alert(
-"❌ Could not mark order ready.\n\n"+
-result.error.message
-);
-
-button.disabled=false;
-
-button.textContent=
-"🍽️ Mark Ready";
-
-return;
-
-}
-
-
-if(!result.data ||
-result.data.length===0){
-
-alert(
-"❌ Order was not updated."
-);
-
-button.disabled=false;
-
-button.textContent=
-"🍽️ Mark Ready";
-
-return;
-
-}
-
-
-await loadOrders();
-
-}
-
-
-
-/* ========================================
-   COMPLETE ORDER
-======================================== */
-
-async function completeOrder(
-orderId,
-button
-){
-
-button.disabled=true;
-
-button.textContent=
-"Updating...";
-
-
-const result =
-await supabaseClient
-.from("orders")
-.update({
-order_status:"completed"
-})
-.eq("id",orderId)
-.eq("restaurant_id",ALBAIK_ID)
-.select();
-
-
-if(result.error){
-
-console.error(
-"Complete order error:",
-result.error
-);
-
-alert(
-"❌ Could not complete order.\n\n"+
-result.error.message
-);
-
-button.disabled=false;
-
-button.textContent=
-"✅ Complete";
-
-return;
-
-}
-
-
-if(!result.data ||
-result.data.length===0){
-
-alert(
-"❌ Order was not updated."
-);
-
-button.disabled=false;
-
-button.textContent=
-"✅ Complete";
-
-return;
-
-}
-
-
-await loadOrders();
-
-}
-
-
-
-/* ========================================
+/* ==========================================
    LOAD MENU
-======================================== */
+========================================== */
 
 async function loadMenu(){
 
-const menu =
-document.getElementById("menuList");
+  const menu =
+    document.getElementById("menuList");
 
 
-menu.innerHTML =
-'<div class="loading">Loading menu...</div>';
+  menu.innerHTML =
+    "<p>🔄 Loading menu...</p>";
 
 
-const result =
-await supabaseClient
-.from("menu_items")
-.select("*")
-.eq("restaurant_id",ALBAIK_ID)
-.order("created_at",{
-ascending:false
-});
+  const { data,error } =
+    await supabaseClient
+      .from("menu_items")
+      .select("*")
+      .eq("restaurant_id",ALBAIK_ID)
+      .order("created_at",{
+        ascending:false
+      });
 
 
-if(result.error){
+  if(error){
 
-console.error(
-"Menu error:",
-result.error
-);
+    console.error(
+      "Menu error:",
+      error
+    );
 
-menu.innerHTML =
-'<div class="empty">'+
-'❌ Could not load menu.<br><br>'+
-escapeHTML(result.error.message)+
-'</div>';
+    menu.innerHTML =
+      `<p>❌ Could not load menu.<br>
+      ${escapeHTML(error.message)}</p>`;
 
-return;
+    return;
 
-}
+  }
 
 
-const data =
-result.data || [];
+  if(!data || data.length === 0){
+
+    menu.innerHTML =
+      `<div class="empty">
+        No menu items yet.
+      </div>`;
+
+    return;
+
+  }
 
 
-if(data.length===0){
-
-menu.innerHTML =
-'<div class="empty">No menu items yet.</div>';
-
-return;
-
-}
+  menu.innerHTML = "";
 
 
-menu.innerHTML =
-data.map(item=>`
+  data.forEach(item => {
 
-<div class="menu-row">
+    menu.innerHTML += `
 
-<div>
+      <div class="menu-row">
 
-<strong>
-${escapeHTML(item.name)}
-</strong>
+        <div>
 
-<br>
+          <strong>
+            ${escapeHTML(item.name)}
+          </strong>
 
-<span class="price">
+          <br>
 
-KSh ${Number(
-item.price || 0
-).toLocaleString()}
+          <span class="price">
+            KSh ${Number(item.price || 0)
+              .toLocaleString()}
+          </span>
 
-</span>
+          <br>
 
-<br>
+          <small>
+            ${escapeHTML(
+              item.description || ""
+            )}
+          </small>
 
-<small>
-
-${escapeHTML(
-item.description || ""
-)}
-
-</small>
-
-</div>
+        </div>
 
 
-<button
-class="action red"
-onclick="deleteFood(${item.id})">
+        <button
+          class="action red"
+          onclick="deleteFood(${item.id})">
+          Delete
+        </button>
 
-Delete
+      </div>
 
-</button>
+    `;
 
-</div>
-
-`).join("");
+  });
 
 }
 
 
-
-/* ========================================
+/* ==========================================
    ADD FOOD
-======================================== */
+========================================== */
 
 async function addFood(){
 
-const name =
-document
-.getElementById("foodName")
-.value
-.trim();
+  const name =
+    document
+      .getElementById("foodName")
+      .value
+      .trim();
 
 
-const price =
-Number(
-document
-.getElementById("foodPrice")
-.value
-);
+  const price =
+    Number(
+      document
+        .getElementById("foodPrice")
+        .value
+    );
 
 
-const description =
-document
-.getElementById("foodDescription")
-.value
-.trim();
+  const description =
+    document
+      .getElementById("foodDescription")
+      .value
+      .trim();
 
 
-if(!name){
+  if(!name){
 
-alert(
-"Please enter food name."
-);
+    alert(
+      "Please enter food name."
+    );
 
-return;
+    return;
+
+  }
+
+
+  if(!price || price <= 0){
+
+    alert(
+      "Please enter a valid price."
+    );
+
+    return;
+
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("menu_items")
+      .insert({
+
+        restaurant_id:ALBAIK_ID,
+
+        name:name,
+
+        description:description,
+
+        price:price,
+
+        image_url:"",
+
+        available:true
+
+      });
+
+
+  if(error){
+
+    console.error(
+      "Add food error:",
+      error
+    );
+
+    alert(
+      "❌ Food could not be added.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  document
+    .getElementById("foodName")
+    .value = "";
+
+
+  document
+    .getElementById("foodPrice")
+    .value = "";
+
+
+  document
+    .getElementById("foodDescription")
+    .value = "";
+
+
+  alert(
+    "✅ Food item added!"
+  );
+
+
+  loadMenu();
 
 }
 
 
-if(!price || price<=0){
-
-alert(
-"Please enter a valid price."
-);
-
-return;
-
-}
-
-
-const result =
-await supabaseClient
-.from("menu_items")
-.insert({
-
-restaurant_id:ALBAIK_ID,
-
-name:name,
-
-description:description,
-
-price:price,
-
-image_url:"",
-
-available:true
-
-})
-.select();
-
-
-if(result.error){
-
-console.error(
-"Add food error:",
-result.error
-);
-
-alert(
-"❌ Food could not be added.\n\n"+
-result.error.message
-);
-
-return;
-
-}
-
-
-document
-.getElementById("foodName")
-.value="";
-
-
-document
-.getElementById("foodPrice")
-.value="";
-
-
-document
-.getElementById("foodDescription")
-.value="";
-
-
-alert(
-"✅ Food item added!"
-);
-
-
-loadMenu();
-
-}
-
-
-
-/* ========================================
+/* ==========================================
    DELETE FOOD
-======================================== */
+========================================== */
 
 async function deleteFood(id){
 
-const yes =
-confirm(
-"Are you sure you want to delete this food?"
-);
+  if(!confirm(
+    "Are you sure you want to delete this food?"
+  )){
+    return;
+  }
 
 
-if(!yes){
-return;
-}
+  const { error } =
+    await supabaseClient
+      .from("menu_items")
+      .delete()
+      .eq("id",id)
+      .eq("restaurant_id",ALBAIK_ID);
 
 
-const result =
-await supabaseClient
-.from("menu_items")
-.delete()
-.eq("id",id)
-.eq("restaurant_id",ALBAIK_ID);
+  if(error){
+
+    console.error(
+      "Delete food error:",
+      error
+    );
+
+    alert(
+      "❌ Could not delete food.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
 
 
-if(result.error){
-
-console.error(
-"Delete food error:",
-result.error
-);
-
-alert(
-"❌ Could not delete food.\n\n"+
-result.error.message
-);
-
-return;
-
-}
-
-
-alert(
-"✅ Food deleted."
-);
-
-
-loadMenu();
+  loadMenu();
 
 }
 
 
-
-/* ========================================
-   DASHBOARD STATISTICS
-======================================== */
-
-function updateStatistics(orders){
-
-const today =
-new Date();
-
-
-const todayString =
-today.toISOString()
-.slice(0,10);
-
-
-const todayOrders =
-orders.filter(order=>{
-
-if(!order.created_at){
-return false;
-}
-
-return order.created_at
-.slice(0,10) === todayString;
-
-});
-
-
-const todaySales =
-todayOrders.reduce(
-(total,order)=>
-total +
-Number(order.total_amount || 0),
-0
-);
-
-
-const pending =
-orders.filter(order=>
-String(
-order.order_status || "pending"
-).toLowerCase()
-==="pending"
-).length;
-
-
-const average =
-orders.length
-? todaySales / todayOrders.length
-: 0;
-
-
-setText(
-"todayOrders",
-todayOrders.length
-);
-
-
-setText(
-"todaySales",
-"KSh " +
-todaySales.toLocaleString()
-);
-
-
-setText(
-"pendingOrders",
-pending
-);
-
-
-setText(
-"reportTodaySales",
-"KSh " +
-todaySales.toLocaleString()
-);
-
-
-setText(
-"reportTodayOrders",
-todayOrders.length +
-" orders"
-);
-
-
-setText(
-"reportPending",
-pending
-);
-
-
-setText(
-"reportTotalOrders",
-orders.length
-);
-
-
-setText(
-"reportAverage",
-"KSh " +
-Math.round(average).toLocaleString()
-);
-
-}
-
-
-
-/* ========================================
-   WHATSAPP
-======================================== */
-
-function openWhatsApp(
-phone,
-message
-){
-
-const url =
-"https://wa.me/" +
-phone +
-"?text=" +
-message;
-
-
-window.open(
-url,
-"_blank"
-);
-
-}
-
-
-
-/* ========================================
-   FORMAT KENYA PHONE
-======================================== */
-
-function formatKenyaPhone(phone){
-
-let number =
-String(phone || "")
-.replace(/\D/g,"");
-
-
-if(!number){
-return "";
-}
-
-
-if(number.startsWith("0")){
-
-number =
-"254" +
-number.substring(1);
-
-}
-
-
-if(number.startsWith("7") &&
-number.length===9){
-
-number =
-"254" +
-number;
-
-}
-
-
-if(number.startsWith("254")){
-
-return number;
-
-}
-
-
-return number;
-
-}
-
-
-
-/* ========================================
-   PROFILE
-======================================== */
-
-function saveProfile(){
-
-alert(
-"✅ Restaurant profile saved."
-);
-
-}
-
-
-
-/* ========================================
+/* ==========================================
    SETTINGS
-======================================== */
+========================================== */
 
 function saveSettings(){
 
-alert(
-"✅ Restaurant settings saved."
-);
+  alert(
+    "✅ Restaurant settings saved."
+  );
 
 }
 
 
-
-/* ========================================
-   HELPER
-======================================== */
-
-function setText(
-id,
-value
-){
-
-const element =
-document.getElementById(id);
-
-
-if(element){
-element.textContent=value;
-}
-
-}
-
-
-function capitalize(value){
-
-return String(value)
-.charAt(0)
-.toUpperCase() +
-String(value)
-.slice(1);
-
-}
-
-
-function formatDate(date){
-
-if(!date){
-return "";
-}
-
-return new Date(date)
-.toLocaleString();
-
-}
-
+/* ==========================================
+   SECURITY
+========================================== */
 
 function escapeHTML(value){
 
-return String(value || "")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
-
-/* ========================================
+/* ==========================================
    START DASHBOARD
-======================================== */
+========================================== */
 
 loadOrders();
 
 loadMenu();
 
 
-/* ========================================
-   AUTO REFRESH
-   Every 10 seconds
-======================================== */
+/*
+   Automatically check for new orders
+   every 5 seconds.
+*/
 
-setInterval(
-loadOrders,
-10000
-);
+setInterval(function(){
+
+  loadOrders();
+
+},5000);
 
 </script>
 
-
 </body>
-
 </html>
