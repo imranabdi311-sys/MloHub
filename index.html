@@ -880,8 +880,7 @@ function getCart(){
 /* =========================================
    ADD TO CART
 ========================================= */
-
-function addToCart(name,price){
+function addToCart(name, price, menuItemId = null){
 
   const cart = getCart();
 
@@ -896,9 +895,10 @@ function addToCart(name,price){
   }else{
 
     cart.push({
-      name:name,
-      price:Number(price),
-      qty:1
+      name: name,
+      price: Number(price),
+      qty: 1,
+      menu_item_id: menuItemId
     });
 
   }
@@ -906,6 +906,7 @@ function addToCart(name,price){
   updateCart();
 
 }
+
 
 
 /* =========================================
@@ -1106,7 +1107,6 @@ function closeCart(){
 /* =========================================
    PLACE ORDER
 ========================================= */
-
 function placeOrder(){
 
   const cart = getCart();
@@ -1252,6 +1252,7 @@ function placeOrder(){
   );
 
 }
+
 
 
 /* =========================================
