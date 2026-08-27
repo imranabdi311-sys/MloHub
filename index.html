@@ -1352,30 +1352,31 @@ async function placeOrder(){
     total.toLocaleString();
 
 
-  /* OPEN WHATSAPP */
+/* OPEN WHATSAPP */
 
-  const whatsappNumber =
-    restaurantWhatsApp[currentRestaurant];
+const whatsappNumber =
+  restaurantWhatsApp[currentRestaurant];
 
-  const whatsappLink =
-    "https://wa.me/" +
-    whatsappNumber +
-    "?text=" +
-    encodeURIComponent(message);
+if(!whatsappNumber){
+  alert("WhatsApp number is not configured for this restaurant.");
+  return;
+}
 
+const whatsappLink =
+  "https://wa.me/" +
+  whatsappNumber +
+  "?text=" +
+  encodeURIComponent(message);
 
-  alert(
-    "✅ MloHub Order #" +
-    order.id +
-    " saved successfully!"
-  );
+alert(
+  "✅ Order #" +
+  order.id +
+  " saved successfully.\n\n" +
+  "WhatsApp will now open."
+);
 
-
-  window.open(
-    whatsappLink,
-    "_blank"
-  );
-
+/* Open WhatsApp */
+window.location.href = whatsappLink;
 }
 /* =========================================
    SEARCH FOOD
