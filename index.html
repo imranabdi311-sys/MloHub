@@ -328,7 +328,13 @@ textarea{
   oninput="searchFood()"
 >
 
-<!-- ALBAIK -->
+<div id="restaurantArea">
+
+  <div class="empty">
+    Loading restaurants...
+  </div>
+
+</div>
 
 <div class="restaurant" id="albaik">
 
@@ -348,7 +354,13 @@ textarea{
 
 </div>
 
-<!-- CHICKING -->
+<div id="restaurantArea">
+
+  <div class="empty">
+    Loading restaurants...
+  </div>
+
+</div>
 
 <div class="restaurant" id="chicking" style="display:none;">
 
@@ -822,33 +834,46 @@ let carts = {
 ========================================= */
 
 let restaurantData = {};
- async function loadRestaurants(){
+async function loadRestaurants(){
 
-  const box =
+  const area =
+    document.getElementById("restaurantArea");
+
+  const buttons =
     document.getElementById("restaurantButtons");
 
-  box.innerHTML =
-    "<p>Loading restaurants...</p>";
+  area.innerHTML =
+    '<div class="empty">Loading restaurants...</div>';
+
+  buttons.innerHTML =
+    '<p>Loading restaurants...</p>';
 
   const { data, error } =
     await supabaseClient
       .from("restaurants")
       .select("id,name,whatsapp")
-      .order("id", { ascending:true });
+      .order("id", {
+        ascending:true
+      });
 
   if(error){
 
     console.error(error);
 
-    box.innerHTML =
-      "<p>❌ Could not load restaurants.</p>";
+    buttons.innerHTML =
+      "❌ Could not load restaurants.";
+
+    area.innerHTML =
+      '<div class="empty">Could not load restaurants.</div>';
 
     return;
   }
 
   restaurantData = {};
 
-  box.innerHTML = "";
+  buttons.innerHTML = "";
+
+  area.innerHTML = "";
 
   data.forEach(restaurant => {
 
@@ -856,6 +881,9 @@ let restaurantData = {};
       id: restaurant.id,
       whatsapp: restaurant.whatsapp
     };
+
+
+    /* RESTAURANT BUTTON */
 
     const button =
       document.createElement("button");
@@ -872,7 +900,166 @@ let restaurantData = {};
 
     };
 
-    box.appendChild(button);
+    buttons.appendChild(button);
+
+
+    /* RESTAURANT CARD */
+
+    const restaurantBox =
+      document.createElement("div");
+
+    restaurantBox.className =
+      "restaurant";
+
+    restaurantBox.id =
+      "restaurant-" + restaurant.id;
+
+    restaurantBox.style.display =
+      "none";
+
+
+    restaurantBox.innerHTML = `
+
+      <h2>
+        🍽️ ${escapeHTML(restaurant.name)}
+      </h2>
+
+      <div class="restaurant-note">
+        📍 Ordering from ${escapeHTML(restaurant.name)}
+      </div>
+
+      <div id="menu-${restaurant.id}">
+        <div class="empty">
+          Loading menu...
+        </div>
+      </div>
+
+    `;
+
+    area.appendChild(restaurantBox);
+
+  });
+
+
+  /* OPEN FIRST RESTAURANT */
+
+  if(data.length > 0){
+
+    selectRestaurant(
+      data[0].id,
+      data[0].name
+    );
+
+  }else{
+
+    area.innerHTML =
+      '<div class="empty">No restaurants available.</div>';
+
+  }
+
+}
+  async function loadRestaurantMenu(restaurantId){
+
+  const menuBox =
+    document.getElementById(
+      "menu-" + restaurantId
+    );
+
+  if(!menuBox) return;
+
+  menuBox.innerHTML =
+    '<div class="empty">Loading menu...</div>';
+
+
+  const { data, error } =
+    await supabaseClient
+      .from("menu_items")
+      .select(
+        "id,name,description,price,available"
+      )
+      .eq("restaurant_id", restaurantId)
+      .eq("available", true)
+      .order("created_at", {
+        ascending:true
+      });
+
+
+  if(error){
+
+    console.error(
+      "Menu loading error:",
+      error
+    );
+
+    menuBox.innerHTML =
+      '<div class="empty">❌ Could not load menu.</div>';
+
+    return;
+  }
+
+
+  if(!data || data.length === 0){
+
+    menuBox.innerHTML =
+      '<div class="empty">No food available yet.</div>';
+
+    return;
+  }
+
+
+  menuBox.innerHTML = "";
+
+
+  data.forEach(item => {
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "menu-item";
+
+
+    row.innerHTML = `
+
+      <div>
+
+        <h3>
+          ${escapeHTML(item.name)}
+        </h3>
+
+        <p class="description">
+          ${escapeHTML(
+            item.description || ""
+          )}
+        </p>
+
+        <span class="price">
+          KSh ${Number(item.price).toLocaleString()}
+        </span>
+
+      </div>
+
+      <button>
+        Add
+      </button>
+
+    `;
+
+
+    row
+      .querySelector("button")
+      .onclick = function(){
+
+        addToCart(
+          item.name,
+          Number(item.price),
+          item.id
+        );
+
+      };
+
+
+    menuBox.appendChild(row);
 
   });
 
@@ -1669,7 +1856,7 @@ async function loadAlbaikMenu(){
 loadRestaurants();
 showRestaurant("albaik");
 
-loadAlbaikMenu();
+loadRestaurants();
 
 </script>
 
