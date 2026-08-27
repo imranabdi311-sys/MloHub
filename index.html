@@ -1107,24 +1107,20 @@ function closeCart(){
 /* =========================================
    PLACE ORDER
 ========================================= */
-function placeOrder(){
+async function placeOrder(){
 
   const cart = getCart();
 
   if(cart.length === 0){
-
     alert("Please add food first.");
-
     return;
   }
 
   const name =
-    document.getElementById("name")
-      .value.trim();
+    document.getElementById("name").value.trim();
 
   const phone =
-    document.getElementById("phone")
-      .value.trim();
+    document.getElementById("phone").value.trim();
 
   const type =
     document.getElementById("type").value;
@@ -1133,49 +1129,170 @@ function placeOrder(){
     document.getElementById("payment").value;
 
   const location =
-    document.getElementById("location")
-      .value.trim();
+    document.getElementById("location").value.trim();
+
 
   if(!name){
-
     alert("Please enter your name.");
-
     return;
   }
 
   if(!phone){
-
     alert("Please enter your phone number.");
-
     return;
   }
 
   if(type === "Delivery" && !location){
-
     alert("Please enter your delivery location.");
+    return;
+  }
+
+
+  /* RESTAURANT ID */
+
+  const restaurantId =
+    currentRestaurant === "Albaik" ? 1 : 2;
+
+
+  /* TOTAL */
+
+  let total = 0;
+
+  cart.forEach(item => {
+    total += Number(item.price) * Number(item.qty);
+  });
+
+
+  /* SAVE CUSTOMER */
+
+  const { data: customer, error: customerError } =
+    await supabaseClient
+      .from("customers")
+      .insert({
+        full_name: name,
+        phone: phone,
+        email: null,
+        address: location || "Pickup"
+      })
+      .select()
+      .single();
+
+
+  if(customerError){
+
+    console.error("Customer error:", customerError);
+
+    alert(
+      "Customer could not be saved.\n\n" +
+      customerError.message
+    );
 
     return;
   }
+
+
+  /* SAVE ORDER */
+
+  const { data: order, error: orderError } =
+    await supabaseClient
+      .from("orders")
+      .insert({
+        restaurant_id: restaurantId,
+        customer_id: customer.id,
+        customer_name: name,
+        customer_phone: phone,
+        delivery_address: location || "Pickup",
+        order_status: "pending",
+        total_amount: total
+      })
+      .select()
+      .single();
+
+
+  if(orderError){
+
+    console.error("Order error:", orderError);
+
+    alert(
+      "Order could not be saved.\n\n" +
+      orderError.message
+    );
+
+    return;
+  }
+
+
+  /* SAVE ORDER ITEMS */
+
+  const orderItems = [];
+
+  cart.forEach(item => {
+
+    if(item.menu_item_id){
+
+      orderItems.push({
+        order_id: order.id,
+        menu_item_id: item.menu_item_id,
+        quantity: item.qty,
+        price: item.price
+      });
+
+    }
+
+  });
+
+
+  if(orderItems.length > 0){
+
+    const { error: itemsError } =
+      await supabaseClient
+        .from("order_items")
+        .insert(orderItems);
+
+
+    if(itemsError){
+
+      console.error(
+        "Order items error:",
+        itemsError
+      );
+
+      alert(
+        "Order #" +
+        order.id +
+        " was created, but the food items failed to save.\n\n" +
+        itemsError.message
+      );
+
+      return;
+    }
+
+  }
+
+
+  /* PAYMENT */
 
   let paymentText =
     "Cash on Delivery / Pickup";
 
   if(payment === "till4574509"){
-
-    paymentText =
-      "M-Pesa Till: 4574509";
-
+    paymentText = "M-Pesa Till: 4574509";
   }
 
   if(payment === "till4578247"){
-
-    paymentText =
-      "M-Pesa Till: 4578247";
-
+    paymentText = "M-Pesa Till: 4578247";
   }
+
+
+  /* WHATSAPP MESSAGE */
 
   let message =
     "NEW MloHub ORDER\n\n";
+
+  message +=
+    "Order ID: #" +
+    order.id +
+    "\n";
 
   message +=
     "Restaurant: " +
@@ -1211,17 +1328,13 @@ function placeOrder(){
     paymentText +
     "\n\n";
 
-  message +=
-    "ORDER:\n";
+  message += "ORDER:\n";
 
-  let total = 0;
 
   cart.forEach(item => {
 
     const itemTotal =
       item.price * item.qty;
-
-    total += itemTotal;
 
     message +=
       item.qty +
@@ -1233,9 +1346,13 @@ function placeOrder(){
 
   });
 
+
   message +=
     "\nTOTAL: KSh " +
     total.toLocaleString();
+
+
+  /* OPEN WHATSAPP */
 
   const whatsappNumber =
     restaurantWhatsApp[currentRestaurant];
@@ -1246,15 +1363,20 @@ function placeOrder(){
     "?text=" +
     encodeURIComponent(message);
 
+
+  alert(
+    "✅ MloHub Order #" +
+    order.id +
+    " saved successfully!"
+  );
+
+
   window.open(
     whatsappLink,
     "_blank"
   );
 
 }
-
-
-
 /* =========================================
    SEARCH FOOD
 ========================================= */
@@ -1428,20 +1550,20 @@ async function loadAlbaikMenu(){
     `;
 
 
-    menuItem
-      .querySelector("button")
-      .addEventListener(
-        "click",
-        function(){
+   menuItem
+  .querySelector("button")
+  .addEventListener(
+    "click",
+    function(){
 
-          addToCart(
-            item.name,
-            Number(item.price)
-          );
-
-        }
+      addToCart(
+        item.name,
+        Number(item.price),
+        item.id
       );
 
+    }
+  );
 
     menuBox.appendChild(menuItem);
 
