@@ -1,9 +1,9 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>MloHub - Food Delivery</title>
 
 <style>
@@ -23,36 +23,33 @@ body{
 header{
   background:#f59e0b;
   color:white;
-  padding:25px 15px;
+  padding:22px 15px;
   text-align:center;
 }
 
 header h1{
-  font-size:32px;
+  font-size:30px;
 }
 
 header p{
-  margin-top:7px;
+  margin-top:6px;
 }
 
 .container{
-  max-width:950px;
+  max-width:900px;
   margin:auto;
   padding:20px;
 }
 
-h2{
-  margin-bottom:12px;
-}
-
 .restaurant-buttons{
   display:flex;
-  flex-wrap:wrap;
   gap:10px;
+  flex-wrap:wrap;
   margin-bottom:20px;
 }
 
 .restaurant-buttons button{
+  flex:1;
   min-width:180px;
 }
 
@@ -61,8 +58,8 @@ h2{
   padding:14px;
   border:1px solid #ddd;
   border-radius:10px;
-  font-size:16px;
   margin-bottom:20px;
+  font-size:16px;
   background:white;
 }
 
@@ -70,33 +67,23 @@ h2{
   background:white;
   padding:20px;
   border-radius:15px;
-  margin-bottom:25px;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  margin-bottom:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.restaurant-header{
-  margin-bottom:15px;
-}
-
-.restaurant-header h2{
-  margin-bottom:5px;
+.restaurant h2{
+  margin-bottom:8px;
 }
 
 .location{
   color:#666;
-}
-
-.restaurant-note{
-  background:#fff7e6;
-  border-left:4px solid #f59e0b;
-  padding:10px;
-  border-radius:5px;
   margin-bottom:15px;
 }
 
 .category{
-  margin-top:20px;
-  padding-top:12px;
+  margin-top:25px;
+  margin-bottom:5px;
+  padding-top:10px;
   border-top:2px solid #f59e0b;
 }
 
@@ -104,29 +91,24 @@ h2{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:15px;
+  border-top:1px solid #eee;
   padding:15px 0;
-  border-bottom:1px solid #eee;
+  gap:15px;
 }
 
-.menu-info{
-  flex:1;
-}
-
-.menu-info h3{
+.menu-item h3{
   margin-bottom:5px;
 }
 
 .description{
   color:#666;
-  margin-bottom:7px;
+  margin-bottom:8px;
   line-height:1.4;
 }
 
 .price{
-  color:#f59e0b;
   font-weight:bold;
-  font-size:17px;
+  color:#f59e0b;
 }
 
 button{
@@ -139,32 +121,39 @@ button{
   font-weight:bold;
 }
 
-button:hover{
-  opacity:.9;
+button:active{
+  transform:scale(.97);
 }
 
-button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
+.restaurant-note{
+  background:#fff7e6;
+  border-left:4px solid #f59e0b;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:5px;
 }
 
 .cart-bar{
   position:fixed;
+  bottom:15px;
   left:15px;
   right:15px;
-  bottom:15px;
-  max-width:900px;
-  margin:auto;
   background:#222;
   color:white;
   padding:14px;
   border-radius:12px;
-  display:none;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
+  max-width:860px;
+  margin:auto;
   z-index:1000;
-  box-shadow:0 5px 20px rgba(0,0,0,.3);
+  display:none;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 4px 15px rgba(0,0,0,.25);
+}
+
+.cart-bar button{
+  background:#f59e0b;
 }
 
 .modal{
@@ -174,13 +163,13 @@ button:disabled{
   background:rgba(0,0,0,.65);
   z-index:2000;
   overflow:auto;
-  padding:15px;
+  padding:20px;
 }
 
 .modal-box{
   background:white;
   max-width:600px;
-  margin:25px auto;
+  margin:30px auto;
   padding:20px;
   border-radius:15px;
 }
@@ -199,15 +188,12 @@ button:disabled{
 }
 
 .cart-item{
-  border-bottom:1px solid #eee;
-  padding:13px 0;
-}
-
-.cart-row{
-  display:flex;
-  justify-content:space-between;
+  display:grid;
+  grid-template-columns:1fr auto auto;
   align-items:center;
   gap:10px;
+  border-bottom:1px solid #eee;
+  padding:12px 0;
 }
 
 .quantity{
@@ -220,15 +206,10 @@ button:disabled{
   padding:5px 9px;
 }
 
-.remove{
-  background:#dc2626;
-  padding:5px 9px;
-}
-
 .total{
-  text-align:right;
   font-size:20px;
   font-weight:bold;
+  text-align:right;
   margin:20px 0;
 }
 
@@ -251,12 +232,13 @@ textarea{
 
 textarea{
   min-height:80px;
+  resize:vertical;
 }
 
 .checkout{
   width:100%;
   margin-top:15px;
-  padding:15px;
+  padding:14px;
   font-size:17px;
 }
 
@@ -268,22 +250,27 @@ textarea{
 
 .empty{
   text-align:center;
-  padding:25px;
+  padding:20px 0;
   color:#666;
+}
+
+.remove{
+  background:#dc2626;
+  padding:6px 9px;
 }
 
 .loading{
   text-align:center;
-  padding:20px;
+  padding:30px;
   color:#666;
 }
 
-.success{
-  background:#dcfce7;
-  color:#166534;
+.error{
+  background:#fee2e2;
+  color:#991b1b;
   padding:15px;
-  border-radius:8px;
-  margin-bottom:15px;
+  border-radius:10px;
+  margin-bottom:20px;
 }
 
 @media(max-width:600px){
@@ -302,17 +289,23 @@ textarea{
 
   .menu-item button{
     white-space:nowrap;
+    padding:9px 12px;
   }
 
   .cart-bar{
     left:8px;
     right:8px;
     bottom:8px;
+    padding:12px 10px;
     font-size:14px;
   }
 
+  .cart-bar button{
+    padding:9px 10px;
+  }
+
   .modal{
-    padding:8px;
+    padding:10px;
   }
 
   .modal-box{
@@ -320,6 +313,9 @@ textarea{
     padding:15px;
   }
 
+  .cart-item{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -333,23 +329,30 @@ textarea{
 
 <div class="container">
 
-  <h2>🍽️ Choose a Restaurant</h2>
+<h2 style="margin-bottom:15px;">🍽️ Choose a Restaurant</h2>
 
-  <div id="restaurantButtons" class="restaurant-buttons">
-    <div class="loading">
-      Loading restaurants...
-    </div>
+<div
+  class="restaurant-buttons"
+  id="restaurantButtons"
+>
+  <div class="loading">
+    Loading restaurants...
   </div>
+</div>
 
-  <input
-    id="search"
-    class="search"
-    type="text"
-    placeholder="🔎 Search food..."
-    oninput="searchFood()"
-  >
+<input
+  id="search"
+  class="search"
+  type="text"
+  placeholder="🔎 Search food..."
+  oninput="searchFood()"
+>
 
-  <div id="restaurantsContainer"></div>
+<div id="restaurantsContainer">
+  <div class="loading">
+    Loading restaurants...
+  </div>
+</div>
 
 </div>
 
@@ -359,11 +362,13 @@ textarea{
 <div class="cart-bar" id="cartBar">
 
   <span>
-    🛒 <strong id="count">0</strong> items
+    🛒 Cart:
+    <strong id="count">0</strong>
   </span>
 
   <span>
-    KSh <strong id="total">0</strong>
+    KSh
+    <strong id="total">0</strong>
   </span>
 
   <button onclick="openCart()">
@@ -373,7 +378,7 @@ textarea{
 </div>
 
 
-<!-- CART -->
+<!-- CART MODAL -->
 
 <div class="modal" id="cartModal">
 
@@ -383,7 +388,8 @@ textarea{
 
     <div
       class="cart-restaurant"
-      id="cartRestaurant">
+      id="cartRestaurant"
+    >
       Restaurant
     </div>
 
@@ -396,12 +402,11 @@ textarea{
 
     <h2>Customer Details</h2>
 
-    <label>Customer Name</label>
+    <label>Name</label>
 
     <input
       id="name"
-      type="text"
-      placeholder="Enter your name"
+      placeholder="Your name"
     >
 
     <label>Phone Number</label>
@@ -444,34 +449,34 @@ textarea{
 
     </select>
 
-    <label>Delivery Location</label>
+    <label>Location</label>
 
     <textarea
       id="location"
-      placeholder="Enter your delivery location"
+      placeholder="Enter delivery location"
     ></textarea>
 
     <button
-      id="placeOrderButton"
       class="checkout"
-      onclick="placeOrder()">
-
+      id="checkoutButton"
+      onclick="placeOrder()"
+    >
       📲 Place Order on WhatsApp
-
     </button>
 
     <button
       class="close"
-      onclick="closeCart()">
-
+      onclick="closeCart()"
+    >
       Close
-
     </button>
 
   </div>
 
 </div>
 
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -482,20 +487,20 @@ textarea{
 ========================================= */
 
 const SUPABASE_URL =
-"https://bhvzpycbztngtwuhxxex.supabase.co";
+  "https://bhvzpycbztngtwuhxxex.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
 
 const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
 /* =========================================
-   MLOHUB DATA
+   DATA
 ========================================= */
 
 let restaurants = [];
@@ -506,68 +511,17 @@ let carts = {};
 
 
 /* =========================================
-   ALBAIK BACKUP
-   YOUR CURRENT ALBAIK ID = 2
+   START
 ========================================= */
 
-const ALBAIK_ID = 2;
-
-const ALBAIK_WHATSAPP =
-"254742333000";
+document.addEventListener(
+  "DOMContentLoaded",
+  loadRestaurants
+);
 
 
 /* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHTML(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================
-   FIND RESTAURANT NAME
-========================================= */
-
-function getRestaurantName(row){
-
-  return (
-    row.name ||
-    row.restaurant_name ||
-    row.title ||
-    row.business_name ||
-    "Restaurant #" + row.id
-  );
-
-}
-
-
-/* =========================================
-   FIND WHATSAPP NUMBER
-========================================= */
-
-function getWhatsApp(row){
-
-  return (
-    row.whatsapp ||
-    row.whatsapp_number ||
-    row.phone ||
-    row.phone_number ||
-    ""
-  );
-
-}
-
-
-/* =========================================
-   LOAD RESTAURANTS
+   LOAD RESTAURANTS AUTOMATICALLY
 ========================================= */
 
 async function loadRestaurants(){
@@ -582,18 +536,17 @@ async function loadRestaurants(){
       "restaurantsContainer"
     );
 
-
   buttons.innerHTML =
     '<div class="loading">Loading restaurants...</div>';
 
-  container.innerHTML = "";
+  container.innerHTML =
+    '<div class="loading">Loading restaurants...</div>';
 
 
   const {
     data,
     error
-  } =
-  await supabaseClient
+  } = await supabaseClient
 
     .from("restaurants")
 
@@ -604,114 +557,137 @@ async function loadRestaurants(){
     });
 
 
-  console.log(
-    "RESTAURANTS:",
-    data
-  );
-
-
-  /*
-    If restaurants table is blocked or empty,
-    use Albaik ID 2 as a backup.
-  */
-
   if(error){
 
     console.error(
-      "Restaurants error:",
+      "Restaurant loading error:",
       error
     );
 
-    restaurants = [
+    buttons.innerHTML = `
+      <div class="error">
+        Unable to load restaurants.
+        <br><br>
+        ${escapeHTML(error.message)}
+      </div>
+    `;
 
-      {
-        id: ALBAIK_ID,
-        name: "Albaik",
-        whatsapp: ALBAIK_WHATSAPP
-      }
+    container.innerHTML = "";
 
-    ];
-
+    return;
   }
 
-  else if(!data || data.length === 0){
 
-    restaurants = [
+  if(!data || data.length === 0){
 
-      {
-        id: ALBAIK_ID,
-        name: "Albaik",
-        whatsapp: ALBAIK_WHATSAPP
-      }
+    buttons.innerHTML =
+      '<div class="empty">No restaurants available.</div>';
 
-    ];
+    container.innerHTML = "";
 
+    return;
   }
 
-  else{
 
-    restaurants = data;
-
-  }
-
+  restaurants = data;
 
   buttons.innerHTML = "";
 
+  container.innerHTML = "";
 
-  restaurants.forEach(
-    function(restaurant){
 
-      const id =
-        Number(restaurant.id);
+  data.forEach((restaurant,index) => {
 
-      const name =
-        getRestaurantName(
-          restaurant
+    carts[restaurant.id] = [];
+
+
+    /* RESTAURANT BUTTON */
+
+    const button =
+      document.createElement("button");
+
+    button.textContent =
+      "🍽️ " +
+      restaurant.name;
+
+    button.onclick =
+      function(){
+
+        showRestaurant(
+          restaurant.id
         );
 
+      };
 
-      if(!carts[id]){
-
-        carts[id] = [];
-
-      }
+    buttons.appendChild(button);
 
 
-      const button =
-        document.createElement("button");
+    /* RESTAURANT SECTION */
+
+    const section =
+      document.createElement("div");
+
+    section.className =
+      "restaurant";
+
+    section.id =
+      "restaurant-" +
+      restaurant.id;
+
+    section.style.display =
+      index === 0
+        ? "block"
+        : "none";
 
 
-      button.textContent =
-        "🍽️ " + name;
+    const location =
+      restaurant.address ||
+      restaurant.location ||
+      "Nairobi";
 
 
-      button.onclick =
-        function(){
+    section.innerHTML = `
 
-          showRestaurant(id);
+      <h2>
+        🍽️ ${escapeHTML(
+          restaurant.name
+        )}
+      </h2>
 
-        };
+      <p class="location">
+        ${escapeHTML(location)}
+      </p>
+
+      <div class="restaurant-note">
+        📍 Ordering from
+        ${escapeHTML(
+          restaurant.name
+        )}
+      </div>
+
+      <div id="menu-${restaurant.id}">
+        <div class="loading">
+          Loading menu...
+        </div>
+      </div>
+
+    `;
 
 
-      buttons.appendChild(
-        button
-      );
-
-    }
-  );
+    container.appendChild(section);
 
 
-  /*
-    Automatically show first restaurant
-  */
-
-  if(restaurants.length > 0){
-
-    showRestaurant(
-      Number(restaurants[0].id)
+    loadMenu(
+      restaurant.id
     );
 
-  }
+  });
+
+
+  currentRestaurant =
+    data[0];
+
+  updateCart();
 
 }
 
@@ -720,90 +696,51 @@ async function loadRestaurants(){
    SHOW RESTAURANT
 ========================================= */
 
-async function showRestaurant(
+function showRestaurant(
   restaurantId
 ){
 
-  currentRestaurant =
+  const restaurant =
     restaurants.find(
-      function(r){
+      r =>
+        Number(r.id) ===
+        Number(restaurantId)
+    );
 
-        return Number(r.id) ===
-          Number(restaurantId);
+
+  if(!restaurant) return;
+
+
+  currentRestaurant =
+    restaurant;
+
+
+  restaurants.forEach(
+    function(r){
+
+      const section =
+        document.getElementById(
+          "restaurant-" +
+          r.id
+        );
+
+      if(section){
+
+        section.style.display =
+          Number(r.id) ===
+          Number(restaurantId)
+            ? "block"
+            : "none";
 
       }
-    );
 
-
-  if(!currentRestaurant){
-
-    return;
-
-  }
-
-
-  const container =
-    document.getElementById(
-      "restaurantsContainer"
-    );
-
-
-  container.innerHTML = `
-
-    <div
-      class="restaurant"
-      id="restaurant-${currentRestaurant.id}">
-
-      <div class="restaurant-header">
-
-        <h2>
-          🍽️
-          ${escapeHTML(
-            getRestaurantName(
-              currentRestaurant
-            )
-          )}
-        </h2>
-
-        <p class="location">
-          ${escapeHTML(
-            currentRestaurant.address ||
-            currentRestaurant.location ||
-            "Nairobi"
-          )}
-        </p>
-
-      </div>
-
-      <div class="restaurant-note">
-
-        📍 Ordering from
-        <strong>
-          ${escapeHTML(
-            getRestaurantName(
-              currentRestaurant
-            )
-          )}
-        </strong>
-
-      </div>
-
-      <div id="menu-${currentRestaurant.id}">
-
-        <div class="loading">
-          Loading menu...
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  await loadMenu(
-    Number(currentRestaurant.id)
+    }
   );
+
+
+  document.getElementById(
+    "search"
+  ).value = "";
 
 
   searchFood();
@@ -823,27 +760,23 @@ async function loadMenu(
 
   const menuBox =
     document.getElementById(
-      "menu-" + restaurantId
+      "menu-" +
+      restaurantId
     );
 
 
-  if(!menuBox){
-
-    return;
-
-  }
+  if(!menuBox) return;
 
 
   const {
     data,
     error
-  } =
-  await supabaseClient
+  } = await supabaseClient
 
     .from("menu_items")
 
     .select(
-      "id,restaurant_id,name,description,price,image_url,available,created_at"
+      "id,name,description,price,available,created_at"
     )
 
     .eq(
@@ -864,13 +797,6 @@ async function loadMenu(
     );
 
 
-  console.log(
-    "MENU FOR RESTAURANT:",
-    restaurantId,
-    data
-  );
-
-
   if(error){
 
     console.error(
@@ -879,40 +805,28 @@ async function loadMenu(
     );
 
     menuBox.innerHTML = `
-
-      <div class="empty">
-
-        ❌ Unable to load menu.
-
+      <div class="error">
+        Unable to load menu.
         <br><br>
-
         ${escapeHTML(
           error.message
         )}
-
       </div>
-
     `;
 
     return;
-
   }
 
 
   if(!data || data.length === 0){
 
     menuBox.innerHTML = `
-
       <div class="empty">
-
         No menu items available.
-
       </div>
-
     `;
 
     return;
-
   }
 
 
@@ -922,61 +836,75 @@ async function loadMenu(
   data.forEach(
     function(item){
 
-      const row =
-        document.createElement("div");
+      const menuItem =
+        document.createElement(
+          "div"
+        );
 
-
-      row.className =
+      menuItem.className =
         "menu-item";
 
 
-      row.innerHTML = `
-
-        <div class="menu-info">
-
-          <h3>
-            ${escapeHTML(item.name)}
-          </h3>
-
-          ${
-            item.description
-            ?
-            `
-            <p class="description">
-              ${escapeHTML(
-                item.description
-              )}
-            </p>
-            `
-            :
-            ""
-          }
-
-          <span class="price">
-
-            KSh
-            ${Number(
-              item.price
-            ).toLocaleString()}
-
-          </span>
-
-        </div>
-
-        <button>
-          Add
-        </button>
-
-      `;
+      const left =
+        document.createElement(
+          "div"
+        );
 
 
-      row
-        .querySelector("button")
-        .onclick =
+      const title =
+        document.createElement(
+          "h3"
+        );
+
+      title.textContent =
+        item.name;
+
+
+      const description =
+        document.createElement(
+          "p"
+        );
+
+      description.className =
+        "description";
+
+      description.textContent =
+        item.description || "";
+
+
+      const price =
+        document.createElement(
+          "span"
+        );
+
+      price.className =
+        "price";
+
+      price.textContent =
+        "KSh " +
+        Number(
+          item.price
+        ).toLocaleString();
+
+
+      left.appendChild(title);
+      left.appendChild(description);
+      left.appendChild(price);
+
+
+      const addButton =
+        document.createElement(
+          "button"
+        );
+
+      addButton.textContent =
+        "Add";
+
+
+      addButton.onclick =
         function(){
 
           addToCart(
-            currentRestaurant.id,
             item.name,
             Number(item.price),
             item.id
@@ -985,95 +913,30 @@ async function loadMenu(
         };
 
 
-      menuBox.appendChild(
-        row
-      );
+      menuItem.appendChild(left);
+      menuItem.appendChild(addButton);
+
+      menuBox.appendChild(menuItem);
 
     }
   );
 
-}
 
+  if(
+    currentRestaurant &&
+    Number(currentRestaurant.id) ===
+    Number(restaurantId)
+  ){
 
-/* =========================================
-   ADD TO CART
-========================================= */
-
-function addToCart(
-  restaurantId,
-  name,
-  price,
-  menuItemId
-){
-
-  const id =
-    Number(restaurantId);
-
-
-  if(!carts[id]){
-
-    carts[id] = [];
+    searchFood();
 
   }
-
-
-  const cart =
-    carts[id];
-
-
-  const existing =
-    cart.find(
-      function(item){
-
-        return Number(
-          item.menu_item_id
-        ) === Number(menuItemId);
-
-      }
-    );
-
-
-  if(existing){
-
-    existing.qty++;
-
-  }
-
-  else{
-
-    cart.push({
-
-      name:name,
-
-      price:Number(price),
-
-      qty:1,
-
-      menu_item_id:
-        Number(menuItemId)
-
-    });
-
-  }
-
-
-  updateCart();
-
-
-  /*
-    Small confirmation
-  */
-
-  console.log(
-    "Added to cart:",
-    name
-  );
 
 }
 
 
 /* =========================================
-   CURRENT CART
+   GET CURRENT CART
 ========================================= */
 
 function getCart(){
@@ -1085,20 +948,136 @@ function getCart(){
   }
 
 
-  const id =
-    Number(
-      currentRestaurant.id
-    );
+  if(!carts[currentRestaurant.id]){
 
-
-  if(!carts[id]){
-
-    carts[id] = [];
+    carts[currentRestaurant.id] = [];
 
   }
 
 
-  return carts[id];
+  return carts[
+    currentRestaurant.id
+  ];
+
+}
+
+
+/* =========================================
+   ADD TO CART
+========================================= */
+
+function addToCart(
+  name,
+  price,
+  menuItemId = null
+){
+
+  if(!currentRestaurant){
+
+    alert(
+      "Please select a restaurant."
+    );
+
+    return;
+
+  }
+
+
+  const cart =
+    getCart();
+
+
+  const existing =
+    cart.find(
+      item =>
+        Number(item.menu_item_id) ===
+        Number(menuItemId)
+    );
+
+
+  if(existing){
+
+    existing.qty++;
+
+  }else{
+
+    cart.push({
+
+      name:name,
+
+      price:Number(price),
+
+      qty:1,
+
+      menu_item_id:menuItemId
+
+    });
+
+  }
+
+
+  updateCart();
+
+}
+
+
+/* =========================================
+   CHANGE QUANTITY
+========================================= */
+
+function changeQty(
+  index,
+  amount
+){
+
+  const cart =
+    getCart();
+
+
+  if(!cart[index]) return;
+
+
+  cart[index].qty +=
+    amount;
+
+
+  if(cart[index].qty <= 0){
+
+    cart.splice(
+      index,
+      1
+    );
+
+  }
+
+
+  updateCart();
+
+}
+
+
+/* =========================================
+   REMOVE ITEM
+========================================= */
+
+function removeFromCart(
+  index
+){
+
+  const cart =
+    getCart();
+
+
+  if(!cart[index]) return;
+
+
+  cart.splice(
+    index,
+    1
+  );
+
+
+  updateCart();
 
 }
 
@@ -1150,25 +1129,21 @@ function updateCart(){
     total.toLocaleString();
 
 
-  if(currentRestaurant){
-
-    document.getElementById(
-      "cartRestaurant"
-    ).textContent =
-      "🍽️ " +
-      getRestaurantName(
-        currentRestaurant
-      );
-
-  }
+  document.getElementById(
+    "cartRestaurant"
+  ).textContent =
+    currentRestaurant
+      ? "🍽️ " +
+        currentRestaurant.name
+      : "Restaurant";
 
 
   document.getElementById(
     "cartBar"
   ).style.display =
     count > 0
-    ? "flex"
-    : "none";
+      ? "flex"
+      : "none";
 
 
   renderCart();
@@ -1213,151 +1188,76 @@ function renderCart(){
           "div"
         );
 
-
       row.className =
         "cart-item";
 
 
       row.innerHTML = `
 
-        <div class="cart-row">
+        <div>
 
-          <div>
+          <strong>
+            ${escapeHTML(
+              item.name
+            )}
+          </strong>
 
-            <strong>
-              ${escapeHTML(
-                item.name
-              )}
-            </strong>
+          <br>
 
-            <br>
+          <small>
+            KSh ${Number(
+              item.price
+            ).toLocaleString()}
+            each
+          </small>
 
-            <small>
-              KSh
-              ${Number(
-                item.price
-              ).toLocaleString()}
-              each
-            </small>
+        </div>
 
-          </div>
+        <div class="quantity">
 
-          <div class="quantity">
+          <button
+            onclick="changeQty(${index},-1)"
+          >
+            −
+          </button>
 
-            <button
-              onclick="changeQty(${index},-1)">
-              −
-            </button>
+          <strong>
+            ${item.qty}
+          </strong>
 
-            <strong>
-              ${item.qty}
-            </strong>
+          <button
+            onclick="changeQty(${index},1)"
+          >
+            +
+          </button>
 
-            <button
-              onclick="changeQty(${index},1)">
-              +
-            </button>
+        </div>
 
-          </div>
+        <div>
 
-          <div>
+          <strong>
+            KSh ${(
+              Number(item.price) *
+              Number(item.qty)
+            ).toLocaleString()}
+          </strong>
 
-            <strong>
-              KSh
-              ${(
-                item.price *
-                item.qty
-              ).toLocaleString()}
-            </strong>
-
-            <button
-              class="remove"
-              onclick="removeFromCart(${index})">
-              ×
-            </button>
-
-          </div>
+          <button
+            class="remove"
+            onclick="removeFromCart(${index})"
+          >
+            ×
+          </button>
 
         </div>
 
       `;
 
 
-      box.appendChild(
-        row
-      );
+      box.appendChild(row);
 
     }
   );
-
-}
-
-
-/* =========================================
-   CHANGE QUANTITY
-========================================= */
-
-function changeQty(
-  index,
-  amount
-){
-
-  const cart =
-    getCart();
-
-
-  if(!cart[index]){
-
-    return;
-
-  }
-
-
-  cart[index].qty +=
-    amount;
-
-
-  if(cart[index].qty <= 0){
-
-    cart.splice(
-      index,
-      1
-    );
-
-  }
-
-
-  updateCart();
-
-}
-
-
-/* =========================================
-   REMOVE
-========================================= */
-
-function removeFromCart(
-  index
-){
-
-  const cart =
-    getCart();
-
-
-  if(!cart[index]){
-
-    return;
-
-  }
-
-
-  cart.splice(
-    index,
-    1
-  );
-
-
-  updateCart();
 
 }
 
@@ -1371,7 +1271,7 @@ function openCart(){
   if(getCart().length === 0){
 
     alert(
-      "Please add food to your cart first."
+      "Your cart is empty. Please add food first."
     );
 
     return;
@@ -1414,7 +1314,7 @@ async function placeOrder(){
   if(cart.length === 0){
 
     alert(
-      "Your cart is empty."
+      "Please add food first."
     );
 
     return;
@@ -1425,7 +1325,7 @@ async function placeOrder(){
   if(!currentRestaurant){
 
     alert(
-      "Please choose a restaurant."
+      "Please select a restaurant."
     );
 
     return;
@@ -1499,6 +1399,45 @@ async function placeOrder(){
   }
 
 
+  /* =====================================
+     RESTAURANT ID
+  ===================================== */
+
+  const restaurantId =
+    Number(
+      currentRestaurant.id
+    );
+
+
+  /* =====================================
+     WHATSAPP
+  ===================================== */
+
+  const whatsappNumber =
+    String(
+      currentRestaurant.whatsapp ||
+      ""
+    ).replace(
+      /\D/g,
+      ""
+    );
+
+
+  if(!whatsappNumber){
+
+    alert(
+      "This restaurant does not have a WhatsApp number saved."
+    );
+
+    return;
+
+  }
+
+
+  /* =====================================
+     TOTAL
+  ===================================== */
+
   let total = 0;
 
 
@@ -1513,451 +1452,391 @@ async function placeOrder(){
   );
 
 
-  const restaurantId =
-    Number(
-      currentRestaurant.id
+  const checkoutButton =
+    document.getElementById(
+      "checkoutButton"
     );
 
 
-  const restaurantName =
-    getRestaurantName(
-      currentRestaurant
-    );
+  checkoutButton.disabled =
+    true;
+
+  checkoutButton.textContent =
+    "Saving order...";
 
 
-  /*
-    CUSTOMER
-  */
-
-  const {
-    data:customer,
-    error:customerError
-  } =
-  await supabaseClient
-
-    .from("customers")
-
-    .insert({
-
-      full_name:name,
-
-      phone:phone,
-
-      email:null,
-
-      address:
-        location ||
-        "Pickup"
-
-    })
-
-    .select()
-
-    .single();
+  try{
 
 
-  if(customerError){
+    /* ===================================
+       SAVE CUSTOMER
+    =================================== */
 
-    console.error(
-      customerError
-    );
+    const {
+      data: customer,
+      error: customerError
+    } =
+      await supabaseClient
 
-    alert(
-      "Customer could not be saved:\n\n" +
-      customerError.message
-    );
+        .from("customers")
 
-    return;
+        .insert({
 
-  }
+          full_name:name,
 
+          phone:phone,
 
-  /*
-    ORDER
-  */
+          email:null,
 
-  const {
-    data:order,
-    error:orderError
-  } =
-  await supabaseClient
+          address:
+            location ||
+            "Pickup"
 
-    .from("orders")
+        })
 
-    .insert({
+        .select()
 
-      restaurant_id:
-        restaurantId,
-
-      customer_id:
-        customer.id,
-
-      customer_name:
-        name,
-
-      customer_phone:
-        phone,
-
-      delivery_address:
-        location ||
-        "Pickup",
-
-      order_status:
-        "pending",
-
-      total_amount:
-        total
-
-    })
-
-    .select()
-
-    .single();
+        .single();
 
 
-  if(orderError){
+    if(customerError){
 
-    console.error(
-      orderError
-    );
+      throw new Error(
+        "Customer could not be saved: " +
+        customerError.message
+      );
 
-    alert(
-      "Order could not be saved:\n\n" +
-      orderError.message
-    );
-
-    return;
-
-  }
+    }
 
 
-  /*
-    ORDER ITEMS
+    /* ===================================
+       SAVE ORDER
+    =================================== */
 
-    IMPORTANT:
-    Every cart item has menu_item_id
-    so the restaurant gets the
-    correct food items.
-  */
+    const {
+      data: order,
+      error: orderError
+    } =
+      await supabaseClient
 
-  const orderItems =
-    cart.map(
+        .from("orders")
+
+        .insert({
+
+          restaurant_id:
+            restaurantId,
+
+          customer_id:
+            customer.id,
+
+          customer_name:
+            name,
+
+          customer_phone:
+            phone,
+
+          delivery_address:
+            location ||
+            "Pickup",
+
+          order_status:
+            "pending",
+
+          total_amount:
+            total
+
+        })
+
+        .select()
+
+        .single();
+
+
+    if(orderError){
+
+      throw new Error(
+        "Order could not be saved: " +
+        orderError.message
+      );
+
+    }
+
+
+    /* ===================================
+       SAVE ORDER ITEMS
+    =================================== */
+
+    const orderItems =
+      cart
+
+        .filter(
+          item =>
+            item.menu_item_id
+        )
+
+        .map(
+          item => ({
+
+            order_id:
+              order.id,
+
+            menu_item_id:
+              item.menu_item_id,
+
+            quantity:
+              item.qty,
+
+            price:
+              item.price
+
+          })
+        );
+
+
+    if(orderItems.length > 0){
+
+      const {
+        error:itemsError
+      } =
+        await supabaseClient
+
+          .from("order_items")
+
+          .insert(
+            orderItems
+          );
+
+
+      if(itemsError){
+
+        throw new Error(
+          "Order was created but order items failed: " +
+          itemsError.message
+        );
+
+      }
+
+    }
+
+
+    /* ===================================
+       PAYMENT TEXT
+    =================================== */
+
+    let paymentText =
+      "Cash on Delivery / Pickup";
+
+
+    if(
+      payment ===
+      "till4574509"
+    ){
+
+      paymentText =
+        "M-Pesa Till: 4574509";
+
+    }
+
+
+    if(
+      payment ===
+      "till4578247"
+    ){
+
+      paymentText =
+        "M-Pesa Till: 4578247";
+
+    }
+
+
+    /* ===================================
+       WHATSAPP MESSAGE
+    =================================== */
+
+    let message =
+      "🍽️ *NEW MloHub ORDER*\n\n";
+
+
+    message +=
+      "*Order ID:* #" +
+      order.id +
+      "\n";
+
+
+    message +=
+      "*Restaurant:* " +
+      currentRestaurant.name +
+      "\n";
+
+
+    message +=
+      "*Customer:* " +
+      name +
+      "\n";
+
+
+    message +=
+      "*Phone:* " +
+      phone +
+      "\n";
+
+
+    message +=
+      "*Order Type:* " +
+      type +
+      "\n";
+
+
+    if(location){
+
+      message +=
+        "*Location:* " +
+        location +
+        "\n";
+
+    }
+
+
+    message +=
+      "*Payment:* " +
+      paymentText +
+      "\n\n";
+
+
+    message +=
+      "*ORDER ITEMS:*\n";
+
+
+    cart.forEach(
       function(item){
 
-        return {
+        const itemTotal =
+          Number(item.price) *
+          Number(item.qty);
 
-          order_id:
-            order.id,
 
-          menu_item_id:
-            Number(
-              item.menu_item_id
-            ),
-
-          quantity:
-            Number(
-              item.qty
-            ),
-
-          price:
-            Number(
-              item.price
-            )
-
-        };
+        message +=
+          item.qty +
+          " × " +
+          item.name +
+          " - KSh " +
+          itemTotal.toLocaleString() +
+          "\n";
 
       }
     );
 
 
-  const {
-    error:itemsError
-  } =
-  await supabaseClient
-
-    .from("order_items")
-
-    .insert(orderItems);
+    message +=
+      "\n*TOTAL: KSh " +
+      total.toLocaleString() +
+      "*";
 
 
-  if(itemsError){
+    /* ===================================
+       WHATSAPP URL
+    =================================== */
+
+    const whatsappLink =
+      "https://wa.me/" +
+      whatsappNumber +
+      "?text=" +
+      encodeURIComponent(
+        message
+      );
+
+
+    /* ===================================
+       CLEAR CART
+    =================================== */
+
+    carts[
+      currentRestaurant.id
+    ] = [];
+
+
+    updateCart();
+
+
+    closeCart();
+
+
+    alert(
+      "✅ MloHub Order #" +
+      order.id +
+      " saved successfully!"
+    );
+
+
+    /* ===================================
+       OPEN WHATSAPP
+    =================================== */
+
+    window.location.href =
+      whatsappLink;
+
+
+  }catch(error){
 
     console.error(
-      itemsError
+      "Order error:",
+      error
     );
+
 
     alert(
-      "Order #" +
-      order.id +
-      " was created, but order items failed:\n\n" +
-      itemsError.message
+      "❌ Order failed.\n\n" +
+      error.message
     );
 
-    return;
+  }finally{
+
+    checkoutButton.disabled =
+      false;
+
+    checkoutButton.textContent =
+      "📲 Place Order on WhatsApp";
 
   }
-
-
-  /*
-    PAYMENT TEXT
-  */
-
-  let paymentText =
-    "Cash on Delivery / Pickup";
-
-
-  if(
-    payment ===
-    "till4574509"
-  ){
-
-    paymentText =
-      "M-Pesa Till: 4574509";
-
-  }
-
-
-  if(
-    payment ===
-    "till4578247"
-  ){
-
-    paymentText =
-      "M-Pesa Till: 4578247";
-
-  }
-
-
-  /*
-    WHATSAPP NUMBER
-  */
-
-  let whatsappNumber =
-    getWhatsApp(
-      currentRestaurant
-    );
-
-
-  /*
-    ALBAIK FALLBACK
-  */
-
-  if(
-    restaurantId === ALBAIK_ID &&
-    !whatsappNumber
-  ){
-
-    whatsappNumber =
-      ALBAIK_WHATSAPP;
-
-  }
-
-
-  if(!whatsappNumber){
-
-    alert(
-      "This restaurant does not have a WhatsApp number yet."
-    );
-
-    return;
-
-  }
-
-
-  /*
-    REMOVE + FROM PHONE
-  */
-
-  whatsappNumber =
-    String(
-      whatsappNumber
-    )
-    .replace(
-      /[^0-9]/g,
-      ""
-    );
-
-
-  /*
-    WHATSAPP MESSAGE
-  */
-
-  let message =
-    "🍽️ *NEW MloHub ORDER*\n\n";
-
-
-  message +=
-    "*Order:* #" +
-    order.id +
-    "\n";
-
-
-  message +=
-    "*Restaurant:* " +
-    restaurantName +
-    "\n";
-
-
-  message +=
-    "*Customer:* " +
-    name +
-    "\n";
-
-
-  message +=
-    "*Phone:* " +
-    phone +
-    "\n";
-
-
-  message +=
-    "*Order Type:* " +
-    type +
-    "\n";
-
-
-  if(location){
-
-    message +=
-      "*Location:* " +
-      location +
-      "\n";
-
-  }
-
-
-  message +=
-    "*Payment:* " +
-    paymentText +
-    "\n\n";
-
-
-  message +=
-    "*ORDER ITEMS:*\n";
-
-
-  cart.forEach(
-    function(item){
-
-      const itemTotal =
-        Number(item.price) *
-        Number(item.qty);
-
-
-      message +=
-        "• " +
-        item.qty +
-        " × " +
-        item.name +
-        " — KSh " +
-        itemTotal.toLocaleString() +
-        "\n";
-
-    }
-  );
-
-
-  message +=
-    "\n💰 *TOTAL: KSh " +
-    total.toLocaleString() +
-    "*";
-
-
-  /*
-    WHATSAPP URL
-  */
-
-  const whatsappLink =
-    "https://wa.me/" +
-    whatsappNumber +
-    "?text=" +
-    encodeURIComponent(
-      message
-    );
-
-
-  /*
-    CLEAR CART
-    AFTER ORDER IS SAVED
-  */
-
-  carts[restaurantId] = [];
-
-
-  updateCart();
-
-
-  /*
-    CLOSE CART
-  */
-
-  closeCart();
-
-
-  /*
-    SUCCESS MESSAGE
-  */
-
-  alert(
-    "✅ MloHub Order #" +
-    order.id +
-    " saved successfully!\n\n" +
-    "WhatsApp will now open for " +
-    restaurantName +
-    "."
-  );
-
-
-  /*
-    OPEN WHATSAPP DIRECTLY
-  */
-
-  window.location.href =
-    whatsappLink;
 
 }
 
 
 /* =========================================
-   SEARCH
+   SEARCH FOOD
 ========================================= */
 
 function searchFood(){
 
+  if(!currentRestaurant)
+    return;
+
+
   const search =
     document.getElementById(
       "search"
-    )
-    .value
-    .toLowerCase()
-    .trim();
+    ).value
+      .toLowerCase()
+      .trim();
 
 
-  if(!currentRestaurant){
-
-    return;
-
-  }
-
-
-  const restaurantBox =
+  const activeRestaurant =
     document.getElementById(
       "restaurant-" +
       currentRestaurant.id
     );
 
 
-  if(!restaurantBox){
-
+  if(!activeRestaurant)
     return;
 
-  }
 
+  activeRestaurant
 
-  restaurantBox
     .querySelectorAll(
       ".menu-item"
     )
+
     .forEach(
       function(item){
 
@@ -1968,8 +1847,8 @@ function searchFood(){
 
         item.style.display =
           text.includes(search)
-          ? "flex"
-          : "none";
+            ? "flex"
+            : "none";
 
       }
     );
@@ -1978,7 +1857,7 @@ function searchFood(){
 
 
 /* =========================================
-   CLOSE MODAL
+   CLOSE MODAL OUTSIDE
 ========================================= */
 
 window.addEventListener(
@@ -1992,7 +1871,8 @@ window.addEventListener(
 
 
     if(
-      event.target === modal
+      event.target ===
+      modal
     ){
 
       closeCart();
@@ -2004,12 +1884,46 @@ window.addEventListener(
 
 
 /* =========================================
-   START
+   ESCAPE HTML
 ========================================= */
 
-loadRestaurants();
+function escapeHTML(
+  value
+){
+
+  return String(
+    value
+  )
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
 
 </script>
 
 </body>
 </html>
+```
