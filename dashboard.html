@@ -1,10 +1,11 @@
-```html
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MloHub Restaurant Dashboard</title>
+
+<title>MloHub - Restaurant Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -41,12 +42,12 @@ header{
 }
 
 .logo{
-  font-size:25px;
+  font-size:26px;
   font-weight:bold;
 }
 
 .restaurant-name{
-  font-size:15px;
+  margin-top:5px;
   opacity:.95;
 }
 
@@ -54,6 +55,32 @@ header{
   max-width:1200px;
   margin:auto;
   padding:20px;
+}
+
+.message{
+  padding:14px;
+  border-radius:10px;
+  margin-bottom:18px;
+  display:none;
+}
+
+.message.show{
+  display:block;
+}
+
+.info{
+  background:#e7f1ff;
+  color:#084298;
+}
+
+.error{
+  background:#f8d7da;
+  color:#842029;
+}
+
+.success-message{
+  background:#d1e7dd;
+  color:#0f5132;
 }
 
 .stats{
@@ -144,7 +171,7 @@ button{
   background:#ff5a00;
   color:white;
   border:0;
-  padding:12px 18px;
+  padding:11px 16px;
   border-radius:9px;
   font-weight:bold;
 }
@@ -152,24 +179,25 @@ button{
 .secondary{
   background:#eee;
   border:0;
-  padding:10px 15px;
+  padding:11px 16px;
   border-radius:9px;
-}
-
-.danger{
-  background:#dc3545;
-  color:white;
-  border:0;
-  padding:10px 14px;
-  border-radius:8px;
 }
 
 .success{
   background:#168c39;
   color:white;
   border:0;
-  padding:10px 14px;
-  border-radius:8px;
+  padding:11px 16px;
+  border-radius:9px;
+  font-weight:bold;
+}
+
+.danger{
+  background:#dc3545;
+  color:white;
+  border:0;
+  padding:11px 16px;
+  border-radius:9px;
 }
 
 .menu-list{
@@ -182,6 +210,7 @@ button{
   border:1px solid #eee;
   border-radius:13px;
   padding:16px;
+  background:#fff;
 }
 
 .menu-card h3{
@@ -198,13 +227,27 @@ button{
   color:#e84d00;
   font-weight:bold;
   font-size:18px;
-  margin-bottom:12px;
+  margin-bottom:10px;
+}
+
+.menu-category{
+  color:#666;
+  font-size:13px;
+  margin-bottom:10px;
 }
 
 .menu-actions{
   display:flex;
   gap:7px;
   flex-wrap:wrap;
+}
+
+.image-preview{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-bottom:12px;
 }
 
 .available{
@@ -232,16 +275,20 @@ button{
   margin-bottom:10px;
 }
 
+.order-info{
+  line-height:1.7;
+}
+
 .order-items{
   background:#f8f8f8;
   padding:12px;
   border-radius:10px;
-  margin:10px 0;
+  margin:12px 0;
 }
 
 .status{
   display:inline-block;
-  padding:6px 10px;
+  padding:6px 11px;
   border-radius:20px;
   font-size:13px;
   font-weight:bold;
@@ -279,46 +326,28 @@ button{
   margin-top:12px;
 }
 
-.hidden{
-  display:none!important;
-}
-
-.message{
-  padding:13px;
-  border-radius:10px;
-  margin-bottom:15px;
-}
-
-.info{
-  background:#e7f1ff;
-  color:#084298;
-}
-
-.error{
-  background:#f8d7da;
-  color:#842029;
-}
-
-.success-message{
-  background:#d1e7dd;
-  color:#0f5132;
-}
-
 .form-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:15px;
 }
 
-.image-preview{
-  max-width:150px;
-  max-height:100px;
-  object-fit:cover;
-  border-radius:8px;
-  margin-bottom:10px;
+.loading{
+  padding:20px;
+  text-align:center;
+  color:#777;
+}
+
+.empty{
+  padding:25px;
+  text-align:center;
+  color:#777;
+  background:#f8f8f8;
+  border-radius:10px;
 }
 
 @media(max-width:800px){
+
   .stats{
     grid-template-columns:1fr 1fr;
   }
@@ -326,9 +355,11 @@ button{
   .form-grid{
     grid-template-columns:1fr;
   }
+
 }
 
 @media(max-width:500px){
+
   .stats{
     grid-template-columns:1fr;
   }
@@ -336,217 +367,343 @@ button{
   .container{
     padding:12px;
   }
+
+  .logo{
+    font-size:21px;
+  }
+
 }
 </style>
+
 </head>
 
 <body>
 
 <header>
-  <div class="header-inner">
-    <div>
-      <div class="logo">🍽️ MloHub</div>
-      <div class="restaurant-name" id="restaurantTitle">
-        Restaurant Dashboard
-      </div>
-    </div>
 
-    <button class="secondary" onclick="refreshAll()">
-      🔄 Refresh
-    </button>
+  <div class="header-inner">
+
+```
+<div>
+
+  <div class="logo">
+    🍽️ MloHub
   </div>
+
+  <div
+    class="restaurant-name"
+    id="restaurantTitle"
+  >
+    Loading restaurant...
+  </div>
+
+</div>
+
+<button
+  class="secondary"
+  onclick="refreshAll()"
+>
+  🔄 Refresh
+</button>
+```
+
+  </div>
+
 </header>
 
 <div class="container">
 
-  <div id="message"></div>
+  <div
+    id="message"
+    class="message"
+  ></div>
 
   <!-- STATS -->
 
   <div class="stats">
 
-    <div class="stat">
-      <div class="stat-icon">📦</div>
-      <h3 id="totalOrders">0</h3>
-      <p>Total Orders</p>
-    </div>
+```
+<div class="stat">
 
-    <div class="stat">
-      <div class="stat-icon">⏳</div>
-      <h3 id="pendingOrders">0</h3>
-      <p>Pending Orders</p>
-    </div>
-
-    <div class="stat">
-      <div class="stat-icon">🍔</div>
-      <h3 id="menuCount">0</h3>
-      <p>Menu Items</p>
-    </div>
-
-    <div class="stat">
-      <div class="stat-icon">💰</div>
-      <h3 id="salesTotal">KSh 0</h3>
-      <p>Sales</p>
-    </div>
-
+  <div class="stat-icon">
+    📦
   </div>
 
+  <h3 id="totalOrders">
+    0
+  </h3>
+
+  <p>
+    Total Orders
+  </p>
+
+</div>
+
+
+<div class="stat">
+
+  <div class="stat-icon">
+    ⏳
+  </div>
+
+  <h3 id="pendingOrders">
+    0
+  </h3>
+
+  <p>
+    Pending Orders
+  </p>
+
+</div>
+
+
+<div class="stat">
+
+  <div class="stat-icon">
+    🍔
+  </div>
+
+  <h3 id="menuCount">
+    0
+  </h3>
+
+  <p>
+    Menu Items
+  </p>
+
+</div>
+
+
+<div class="stat">
+
+  <div class="stat-icon">
+    💰
+  </div>
+
+  <h3 id="salesTotal">
+    KSh 0
+  </h3>
+
+  <p>
+    Sales
+  </p>
+
+</div>
+```
+
+  </div>
 
   <!-- TABS -->
 
   <div class="tabs">
 
-    <button
-      class="tab active"
-      onclick="showPanel('orders',this)"
-    >
-      📦 Orders
-    </button>
+```
+<button
+  class="tab active"
+  onclick="showPanel('orders',this)"
+>
+  📦 Orders
+</button>
 
-    <button
-      class="tab"
-      onclick="showPanel('menu',this)"
-    >
-      🍔 Menu
-    </button>
+<button
+  class="tab"
+  onclick="showPanel('menu',this)"
+>
+  🍔 Menu
+</button>
 
-    <button
-      class="tab"
-      onclick="showPanel('add',this)"
-    >
-      ➕ Add Menu
-    </button>
+<button
+  class="tab"
+  onclick="showPanel('add',this)"
+>
+  ➕ Add Menu
+</button>
+```
+
+  </div>
+
+  <!-- ORDERS -->
+
+  <section
+    id="ordersPanel"
+    class="panel active"
+  >
+
+```
+<div class="card">
+
+  <h2>
+    📦 Restaurant Orders
+  </h2>
+
+  <div
+    id="ordersLoading"
+    class="loading"
+  >
+    Loading orders...
+  </div>
+
+  <div id="ordersList"></div>
+
+</div>
+```
+
+  </section>
+
+  <!-- MENU -->
+
+  <section
+    id="menuPanel"
+    class="panel"
+  >
+
+```
+<div class="card">
+
+  <h2>
+    🍔 Manage Menu
+  </h2>
+
+  <input
+    id="menuAdminSearch"
+    placeholder="🔎 Search menu..."
+    oninput="filterAdminMenu()"
+  >
+
+  <div
+    id="adminMenuList"
+    class="menu-list"
+  >
+    <div class="loading">
+      Loading menu...
+    </div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <!-- ADD MENU -->
+
+  <section
+    id="addPanel"
+    class="panel"
+  >
+
+```
+<div class="card">
+
+  <h2 id="formTitle">
+    ➕ Add Menu Item
+  </h2>
+
+  <input
+    type="hidden"
+    id="editId"
+  >
+
+
+  <div class="form-grid">
+
+    <div>
+
+      <label>
+        Menu Name
+      </label>
+
+      <input
+        id="itemName"
+        placeholder="Example: Chicken Burger"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Price
+      </label>
+
+      <input
+        id="itemPrice"
+        type="number"
+        min="0"
+        placeholder="550"
+      >
+
+    </div>
 
   </div>
 
 
-  <!-- ORDERS -->
+  <label>
+    Description
+  </label>
 
-  <section id="ordersPanel" class="panel active">
-
-    <div class="card">
-
-      <h2>📦 Restaurant Orders</h2>
-
-      <div id="ordersLoading">
-        Loading orders...
-      </div>
-
-      <div id="ordersList"></div>
-
-    </div>
-
-  </section>
+  <textarea
+    id="itemDescription"
+    rows="3"
+    placeholder="Describe the food..."
+  ></textarea>
 
 
-  <!-- MENU -->
+  <label>
+    Category
+  </label>
 
-  <section id="menuPanel" class="panel">
-
-    <div class="card">
-
-      <h2>🍔 Manage Menu</h2>
-
-      <input
-        id="menuAdminSearch"
-        placeholder="🔎 Search menu..."
-        oninput="filterAdminMenu()"
-      >
-
-      <div id="adminMenuList" class="menu-list">
-        Loading menu...
-      </div>
-
-    </div>
-
-  </section>
+  <input
+    id="itemCategory"
+    placeholder="Example: Burgers"
+  >
 
 
-  <!-- ADD MENU -->
+  <label>
+    Image URL
+  </label>
 
-  <section id="addPanel" class="panel">
+  <input
+    id="itemImage"
+    placeholder="https://..."
+  >
 
-    <div class="card">
 
-      <h2 id="formTitle">➕ Add Menu Item</h2>
+  <label>
+    <input
+      id="itemAvailable"
+      type="checkbox"
+      checked
+      style="width:auto"
+    >
 
-      <input type="hidden" id="editId">
+    Available
+  </label>
 
-      <div class="form-grid">
+  <br><br>
 
-        <div>
-          <label>Menu Name</label>
-          <input
-            id="itemName"
-            placeholder="Example: Chicken Burger"
-          >
-        </div>
 
-        <div>
-          <label>Price</label>
-          <input
-            id="itemPrice"
-            type="number"
-            placeholder="550"
-          >
-        </div>
+  <button
+    class="primary"
+    onclick="saveMenuItem()"
+  >
+    💾 Save Menu Item
+  </button>
 
-      </div>
 
-      <label>Description</label>
+  <button
+    class="secondary"
+    onclick="clearForm()"
+  >
+    Clear
+  </button>
 
-      <textarea
-        id="itemDescription"
-        rows="3"
-        placeholder="Describe the food..."
-      ></textarea>
-
-      <label>Category</label>
-
-      <input
-        id="itemCategory"
-        placeholder="Example: Burgers"
-      >
-
-      <label>Image URL</label>
-
-      <input
-        id="itemImage"
-        placeholder="https://..."
-      >
-
-      <label>
-        <input
-          id="itemAvailable"
-          type="checkbox"
-          checked
-          style="width:auto"
-        >
-        Available
-      </label>
-
-      <br><br>
-
-      <button
-        class="primary"
-        onclick="saveMenuItem()"
-      >
-        💾 Save Menu Item
-      </button>
-
-      <button
-        class="secondary"
-        onclick="clearForm()"
-      >
-        Clear
-      </button>
-
-    </div>
+</div>
+```
 
   </section>
 
 </div>
-
 
 <script>
 
@@ -568,12 +725,8 @@ const supabaseClient =
 
 
 /* =========================================
-   SETTINGS
+   ALBAIK
 ========================================= */
-
-/*
-  Albaik restaurant ID
-*/
 
 const RESTAURANT_ID = 2;
 
@@ -588,24 +741,24 @@ let orders = [];
    MESSAGE
 ========================================= */
 
-function showMessage(text,type="info"){
+function showMessage(text,type){
 
   const box =
-    document.getElementById(
-      "message"
-    );
+    document.getElementById("message");
 
   box.className =
-    "message " + type;
+    "message show " + type;
 
   box.textContent =
     text;
 
   setTimeout(function(){
 
-    box.className = "";
+    box.className =
+      "message";
 
-    box.textContent = "";
+    box.textContent =
+      "";
 
   },4000);
 
@@ -613,31 +766,25 @@ function showMessage(text,type="info"){
 
 
 /* =========================================
-   LOAD RESTAURANT
+   RESTAURANT
 ========================================= */
 
 async function loadRestaurant(){
 
-  const {
-    data,
-    error
-  } =
+  const result =
     await supabaseClient
       .from("restaurants")
       .select("*")
-      .eq(
-        "id",
-        RESTAURANT_ID
-      )
+      .eq("id",RESTAURANT_ID)
       .single();
 
-  if(error){
+  if(result.error){
 
-    console.error(error);
+    console.error(result.error);
 
     showMessage(
       "Could not load restaurant: " +
-      error.message,
+      result.error.message,
       "error"
     );
 
@@ -646,13 +793,11 @@ async function loadRestaurant(){
   }
 
   restaurant =
-    data;
+    result.data;
 
-  document
-    .getElementById(
-      "restaurantTitle"
-    )
-    .textContent =
+  document.getElementById(
+    "restaurantTitle"
+  ).textContent =
     restaurant.name +
     " Dashboard";
 
@@ -660,7 +805,7 @@ async function loadRestaurant(){
 
 
 /* =========================================
-   LOAD MENU
+   MENU
 ========================================= */
 
 async function loadMenu(){
@@ -671,13 +816,10 @@ async function loadMenu(){
     );
 
   box.innerHTML =
-    "Loading menu...";
+    '<div class="loading">Loading menu...</div>';
 
 
-  const {
-    data,
-    error
-  } =
+  const result =
     await supabaseClient
       .from("menu_items")
       .select(
@@ -689,17 +831,17 @@ async function loadMenu(){
       )
       .order(
         "created_at",
-        {
-          ascending:false
-        }
+        {ascending:false}
       );
 
 
-  if(error){
+  if(result.error){
+
+    console.error(result.error);
 
     box.innerHTML =
-      '<div class="message error">' +
-      error.message +
+      '<div class="message show error">' +
+      escapeHTML(result.error.message) +
       '</div>';
 
     return;
@@ -708,14 +850,12 @@ async function loadMenu(){
 
 
   menuItems =
-    data || [];
+    result.data || [];
 
 
-  document
-    .getElementById(
-      "menuCount"
-    )
-    .textContent =
+  document.getElementById(
+    "menuCount"
+  ).textContent =
     menuItems.length;
 
 
@@ -740,10 +880,10 @@ function displayAdminMenu(items){
   box.innerHTML = "";
 
 
-  if(items.length === 0){
+  if(!items.length){
 
     box.innerHTML =
-      '<div class="message info">' +
+      '<div class="empty">' +
       'No menu items yet.' +
       '</div>';
 
@@ -755,42 +895,46 @@ function displayAdminMenu(items){
   items.forEach(function(item){
 
     const card =
-      document.createElement(
-        "div"
-      );
+      document.createElement("div");
 
     card.className =
       "menu-card";
 
 
-    card.innerHTML = `
+    let imageHTML = "";
 
-      ${
-        item.image_url
-        ?
-        `<img
+    if(item.image_url){
+
+      imageHTML = `
+        <img
           class="image-preview"
           src="${escapeHTML(item.image_url)}"
           onerror="this.style.display='none'"
-        >`
-        :
-        ""
-      }
+          alt="${escapeHTML(item.name)}"
+        >
+      `;
+
+    }
+
+
+    card.innerHTML = `
+
+      ${imageHTML}
 
       <h3>
         ${escapeHTML(item.name)}
       </h3>
 
       <p class="menu-description">
-        ${escapeHTML(
-          item.description || ""
-        )}
+        ${escapeHTML(item.description || "")}
+      </p>
+
+      <p class="menu-category">
+        📂 ${escapeHTML(item.category || "Other")}
       </p>
 
       <p class="menu-price">
-        KSh ${Number(
-          item.price || 0
-        ).toLocaleString()}
+        KSh ${Number(item.price || 0).toLocaleString()}
       </p>
 
       <p class="${
@@ -813,7 +957,7 @@ function displayAdminMenu(items){
 
         <button
           class="primary"
-          onclick="editMenu(${item.id})"
+          onclick="editMenu(${Number(item.id)})"
         >
           ✏️ Edit
         </button>
@@ -825,20 +969,22 @@ function displayAdminMenu(items){
             : "success"
           }"
           onclick="toggleAvailability(
-            ${item.id},
+            ${Number(item.id)},
             ${item.available}
           )"
         >
+
           ${
             item.available
             ? "❌ Hide"
             : "✅ Show"
           }
+
         </button>
 
         <button
           class="danger"
-          onclick="deleteMenu(${item.id})"
+          onclick="deleteMenu(${Number(item.id)})"
         >
           🗑️ Delete
         </button>
@@ -856,50 +1002,40 @@ function displayAdminMenu(items){
 
 
 /* =========================================
-   SEARCH MENU
+   SEARCH
 ========================================= */
 
 function filterAdminMenu(){
 
   const term =
-    document
-      .getElementById(
-        "menuAdminSearch"
-      )
-      .value
-      .toLowerCase()
-      .trim();
+    document.getElementById(
+      "menuAdminSearch"
+    ).value
+    .toLowerCase()
+    .trim();
 
 
   const filtered =
-    menuItems.filter(
-      function(item){
+    menuItems.filter(function(item){
 
-        return (
+      return (
 
-          String(
-            item.name || ""
-          )
+        String(item.name || "")
           .toLowerCase()
           .includes(term)
 
-          ||
+        ||
 
-          String(
-            item.category || ""
-          )
+        String(item.category || "")
           .toLowerCase()
           .includes(term)
 
-        );
+      );
 
-      }
-    );
+    });
 
 
-  displayAdminMenu(
-    filtered
-  );
+  displayAdminMenu(filtered);
 
 }
 
@@ -911,65 +1047,51 @@ function filterAdminMenu(){
 async function saveMenuItem(){
 
   const id =
-    document
-      .getElementById(
-        "editId"
-      )
-      .value;
+    document.getElementById(
+      "editId"
+    ).value;
 
 
   const name =
-    document
-      .getElementById(
-        "itemName"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "itemName"
+    ).value
+    .trim();
 
 
   const price =
     Number(
-      document
-        .getElementById(
-          "itemPrice"
-        )
-        .value
+      document.getElementById(
+        "itemPrice"
+      ).value
     );
 
 
   const description =
-    document
-      .getElementById(
-        "itemDescription"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "itemDescription"
+    ).value
+    .trim();
 
 
   const category =
-    document
-      .getElementById(
-        "itemCategory"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "itemCategory"
+    ).value
+    .trim();
 
 
   const image_url =
-    document
-      .getElementById(
-        "itemImage"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "itemImage"
+    ).value
+    .trim();
 
 
   const available =
-    document
-      .getElementById(
-        "itemAvailable"
-      )
-      .checked;
+    document.getElementById(
+      "itemAvailable"
+    ).checked;
 
 
   if(!name){
@@ -983,7 +1105,7 @@ async function saveMenuItem(){
   }
 
 
-  if(!price || price < 0){
+  if(isNaN(price) || price < 0){
 
     alert(
       "Please enter a valid price."
@@ -999,12 +1121,14 @@ async function saveMenuItem(){
     restaurant_id:
       RESTAURANT_ID,
 
-    name:name,
+    name:
+      name,
 
     description:
       description || null,
 
-    price:price,
+    price:
+      price,
 
     image_url:
       image_url || null,
@@ -1027,10 +1151,7 @@ async function saveMenuItem(){
       await supabaseClient
         .from("menu_items")
         .update(itemData)
-        .eq(
-          "id",
-          id
-        )
+        .eq("id",id)
         .eq(
           "restaurant_id",
           RESTAURANT_ID
@@ -1041,18 +1162,14 @@ async function saveMenuItem(){
     result =
       await supabaseClient
         .from("menu_items")
-        .insert(
-          itemData
-        );
+        .insert(itemData);
 
   }
 
 
   if(result.error){
 
-    console.error(
-      result.error
-    );
+    console.error(result.error);
 
     showMessage(
       "Could not save menu item: " +
@@ -1067,8 +1184,8 @@ async function saveMenuItem(){
 
   showMessage(
     id
-    ? "Menu item updated successfully."
-    : "Menu item added successfully.",
+      ? "Menu item updated successfully."
+      : "Menu item added successfully.",
     "success-message"
   );
 
@@ -1092,81 +1209,70 @@ async function saveMenuItem(){
 function editMenu(id){
 
   const item =
-    menuItems.find(
-      function(x){
-        return x.id === id;
-      }
-    );
+    menuItems.find(function(x){
+
+      return Number(x.id) === Number(id);
+
+    });
 
 
   if(!item){
+
+    showMessage(
+      "Menu item not found.",
+      "error"
+    );
 
     return;
 
   }
 
 
-  document
-    .getElementById(
-      "editId"
-    )
-    .value =
+  document.getElementById(
+    "editId"
+  ).value =
     item.id;
 
 
-  document
-    .getElementById(
-      "itemName"
-    )
-    .value =
+  document.getElementById(
+    "itemName"
+  ).value =
     item.name || "";
 
 
-  document
-    .getElementById(
-      "itemPrice"
-    )
-    .value =
+  document.getElementById(
+    "itemPrice"
+  ).value =
     item.price || "";
 
 
-  document
-    .getElementById(
-      "itemDescription"
-    )
-    .value =
+  document.getElementById(
+    "itemDescription"
+  ).value =
     item.description || "";
 
 
-  document
-    .getElementById(
-      "itemCategory"
-    )
-    .value =
+  document.getElementById(
+    "itemCategory"
+  ).value =
     item.category || "";
 
 
-  document
-    .getElementById(
-      "itemImage"
-    )
-    .value =
+  document.getElementById(
+    "itemImage"
+  ).value =
     item.image_url || "";
 
 
-  document
-    .getElementById(
-      "itemAvailable"
-    )
-    .checked =
+  document.getElementById(
+    "itemAvailable"
+  ).checked =
     item.available;
 
 
-  document
-    .getElementById(
-      "formTitle"
-    )
-    .textContent =
+  document.getElementById(
+    "formTitle"
+  ).textContent =
     "✏️ Edit Menu Item";
 
 
@@ -1184,67 +1290,51 @@ function editMenu(id){
 
 function clearForm(){
 
-  document
-    .getElementById(
-      "editId"
-    )
-    .value = "";
+  document.getElementById(
+    "editId"
+  ).value = "";
 
 
-  document
-    .getElementById(
-      "itemName"
-    )
-    .value = "";
+  document.getElementById(
+    "itemName"
+  ).value = "";
 
 
-  document
-    .getElementById(
-      "itemPrice"
-    )
-    .value = "";
+  document.getElementById(
+    "itemPrice"
+  ).value = "";
 
 
-  document
-    .getElementById(
-      "itemDescription"
-    )
-    .value = "";
+  document.getElementById(
+    "itemDescription"
+  ).value = "";
 
 
-  document
-    .getElementById(
-      "itemCategory"
-    )
-    .value = "";
+  document.getElementById(
+    "itemCategory"
+  ).value = "";
 
 
-  document
-    .getElementById(
-      "itemImage"
-    )
-    .value = "";
+  document.getElementById(
+    "itemImage"
+  ).value = "";
 
 
-  document
-    .getElementById(
-      "itemAvailable"
-    )
-    .checked = true;
+  document.getElementById(
+    "itemAvailable"
+  ).checked = true;
 
 
-  document
-    .getElementById(
-      "formTitle"
-    )
-    .textContent =
+  document.getElementById(
+    "formTitle"
+  ).textContent =
     "➕ Add Menu Item";
 
 }
 
 
 /* =========================================
-   TOGGLE AVAILABILITY
+   AVAILABILITY
 ========================================= */
 
 async function toggleAvailability(
@@ -1252,29 +1342,24 @@ async function toggleAvailability(
   current
 ){
 
-  const {
-    error
-  } =
+  const result =
     await supabaseClient
       .from("menu_items")
       .update({
         available:!current
       })
-      .eq(
-        "id",
-        id
-      )
+      .eq("id",id)
       .eq(
         "restaurant_id",
         RESTAURANT_ID
       );
 
 
-  if(error){
+  if(result.error){
 
     showMessage(
       "Could not update item: " +
-      error.message,
+      result.error.message,
       "error"
     );
 
@@ -1289,7 +1374,7 @@ async function toggleAvailability(
   );
 
 
-  loadMenu();
+  await loadMenu();
 
 }
 
@@ -1300,40 +1385,31 @@ async function toggleAvailability(
 
 async function deleteMenu(id){
 
-  const confirmDelete =
-    confirm(
-      "Are you sure you want to delete this menu item?"
-    );
-
-
-  if(!confirmDelete){
+  if(!confirm(
+    "Are you sure you want to delete this menu item?"
+  )){
 
     return;
 
   }
 
 
-  const {
-    error
-  } =
+  const result =
     await supabaseClient
       .from("menu_items")
       .delete()
-      .eq(
-        "id",
-        id
-      )
+      .eq("id",id)
       .eq(
         "restaurant_id",
         RESTAURANT_ID
       );
 
 
-  if(error){
+  if(result.error){
 
     showMessage(
       "Could not delete item: " +
-      error.message,
+      result.error.message,
       "error"
     );
 
@@ -1348,13 +1424,13 @@ async function deleteMenu(id){
   );
 
 
-  loadMenu();
+  await loadMenu();
 
 }
 
 
 /* =========================================
-   LOAD ORDERS
+   ORDERS
 ========================================= */
 
 async function loadOrders(){
@@ -1370,40 +1446,37 @@ async function loadOrders(){
     );
 
 
-  loading.classList.remove(
-    "hidden"
-  );
+  loading.style.display =
+    "block";
 
 
-  const {
-    data,
-    error
-  } =
+  const result =
     await supabaseClient
       .from("orders")
-      .select("*")
+      .select(
+        "id,restaurant_id,customer_name,customer_phone,delivery_address,order_status,total_amount,created_at,customer_id"
+      )
       .eq(
         "restaurant_id",
         RESTAURANT_ID
       )
       .order(
         "created_at",
-        {
-          ascending:false
-        }
+        {ascending:false}
       );
 
 
-  loading.classList.add(
-    "hidden"
-  );
+  loading.style.display =
+    "none";
 
 
-  if(error){
+  if(result.error){
+
+    console.error(result.error);
 
     box.innerHTML =
-      '<div class="message error">' +
-      escapeHTML(error.message) +
+      '<div class="message show error">' +
+      escapeHTML(result.error.message) +
       '</div>';
 
     return;
@@ -1412,74 +1485,63 @@ async function loadOrders(){
 
 
   orders =
-    data || [];
+    result.data || [];
 
 
-  document
-    .getElementById(
-      "totalOrders"
-    )
-    .textContent =
+  document.getElementById(
+    "totalOrders"
+  ).textContent =
     orders.length;
 
 
   const pending =
-    orders.filter(
-      function(order){
+    orders.filter(function(order){
 
-        return String(
-          order.status || ""
-        )
-        .toLowerCase()
-        ===
-        "pending";
+      return String(
+        order.order_status || ""
+      ).toLowerCase()
+      ===
+      "pending";
 
-      }
-    ).length;
+    }).length;
 
 
-  document
-    .getElementById(
-      "pendingOrders"
-    )
-    .textContent =
+  document.getElementById(
+    "pendingOrders"
+  ).textContent =
     pending;
 
 
   const sales =
     orders.reduce(
-      function(sum,order){
+      function(total,order){
 
         const status =
           String(
-            order.status || ""
+            order.order_status || ""
           ).toLowerCase();
 
-        if(
-          status !== "cancelled"
-        ){
 
-          return sum +
+        if(status !== "cancelled"){
+
+          return total +
             Number(
-              order.total_amount ||
-              order.total ||
-              0
+              order.total_amount || 0
             );
 
         }
 
-        return sum;
+
+        return total;
 
       },
       0
     );
 
 
-  document
-    .getElementById(
-      "salesTotal"
-    )
-    .textContent =
+  document.getElementById(
+    "salesTotal"
+  ).textContent =
     "KSh " +
     sales.toLocaleString();
 
@@ -1503,10 +1565,10 @@ function displayOrders(){
   box.innerHTML = "";
 
 
-  if(orders.length === 0){
+  if(!orders.length){
 
     box.innerHTML =
-      '<div class="message info">' +
+      '<div class="empty">' +
       'No orders yet.' +
       '</div>';
 
@@ -1515,143 +1577,185 @@ function displayOrders(){
   }
 
 
-  orders.forEach(
-    function(order){
+  orders.forEach(function(order){
 
-      const div =
-        document.createElement(
-          "div"
-        );
+    const div =
+      document.createElement("div");
 
-      div.className =
-        "order";
+    div.className =
+      "order";
 
 
-      const status =
-        String(
-          order.status ||
-          "pending"
-        )
-        .toLowerCase();
+    const status =
+      String(
+        order.order_status ||
+        "pending"
+      ).toLowerCase();
 
 
-      const total =
-        Number(
-          order.total_amount ||
-          order.total ||
-          0
-        );
+    const total =
+      Number(
+        order.total_amount || 0
+      );
 
 
-      const date =
+    const date =
+      order.created_at
+      ?
+      new Date(
         order.created_at
-        ?
-        new Date(
-          order.created_at
-        ).toLocaleString()
-        :
-        "";
+      ).toLocaleString()
+      :
+      "";
 
 
-      div.innerHTML = `
+    div.innerHTML = `
 
-        <div class="order-top">
+      <div class="order-top">
 
-          <strong>
-            📦 Order #${escapeHTML(
-              order.id
-            )}
-          </strong>
+        <strong>
+          📦 Order #${escapeHTML(order.id)}
+        </strong>
 
-          <span class="status ${status}">
-            ${escapeHTML(
-              order.status ||
-              "pending"
-            )}
-          </span>
+        <span class="status ${escapeHTML(status)}">
+          ${escapeHTML(
+            order.order_status || "pending"
+          )}
+        </span>
 
+      </div>
+
+
+      <div class="order-info">
+
+        <div>
+          👤 <strong>Customer:</strong>
+          ${escapeHTML(
+            order.customer_name || "Customer"
+          )}
         </div>
 
-        <p>
-          🕐 ${escapeHTML(date)}
-        </p>
-
-        <div class="order-items">
-
-          <strong>
-            Order Total
-          </strong>
-
-          <br>
-
-          KSh ${total.toLocaleString()}
-
+        <div>
+          📞 <strong>Phone:</strong>
+          ${escapeHTML(
+            order.customer_phone || "Not provided"
+          )}
         </div>
 
-        <div class="order-actions">
-
-          ${
-            status === "pending"
-            ?
-            `<button
-              class="primary"
-              onclick="changeOrderStatus(${order.id},'preparing')"
-            >
-              👨‍🍳 Start Preparing
-            </button>`
-            :
-            ""
-          }
-
-          ${
-            status === "preparing"
-            ?
-            `<button
-              class="success"
-              onclick="changeOrderStatus(${order.id},'ready')"
-            >
-              ✅ Mark Ready
-            </button>`
-            :
-            ""
-          }
-
-          ${
-            status === "ready"
-            ?
-            `<button
-              class="success"
-              onclick="changeOrderStatus(${order.id},'completed')"
-            >
-              🏁 Complete
-            </button>`
-            :
-            ""
-          }
-
-          ${
-            status !== "completed" &&
-            status !== "cancelled"
-            ?
-            `<button
-              class="danger"
-              onclick="changeOrderStatus(${order.id},'cancelled')"
-            >
-              ❌ Cancel
-            </button>`
-            :
-            ""
-          }
-
+        <div>
+          📍 <strong>Delivery:</strong>
+          ${escapeHTML(
+            order.delivery_address || "Not provided"
+          )}
         </div>
 
-      `;
+        <div>
+          🕐 <strong>Time:</strong>
+          ${escapeHTML(date)}
+        </div>
+
+      </div>
 
 
-      box.appendChild(div);
+      <div class="order-items">
 
-    }
-  );
+        <strong>
+          💰 Order Total
+        </strong>
+
+        <br><br>
+
+        KSh ${total.toLocaleString()}
+
+      </div>
+
+
+      <div class="order-actions">
+
+        ${
+          status === "pending"
+          ?
+          `
+          <button
+            class="primary"
+            onclick="changeOrderStatus(
+              ${Number(order.id)},
+              'preparing'
+            )"
+          >
+            👨‍🍳 Start Preparing
+          </button>
+          `
+          :
+          ""
+        }
+
+
+        ${
+          status === "preparing"
+          ?
+          `
+          <button
+            class="success"
+            onclick="changeOrderStatus(
+              ${Number(order.id)},
+              'ready'
+            )"
+          >
+            ✅ Mark Ready
+          </button>
+          `
+          :
+          ""
+        }
+
+
+        ${
+          status === "ready"
+          ?
+          `
+          <button
+            class="success"
+            onclick="changeOrderStatus(
+              ${Number(order.id)},
+              'completed'
+            )"
+          >
+            🏁 Complete
+          </button>
+          `
+          :
+          ""
+        }
+
+
+        ${
+          status !== "completed" &&
+          status !== "cancelled"
+          ?
+          `
+          <button
+            class="danger"
+            onclick="changeOrderStatus(
+              ${Number(order.id)},
+              'cancelled'
+            )"
+          >
+            ❌ Cancel
+          </button>
+          `
+          :
+          ""
+        }
+
+      </div>
+
+    `;
+
+
+    box.appendChild(div);
+
+  });
 
 }
 
@@ -1662,16 +1766,14 @@ function displayOrders(){
 
 async function changeOrderStatus(
   id,
-  status
+  newStatus
 ){
 
-  const {
-    error
-  } =
+  const result =
     await supabaseClient
       .from("orders")
       .update({
-        status:status
+        order_status:newStatus
       })
       .eq(
         "id",
@@ -1683,11 +1785,13 @@ async function changeOrderStatus(
       );
 
 
-  if(error){
+  if(result.error){
+
+    console.error(result.error);
 
     showMessage(
       "Could not update order: " +
-      error.message,
+      result.error.message,
       "error"
     );
 
@@ -1697,14 +1801,16 @@ async function changeOrderStatus(
 
 
   showMessage(
-    "Order updated to " +
-    status +
+    "Order #" +
+    id +
+    " updated to " +
+    newStatus +
     ".",
     "success-message"
   );
 
 
-  loadOrders();
+  await loadOrders();
 
 }
 
@@ -1719,45 +1825,31 @@ function showPanel(
 ){
 
   document
-    .querySelectorAll(
-      ".panel"
-    )
-    .forEach(
-      function(p){
-        p.classList.remove(
-          "active"
-        );
-      }
-    );
+    .querySelectorAll(".panel")
+    .forEach(function(p){
+
+      p.classList.remove("active");
+
+    });
+
+
+  document.getElementById(
+    panel + "Panel"
+  ).classList.add("active");
 
 
   document
-    .getElementById(
-      panel + "Panel"
-    )
-    .classList.add(
-      "active"
-    );
+    .querySelectorAll(".tab")
+    .forEach(function(t){
 
+      t.classList.remove("active");
 
-  document
-    .querySelectorAll(
-      ".tab"
-    )
-    .forEach(
-      function(t){
-        t.classList.remove(
-          "active"
-        );
-      }
-    );
+    });
 
 
   if(button){
 
-    button.classList.add(
-      "active"
-    );
+    button.classList.add("active");
 
   }
 
@@ -1777,7 +1869,7 @@ async function refreshAll(){
   await loadOrders();
 
   showMessage(
-    "Dashboard refreshed.",
+    "Dashboard refreshed successfully.",
     "success-message"
   );
 
@@ -1823,4 +1915,3 @@ startDashboard();
 
 </body>
 </html>
-```
