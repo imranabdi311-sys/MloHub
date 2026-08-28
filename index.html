@@ -1,503 +1,1441 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MloHub - Food Delivery</title>
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>MloHub | Food Delivery</title>
+
+<meta
+  name="description"
+  content="MloHub - Discover restaurants, order food and enjoy."
+>
 
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
-  font-family:Arial,sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
 }
 
 body{
-  background:#f7f7f7;
-  color:#222;
-  padding-bottom:100px;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f6f7f9;
+  color:#171717;
+  line-height:1.5;
 }
 
-header{
-  background:#f59e0b;
-  color:white;
-  padding:22px 15px;
-  text-align:center;
-}
-
-header h1{
-  font-size:30px;
-}
-
-header p{
-  margin-top:6px;
-}
-
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-
-.restaurant-buttons{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-}
-
-.restaurant-buttons button{
-  flex:1;
-  min-width:180px;
-}
-
-.search{
-  width:100%;
-  padding:14px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  margin-bottom:20px;
-  font-size:16px;
-  background:white;
-}
-
-.restaurant{
-  background:white;
-  padding:20px;
-  border-radius:15px;
-  margin-bottom:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.restaurant h2{
-  margin-bottom:8px;
-}
-
-.location{
-  color:#666;
-  margin-bottom:15px;
-}
-
-.category{
-  margin-top:25px;
-  margin-bottom:5px;
-  padding-top:10px;
-  border-top:2px solid #f59e0b;
-}
-
-.menu-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-top:1px solid #eee;
-  padding:15px 0;
-  gap:15px;
-}
-
-.menu-item h3{
-  margin-bottom:5px;
-}
-
-.description{
-  color:#666;
-  margin-bottom:8px;
-  line-height:1.4;
-}
-
-.price{
-  font-weight:bold;
-  color:#f59e0b;
+button,
+input,
+select,
+textarea{
+  font:inherit;
 }
 
 button{
-  background:#f59e0b;
-  color:white;
-  border:0;
-  padding:10px 15px;
-  border-radius:8px;
   cursor:pointer;
-  font-weight:bold;
 }
 
-button:active{
-  transform:scale(.97);
+img{
+  max-width:100%;
+  display:block;
 }
 
-button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
 
-.restaurant-note{
-  background:#fff7e6;
-  border-left:4px solid #f59e0b;
-  padding:10px;
-  margin-bottom:15px;
-  border-radius:5px;
-}
+/* =========================================================
+   HEADER
+========================================================= */
 
-.cart-bar{
-  position:fixed;
-  bottom:15px;
-  left:15px;
-  right:15px;
-  background:#222;
+header{
+  background:linear-gradient(
+    135deg,
+    #ff8a00,
+    #ff5e00
+  );
+
   color:white;
-  padding:14px;
-  border-radius:12px;
-  max-width:860px;
-  margin:auto;
+
+  position:sticky;
+  top:0;
+
   z-index:1000;
-  display:none;
+
+  box-shadow:
+    0 3px 15px rgba(0,0,0,.15);
+}
+
+.header-inner{
+  max-width:1150px;
+  margin:auto;
+
+  padding:15px 20px;
+
+  display:flex;
+  align-items:center;
   justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  box-shadow:0 4px 15px rgba(0,0,0,.25);
+
+  gap:20px;
 }
 
-.cart-bar button{
-  background:#f59e0b;
+.logo{
+  font-size:27px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  z-index:2000;
-  overflow:auto;
-  padding:20px;
-}
-
-.modal-box{
-  background:white;
-  max-width:600px;
-  margin:30px auto;
-  padding:20px;
-  border-radius:15px;
-}
-
-.modal-box h2{
-  margin-bottom:15px;
-}
-
-.cart-restaurant{
-  background:#f59e0b;
+.logo span{
   color:white;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:15px;
+}
+
+.header-cart{
+  background:white;
+  color:#ff6500;
+
+  border:0;
+
+  padding:10px 15px;
+
+  border-radius:30px;
+
   font-weight:bold;
-}
 
-.cart-item{
-  display:grid;
-  grid-template-columns:1fr auto auto;
-  align-items:center;
-  gap:10px;
-  border-bottom:1px solid #eee;
-  padding:12px 0;
-}
-
-.quantity{
   display:flex;
   align-items:center;
   gap:7px;
 }
 
-.quantity button{
-  padding:5px 9px;
-}
 
-.total{
-  font-size:20px;
-  font-weight:bold;
-  text-align:right;
-  margin:20px 0;
-}
+/* =========================================================
+   HERO
+========================================================= */
 
-label{
-  display:block;
-  font-weight:bold;
-  margin-top:12px;
-  margin-bottom:6px;
-}
+.hero{
+  background:
+    linear-gradient(
+      rgba(0,0,0,.42),
+      rgba(0,0,0,.42)
+    ),
+    linear-gradient(
+      135deg,
+      #ff8a00,
+      #ff4d00
+    );
 
-input,
-select,
-textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:8px;
-  font-size:16px;
-}
+  color:white;
 
-textarea{
-  min-height:80px;
-  resize:vertical;
-}
+  padding:55px 20px 65px;
 
-.checkout{
-  width:100%;
-  margin-top:15px;
-  padding:14px;
-  font-size:17px;
-}
-
-.close{
-  width:100%;
-  margin-top:10px;
-  background:#555;
-}
-
-.empty{
   text-align:center;
-  padding:20px 0;
+}
+
+.hero-inner{
+  max-width:900px;
+  margin:auto;
+}
+
+.hero h1{
+  font-size:42px;
+  margin-bottom:12px;
+}
+
+.hero p{
+  font-size:19px;
+  opacity:.95;
+}
+
+.hero-search{
+  margin:25px auto 0;
+
+  max-width:700px;
+
+  position:relative;
+}
+
+.hero-search input{
+  width:100%;
+
+  padding:17px 20px 17px 50px;
+
+  border:0;
+
+  border-radius:35px;
+
+  outline:none;
+
+  font-size:17px;
+
+  box-shadow:
+    0 5px 20px rgba(0,0,0,.18);
+}
+
+.search-icon{
+  position:absolute;
+  left:18px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:20px;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.container{
+  max-width:1150px;
+  margin:auto;
+
+  padding:25px 20px 120px;
+}
+
+.section-title{
+  font-size:25px;
+  margin-bottom:16px;
+}
+
+.section-subtitle{
+  color:#666;
+  margin-top:-10px;
+  margin-bottom:20px;
+}
+
+
+/* =========================================================
+   RESTAURANTS
+========================================================= */
+
+.restaurant-list{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(240px,1fr));
+
+  gap:18px;
+
+  margin-bottom:35px;
+}
+
+.restaurant-card{
+  background:white;
+
+  border-radius:18px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 3px 15px rgba(0,0,0,.08);
+
+  transition:
+    transform .2s,
+    box-shadow .2s;
+
+  border:2px solid transparent;
+}
+
+.restaurant-card:hover{
+  transform:translateY(-3px);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.12);
+}
+
+.restaurant-card.active{
+  border-color:#ff6900;
+}
+
+.restaurant-image{
+  height:150px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:60px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff1df,
+      #ffe0bd
+    );
+
+  overflow:hidden;
+}
+
+.restaurant-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.restaurant-content{
+  padding:17px;
+}
+
+.restaurant-content h3{
+  font-size:20px;
+  margin-bottom:5px;
+}
+
+.restaurant-location{
+  color:#666;
+  font-size:14px;
+  margin-bottom:12px;
+}
+
+.restaurant-button{
+  width:100%;
+
+  border:0;
+
+  background:#ff6900;
+
+  color:white;
+
+  padding:11px;
+
+  border-radius:9px;
+
+  font-weight:bold;
+}
+
+
+/* =========================================================
+   RESTAURANT AREA
+========================================================= */
+
+.restaurant-area{
+  display:none;
+}
+
+.restaurant-area.show{
+  display:block;
+}
+
+.restaurant-heading{
+  background:white;
+
+  padding:22px;
+
+  border-radius:18px;
+
+  margin-bottom:18px;
+
+  box-shadow:
+    0 3px 15px rgba(0,0,0,.07);
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:20px;
+}
+
+.restaurant-heading h2{
+  font-size:28px;
+}
+
+.restaurant-heading p{
   color:#666;
 }
 
-.remove{
-  background:#dc2626;
-  padding:6px 9px;
+.back-button{
+  background:#222;
+  color:white;
+
+  border:0;
+
+  padding:10px 15px;
+
+  border-radius:9px;
 }
+
+
+/* =========================================================
+   CATEGORY FILTERS
+========================================================= */
+
+.category-list{
+  display:flex;
+
+  gap:9px;
+
+  overflow-x:auto;
+
+  padding-bottom:8px;
+
+  margin-bottom:20px;
+}
+
+.category-button{
+  flex:none;
+
+  background:white;
+
+  border:1px solid #ddd;
+
+  padding:9px 15px;
+
+  border-radius:25px;
+
+  color:#444;
+}
+
+.category-button.active{
+  background:#ff6900;
+  color:white;
+  border-color:#ff6900;
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.menu-category{
+  margin-bottom:30px;
+}
+
+.menu-category-title{
+  font-size:22px;
+
+  margin-bottom:12px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.menu-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+
+  gap:15px;
+}
+
+.menu-card{
+  background:white;
+
+  border-radius:15px;
+
+  padding:15px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  box-shadow:
+    0 2px 10px rgba(0,0,0,.07);
+
+  position:relative;
+}
+
+.menu-image{
+  height:170px;
+
+  border-radius:12px;
+
+  overflow:hidden;
+
+  background:#f0f0f0;
+
+  margin-bottom:13px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:55px;
+}
+
+.menu-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.offer-badge{
+  position:absolute;
+
+  top:24px;
+  left:24px;
+
+  background:#dc2626;
+
+  color:white;
+
+  padding:5px 9px;
+
+  border-radius:6px;
+
+  font-size:12px;
+
+  font-weight:bold;
+}
+
+.menu-card h4{
+  font-size:18px;
+
+  margin-bottom:6px;
+}
+
+.menu-description{
+  color:#666;
+
+  font-size:14px;
+
+  min-height:42px;
+
+  margin-bottom:10px;
+}
+
+.menu-bottom{
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  margin-top:auto;
+}
+
+.menu-price{
+  font-weight:800;
+
+  color:#ff6900;
+
+  font-size:18px;
+}
+
+.add-button{
+  background:#ff6900;
+
+  color:white;
+
+  border:0;
+
+  padding:9px 14px;
+
+  border-radius:9px;
+
+  font-weight:bold;
+}
+
+.add-button.added{
+  background:#16a34a;
+}
+
+
+/* =========================================================
+   CART BAR
+========================================================= */
+
+.cart-bar{
+  position:fixed;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  bottom:15px;
+
+  width:
+    min(700px,calc(100% - 25px));
+
+  background:#202020;
+
+  color:white;
+
+  border-radius:15px;
+
+  padding:13px 15px;
+
+  z-index:1500;
+
+  box-shadow:
+    0 5px 30px rgba(0,0,0,.3);
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:12px;
+}
+
+.cart-bar.show{
+  display:flex;
+}
+
+.cart-info{
+  display:flex;
+
+  gap:15px;
+
+  align-items:center;
+}
+
+.view-cart{
+  background:#ff6900;
+
+  color:white;
+
+  border:0;
+
+  border-radius:9px;
+
+  padding:10px 15px;
+
+  font-weight:bold;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+  position:fixed;
+
+  inset:0;
+
+  background:
+    rgba(0,0,0,.65);
+
+  z-index:3000;
+
+  display:none;
+
+  overflow-y:auto;
+
+  padding:15px;
+}
+
+.modal.show{
+  display:block;
+}
+
+.modal-box{
+  background:white;
+
+  width:
+    min(650px,100%);
+
+  margin:25px auto;
+
+  border-radius:18px;
+
+  padding:22px;
+
+  position:relative;
+}
+
+.modal-header{
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:18px;
+}
+
+.modal-header h2{
+  font-size:24px;
+}
+
+.close-button{
+  width:38px;
+  height:38px;
+
+  border:0;
+
+  border-radius:50%;
+
+  background:#eee;
+
+  font-size:20px;
+}
+
+
+/* =========================================================
+   CART ITEMS
+========================================================= */
+
+.cart-restaurant{
+  background:#fff4e8;
+
+  border-left:5px solid #ff6900;
+
+  padding:12px;
+
+  border-radius:8px;
+
+  margin-bottom:15px;
+
+  font-weight:bold;
+}
+
+.cart-item{
+  display:grid;
+
+  grid-template-columns:
+    1fr auto auto;
+
+  align-items:center;
+
+  gap:12px;
+
+  padding:14px 0;
+
+  border-bottom:1px solid #eee;
+}
+
+.cart-item-name{
+  font-weight:bold;
+}
+
+.cart-item-price{
+  color:#777;
+
+  font-size:13px;
+
+  margin-top:3px;
+}
+
+.quantity{
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.quantity button{
+  width:30px;
+  height:30px;
+
+  border:0;
+
+  border-radius:7px;
+
+  background:#eee;
+}
+
+.quantity strong{
+  min-width:20px;
+  text-align:center;
+}
+
+.delete-button{
+  background:#dc2626 !important;
+  color:white;
+
+  border:0;
+
+  border-radius:7px;
+
+  padding:7px 9px;
+}
+
+.cart-total{
+  text-align:right;
+
+  font-size:21px;
+
+  font-weight:bold;
+
+  padding:18px 0;
+}
+
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-title{
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.form-group{
+  margin-bottom:13px;
+}
+
+.form-group label{
+  display:block;
+
+  font-weight:bold;
+
+  margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+
+  padding:12px;
+
+  border:1px solid #d6d6d6;
+
+  border-radius:9px;
+
+  outline:none;
+
+  background:white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:#ff6900;
+}
+
+.form-group textarea{
+  min-height:85px;
+
+  resize:vertical;
+}
+
+.checkout-button{
+  width:100%;
+
+  background:#25D366;
+
+  color:white;
+
+  border:0;
+
+  padding:15px;
+
+  border-radius:10px;
+
+  font-size:17px;
+
+  font-weight:bold;
+
+  margin-top:8px;
+}
+
+.checkout-button:disabled{
+  background:#999;
+
+  cursor:not-allowed;
+}
+
+
+/* =========================================================
+   EMPTY / LOADING / ERROR
+========================================================= */
 
 .loading{
   text-align:center;
+
+  padding:40px;
+
+  color:#666;
+}
+
+.spinner{
+  width:40px;
+  height:40px;
+
+  border:4px solid #eee;
+
+  border-top-color:#ff6900;
+
+  border-radius:50%;
+
+  animation:
+    spin .8s linear infinite;
+
+  margin:0 auto 12px;
+}
+
+@keyframes spin{
+
+  to{
+    transform:rotate(360deg);
+  }
+
+}
+
+.empty{
+  background:white;
+
+  border-radius:12px;
+
   padding:30px;
+
+  text-align:center;
+
   color:#666;
 }
 
 .error{
   background:#fee2e2;
+
   color:#991b1b;
+
   padding:15px;
+
   border-radius:10px;
-  margin-bottom:15px;
+
+  margin:15px 0;
 }
 
-.success{
-  background:#dcfce7;
-  color:#166534;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:15px;
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+  position:fixed;
+
+  top:85px;
+
+  right:15px;
+
+  z-index:5000;
+
+  background:#222;
+
+  color:white;
+
+  padding:13px 17px;
+
+  border-radius:9px;
+
+  box-shadow:
+    0 5px 20px rgba(0,0,0,.2);
+
+  display:none;
+
+  max-width:320px;
 }
 
-@media(max-width:600px){
+.toast.show{
+  display:block;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+  background:#202020;
+
+  color:white;
+
+  text-align:center;
+
+  padding:30px 20px;
+
+  margin-top:30px;
+}
+
+footer h3{
+  margin-bottom:8px;
+}
+
+footer p{
+  color:#bbb;
+
+  font-size:14px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:650px){
+
+  .header-inner{
+    padding:12px 15px;
+  }
+
+  .logo{
+    font-size:23px;
+  }
+
+  .hero{
+    padding:40px 15px 45px;
+  }
+
+  .hero h1{
+    font-size:31px;
+  }
+
+  .hero p{
+    font-size:16px;
+  }
 
   .container{
-    padding:12px;
+    padding:
+      20px
+      12px
+      110px;
   }
 
-  .restaurant{
-    padding:15px;
-  }
+  .restaurant-heading{
+    flex-direction:column;
 
-  .menu-item{
     align-items:flex-start;
   }
 
-  .menu-item button{
-    white-space:nowrap;
-    padding:9px 12px;
+  .restaurant-heading h2{
+    font-size:23px;
   }
 
-  .cart-bar{
-    left:8px;
-    right:8px;
-    bottom:8px;
-    padding:12px 10px;
-    font-size:14px;
+  .menu-grid{
+    grid-template-columns:1fr;
   }
 
-  .cart-bar button{
-    padding:9px 10px;
-  }
-
-  .modal{
-    padding:10px;
-  }
-
-  .modal-box{
-    margin:10px auto;
-    padding:15px;
+  .menu-image{
+    height:180px;
   }
 
   .cart-item{
     grid-template-columns:1fr;
   }
+
+  .cart-item > div:last-child{
+    text-align:left;
+  }
+
+  .cart-bar{
+    bottom:8px;
+  }
+
 }
+
+
+/* =========================================================
+   HIDE
+========================================================= */
+
+.hidden{
+  display:none !important;
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =======================================================
+     HEADER
+======================================================= -->
+
 <header>
-  <h1>🍽️ MloHub</h1>
-  <p>Discover food. Order easily. Enjoy.</p>
-</header>
 
-<div class="container">
+  <div class="header-inner">
 
-  <h2 style="margin-bottom:15px;">
-    🍽️ Choose a Restaurant
-  </h2>
-
-  <div id="message"></div>
-
-  <div
-    class="restaurant-buttons"
-    id="restaurantButtons"
-  >
-    <div class="loading">
-      Loading restaurants...
+    <div class="logo">
+      🍽️ MloHub
     </div>
+
+    <button
+      class="header-cart"
+      onclick="openCart()"
+    >
+      🛒
+      Cart
+      <span id="headerCartCount">0</span>
+    </button>
+
   </div>
 
-  <input
-    id="search"
-    class="search"
-    type="text"
-    placeholder="🔎 Search food..."
-    oninput="searchFood()"
+</header>
+
+
+<!-- =======================================================
+     HERO
+======================================================= -->
+
+<section class="hero">
+
+  <div class="hero-inner">
+
+    <h1>
+      Discover. Order. Enjoy. 🍔
+    </h1>
+
+    <p>
+      Find your favourite food from restaurants near you.
+    </p>
+
+    <div class="hero-search">
+
+      <span class="search-icon">
+        🔎
+      </span>
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search for food..."
+        autocomplete="off"
+      >
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main class="container">
+
+
+  <!-- RESTAURANTS -->
+
+  <section>
+
+    <h2 class="section-title">
+      🍽️ Choose a Restaurant
+    </h2>
+
+    <p class="section-subtitle">
+      Order directly from your favourite restaurant.
+    </p>
+
+    <div
+      id="restaurantList"
+      class="restaurant-list"
+    >
+
+      <div class="loading">
+
+        <div class="spinner"></div>
+
+        Loading restaurants...
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- RESTAURANT MENU -->
+
+  <section
+    id="restaurantArea"
+    class="restaurant-area"
   >
 
-  <div id="restaurantsContainer"></div>
+    <div
+      id="restaurantHeading"
+      class="restaurant-heading"
+    >
+    </div>
 
-</div>
 
-<!-- CART BAR -->
+    <div
+      id="categoryList"
+      class="category-list"
+    >
+    </div>
 
-<div class="cart-bar" id="cartBar">
 
-  <span>
-    🛒 Cart:
-    <strong id="count">0</strong>
-  </span>
+    <div
+      id="menuContainer"
+    >
 
-  <span>
-    KSh
-    <strong id="total">0</strong>
-  </span>
+      <div class="loading">
 
-  <button onclick="openCart()">
+        <div class="spinner"></div>
+
+        Loading menu...
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+</main>
+
+
+<!-- =======================================================
+     CART BAR
+======================================================= -->
+
+<div
+  id="cartBar"
+  class="cart-bar"
+>
+
+  <div class="cart-info">
+
+    <span>
+      🛒
+      <strong id="cartCount">
+        0
+      </strong>
+      items
+    </span>
+
+    <span>
+      KSh
+      <strong id="cartTotal">
+        0
+      </strong>
+    </span>
+
+  </div>
+
+  <button
+    class="view-cart"
+    onclick="openCart()"
+  >
     View Cart
   </button>
 
 </div>
 
 
-<!-- CART MODAL -->
+<!-- =======================================================
+     CART MODAL
+======================================================= -->
 
-<div class="modal" id="cartModal">
+<div
+  id="cartModal"
+  class="modal"
+>
 
   <div class="modal-box">
 
-    <h2>🛒 Your Order</h2>
+
+    <div class="modal-header">
+
+      <h2>
+        🛒 Your Order
+      </h2>
+
+      <button
+        class="close-button"
+        onclick="closeCart()"
+      >
+        ×
+      </button>
+
+    </div>
+
 
     <div
-      class="cart-restaurant"
       id="cartRestaurant"
+      class="cart-restaurant"
     >
       Restaurant
     </div>
 
-    <div id="items"></div>
 
-    <div class="total">
-      Total:
-      KSh
-      <span id="modalTotal">0</span>
+    <div id="cartItems">
     </div>
 
-    <h2>Customer Details</h2>
 
-    <label>Name</label>
+    <div
+      id="cartTotalBox"
+      class="cart-total"
+    >
+      Total:
+      KSh
+      <span id="modalTotal">
+        0
+      </span>
+    </div>
 
-    <input
-      id="name"
-      placeholder="Your name"
+
+    <h3 class="form-title">
+      👤 Customer Details
+    </h3>
+
+
+    <div class="form-group">
+
+      <label>
+        Full Name
+      </label>
+
+      <input
+        id="customerName"
+        type="text"
+        placeholder="Enter your name"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Phone Number
+      </label>
+
+      <input
+        id="customerPhone"
+        type="tel"
+        placeholder="07XXXXXXXX"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Order Type
+      </label>
+
+      <select id="orderType">
+
+        <option value="Delivery">
+          🚚 Delivery
+        </option>
+
+        <option value="Pickup">
+          🏪 Pickup
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div
+      id="locationGroup"
+      class="form-group"
     >
 
-    <label>Phone Number</label>
+      <label>
+        Delivery Location
+      </label>
 
-    <input
-      id="phone"
-      type="tel"
-      placeholder="07XXXXXXXX"
-    >
+      <textarea
+        id="customerLocation"
+        placeholder="Enter your building, street or location"
+      ></textarea>
 
-    <label>Order Type</label>
+    </div>
 
-    <select id="type">
 
-      <option value="Delivery">
-        🚚 Delivery
-      </option>
+    <div class="form-group">
 
-      <option value="Pickup">
-        🏪 Pickup
-      </option>
+      <label>
+        Payment Method
+      </label>
 
-    </select>
+      <select id="paymentMethod">
 
-    <label>Payment Method</label>
+        <option value="Cash">
+          💵 Cash
+        </option>
 
-    <select id="payment">
+        <option value="M-Pesa">
+          📱 M-Pesa
+        </option>
 
-      <option value="cash">
-        💵 Cash on Delivery / Pickup
-      </option>
+      </select>
 
-      <option value="till4574509">
-        📱 M-Pesa Till: 4574509
-      </option>
+    </div>
 
-      <option value="till4578247">
-        📱 M-Pesa Till: 4578247
-      </option>
-
-    </select>
-
-    <label>Location</label>
-
-    <textarea
-      id="location"
-      placeholder="Enter delivery location"
-    ></textarea>
 
     <button
-      class="checkout"
       id="checkoutButton"
+      class="checkout-button"
       onclick="placeOrder()"
     >
-      📲 Place Order on WhatsApp
+      📲 Order on WhatsApp
     </button>
 
-    <button
-      class="close"
-      onclick="closeCart()"
-    >
-      Close
-    </button>
 
   </div>
 
 </div>
 
 
-<!-- SUPABASE -->
+<!-- =======================================================
+     TOAST
+======================================================= -->
+
+<div
+  id="toast"
+  class="toast"
+>
+</div>
+
+
+<!-- =======================================================
+     FOOTER
+======================================================= -->
+
+<footer>
+
+  <h3>
+    🍽️ MloHub
+  </h3>
+
+  <p>
+    Discover food. Order easily. Enjoy.
+  </p>
+
+  <p style="margin-top:8px;">
+    © 2026 MloHub
+  </p>
+
+</footer>
+
+
+<!-- =======================================================
+     SUPABASE
+======================================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
 
-/* =========================================
-   SUPABASE
-========================================= */
+/* =========================================================
+   SUPABASE CONNECTION
+========================================================= */
 
 const SUPABASE_URL =
   "https://bhvzpycbztngtwuhxxex.supabase.co";
@@ -512,253 +1450,355 @@ const supabaseClient =
   );
 
 
-/* =========================================
-   GLOBAL DATA
-========================================= */
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
 
 let restaurants = [];
 
 let currentRestaurant = null;
 
-let carts = {};
+let menuItems = [];
+
+let cart = [];
+
+let activeCategory = "All";
+
+let searchTerm = "";
 
 
-/* =========================================
-   START
-========================================= */
+/* =========================================================
+   HELPERS
+========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function(){
+function escapeHTML(value){
 
-    loadRestaurants();
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
-  }
-);
+}
 
 
-/* =========================================
-   LOAD ALL RESTAURANTS
-========================================= */
+function money(value){
+
+  return Number(value || 0)
+    .toLocaleString("en-KE");
+
+}
+
+
+function showToast(message){
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  setTimeout(function(){
+
+    toast.classList.remove("show");
+
+  },3000);
+
+}
+
+
+function restaurantWhatsApp(restaurant){
+
+  if(!restaurant) return "";
+
+  return String(
+    restaurant.whatsapp ||
+    restaurant.whatsapp_number ||
+    restaurant.phone ||
+    ""
+  ).replace(/\D/g,"");
+
+}
+
+
+/* =========================================================
+   LOAD RESTAURANTS
+========================================================= */
 
 async function loadRestaurants(){
 
-  const buttons =
+  const box =
     document.getElementById(
-      "restaurantButtons"
+      "restaurantList"
     );
 
-  const container =
-    document.getElementById(
-      "restaurantsContainer"
-    );
 
-  buttons.innerHTML =
-    '<div class="loading">Loading restaurants...</div>';
-
-  container.innerHTML = "";
+  box.innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      Loading restaurants...
+    </div>
+  `;
 
 
-  const { data, error } =
+  const result =
     await supabaseClient
-
       .from("restaurants")
-
       .select("*")
+      .order("id",{ascending:true});
 
-      .order("id",{
-        ascending:true
-      });
+
+  const data =
+    result.data;
+
+  const error =
+    result.error;
 
 
   if(error){
 
     console.error(
-      "Restaurant loading error:",
+      "Restaurant error:",
       error
     );
 
-    buttons.innerHTML =
-      '<div class="error">' +
-      'Unable to load restaurants.<br><br>' +
-      escapeHTML(error.message) +
-      '</div>';
+
+    box.innerHTML = `
+      <div class="error">
+
+        ❌ Unable to load restaurants.
+
+        <br><br>
+
+        ${escapeHTML(error.message)}
+
+      </div>
+    `;
 
     return;
+
   }
 
 
   if(!data || data.length === 0){
 
-    buttons.innerHTML =
-      '<div class="empty">' +
-      'No restaurants available.' +
-      '</div>';
+    box.innerHTML = `
+      <div class="empty">
+        🍽️ No restaurants available yet.
+      </div>
+    `;
 
     return;
+
   }
 
 
   restaurants = data;
 
 
-  data.forEach(function(restaurant){
-
-    carts[restaurant.id] = [];
-
-  });
-
-
-  buttons.innerHTML = "";
-
-
-  data.forEach(function(restaurant,index){
-
-    const button =
-      document.createElement("button");
-
-    button.textContent =
-      "🍽️ " + restaurant.name;
-
-    button.onclick =
-      function(){
-
-        showRestaurant(
-          restaurant.id
-        );
-
-      };
-
-    buttons.appendChild(button);
-
-  });
-
-
   renderRestaurants();
-
-
-  if(data.length > 0){
-
-    showRestaurant(data[0].id);
-
-  }
 
 }
 
 
-/* =========================================
+/* =========================================================
    RENDER RESTAURANTS
-========================================= */
+========================================================= */
 
 function renderRestaurants(){
 
-  const container =
+  const box =
     document.getElementById(
-      "restaurantsContainer"
+      "restaurantList"
     );
 
-  container.innerHTML = "";
+
+  if(!restaurants.length){
+
+    box.innerHTML = `
+      <div class="empty">
+        No restaurants found.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML = "";
 
 
   restaurants.forEach(function(restaurant){
 
-    const box =
+    const card =
       document.createElement("div");
 
-    box.className = "restaurant";
 
-    box.id =
-      "restaurant-" +
-      restaurant.id;
-
-    box.style.display = "none";
+    card.className =
+      "restaurant-card";
 
 
-    box.innerHTML = `
+    if(
+      currentRestaurant &&
+      Number(currentRestaurant.id) ===
+      Number(restaurant.id)
+    ){
 
-      <h2>
-        🍽️ ${escapeHTML(
-          restaurant.name || "Restaurant"
-        )}
-      </h2>
+      card.classList.add("active");
 
-      <p class="location">
-        ${escapeHTML(
-          restaurant.address ||
-          restaurant.location ||
-          "Nairobi"
-        )}
-      </p>
+    }
 
-      <div class="restaurant-note">
-        📍 Ordering from
-        ${escapeHTML(
-          restaurant.name || "Restaurant"
-        )}
+
+    const image =
+      restaurant.image_url ||
+      restaurant.logo_url ||
+      restaurant.image;
+
+
+    card.innerHTML = `
+
+      <div class="restaurant-image">
+
+        ${
+          image
+          ?
+          `<img
+             src="${escapeHTML(image)}"
+             alt="${escapeHTML(restaurant.name)}"
+             onerror="this.style.display='none'"
+           >`
+          :
+          `🍽️`
+        }
+
       </div>
 
-      <div id="menu-${restaurant.id}">
-        <div class="loading">
-          Loading menu...
-        </div>
+
+      <div class="restaurant-content">
+
+        <h3>
+          ${escapeHTML(
+            restaurant.name ||
+            "Restaurant"
+          )}
+        </h3>
+
+
+        <p class="restaurant-location">
+
+          📍
+
+          ${escapeHTML(
+            restaurant.address ||
+            restaurant.location ||
+            "Nairobi"
+          )}
+
+        </p>
+
+
+        <button
+          class="restaurant-button"
+          onclick="selectRestaurant(${Number(restaurant.id)})"
+        >
+          View Menu
+        </button>
+
       </div>
 
     `;
 
 
-    container.appendChild(box);
+    box.appendChild(card);
 
   });
 
 }
 
 
-/* =========================================
-   SHOW RESTAURANT
-========================================= */
+/* =========================================================
+   SELECT RESTAURANT
+========================================================= */
 
-async function showRestaurant(
-  restaurantId
-){
+async function selectRestaurant(id){
 
   const restaurant =
-    restaurants.find(
-      r => Number(r.id) === Number(restaurantId)
+    restaurants.find(function(item){
+
+      return Number(item.id) ===
+             Number(id);
+
+    });
+
+
+  if(!restaurant){
+
+    showToast(
+      "Restaurant not found."
     );
 
+    return;
 
-  if(!restaurant) return;
+  }
 
 
   currentRestaurant =
     restaurant;
 
 
-  restaurants.forEach(function(r){
+  renderRestaurants();
 
-    const box =
-      document.getElementById(
-        "restaurant-" + r.id
-      );
 
-    if(box){
+  const area =
+    document.getElementById(
+      "restaurantArea"
+    );
 
-      box.style.display =
-        Number(r.id) === Number(restaurantId)
-          ? "block"
-          : "none";
 
-    }
+  area.classList.add("show");
 
-  });
+
+  renderRestaurantHeading();
+
+
+  menuItems = [];
+
+
+  activeCategory = "All";
+
+
+  searchTerm = "";
 
 
   document.getElementById(
-    "search"
+    "searchInput"
   ).value = "";
 
 
-  updateCart();
+  document.getElementById(
+    "menuContainer"
+  ).innerHTML = `
+
+    <div class="loading">
+
+      <div class="spinner"></div>
+
+      Loading ${escapeHTML(
+        restaurant.name
+      )} menu...
+
+    </div>
+
+  `;
+
+
+  area.scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
 
 
   await loadMenu(
@@ -768,55 +1808,114 @@ async function showRestaurant(
 }
 
 
-/* =========================================
-   LOAD RESTAURANT MENU
-========================================= */
+/* =========================================================
+   RESTAURANT HEADING
+========================================================= */
+
+function renderRestaurantHeading(){
+
+  const box =
+    document.getElementById(
+      "restaurantHeading"
+    );
+
+
+  if(!currentRestaurant) return;
+
+
+  box.innerHTML = `
+
+    <div>
+
+      <h2>
+        🍽️
+        ${escapeHTML(
+          currentRestaurant.name
+        )}
+      </h2>
+
+      <p>
+        📍
+        ${escapeHTML(
+          currentRestaurant.address ||
+          currentRestaurant.location ||
+          "Nairobi"
+        )}
+      </p>
+
+    </div>
+
+
+    <button
+      class="back-button"
+      onclick="closeRestaurant()"
+    >
+      ← Restaurants
+    </button>
+
+  `;
+
+}
+
+
+/* =========================================================
+   CLOSE RESTAURANT
+========================================================= */
+
+function closeRestaurant(){
+
+  document
+    .getElementById(
+      "restaurantArea"
+    )
+    .classList.remove("show");
+
+
+  currentRestaurant = null;
+
+  renderRestaurants();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =========================================================
+   LOAD MENU
+========================================================= */
 
 async function loadMenu(
   restaurantId
 ){
 
-  const menuBox =
-    document.getElementById(
-      "menu-" + restaurantId
-    );
-
-
-  if(!menuBox) return;
-
-
-  menuBox.innerHTML =
-    '<div class="loading">' +
-    'Loading menu...' +
-    '</div>';
-
-
-  const { data, error } =
+  const result =
     await supabaseClient
-
       .from("menu_items")
-
-    .select(
-  "id,restaurant_id,name,description,price,image_url,available,created_at,category"
-) 
-      )
-
+      .select("*")
       .eq(
         "restaurant_id",
         restaurantId
       )
-
       .eq(
         "available",
         true
       )
-
       .order(
         "created_at",
         {
           ascending:true
         }
       );
+
+
+  const data =
+    result.data;
+
+  const error =
+    result.error;
 
 
   if(error){
@@ -826,144 +1925,588 @@ async function loadMenu(
       error
     );
 
-    menuBox.innerHTML =
-      '<div class="error">' +
-      'Unable to load menu.<br><br>' +
-      escapeHTML(error.message) +
-      '</div>';
 
-    return;
-  }
+    document.getElementById(
+      "menuContainer"
+    ).innerHTML = `
 
+      <div class="error">
 
-  if(!data || data.length === 0){
+        ❌ Unable to load menu.
 
-    menuBox.innerHTML =
-      '<div class="empty">' +
-      'No menu items available.' +
-      '</div>';
+        <br><br>
 
-    return;
-  }
-
-
-  menuBox.innerHTML = "";
-
-
-  data.forEach(function(item){
-
-    const menuItem =
-      document.createElement("div");
-
-    menuItem.className =
-      "menu-item";
-
-
-    menuItem.innerHTML = `
-
-      <div>
-
-        <h3>
-          ${escapeHTML(
-            item.name
-          )}
-        </h3>
-
-        <p class="description">
-          ${escapeHTML(
-            item.description || ""
-          )}
-        </p>
-
-        <span class="price">
-          KSh
-          ${Number(
-            item.price
-          ).toLocaleString()}
-        </span>
+        ${escapeHTML(
+          error.message
+        )}
 
       </div>
 
-      <button>
-        Add
-      </button>
+    `;
+
+    return;
+
+  }
+
+
+  menuItems =
+    data || [];
+
+
+  renderCategories();
+
+  renderMenu();
+
+}
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+function getCategories(){
+
+  const categories = [
+    "All"
+  ];
+
+
+  menuItems.forEach(function(item){
+
+    const category =
+      item.category &&
+      String(item.category).trim()
+      ?
+      String(item.category).trim()
+      :
+      "Other";
+
+
+    if(
+      !categories.includes(
+        category
+      )
+    ){
+
+      categories.push(
+        category
+      );
+
+    }
+
+  });
+
+
+  return categories;
+
+}
+
+
+/* =========================================================
+   RENDER CATEGORIES
+========================================================= */
+
+function renderCategories(){
+
+  const box =
+    document.getElementById(
+      "categoryList"
+    );
+
+
+  const categories =
+    getCategories();
+
+
+  box.innerHTML = "";
+
+
+  categories.forEach(function(category){
+
+    const button =
+      document.createElement("button");
+
+
+    button.className =
+      "category-button";
+
+
+    if(
+      category === activeCategory
+    ){
+
+      button.classList.add(
+        "active"
+      );
+
+    }
+
+
+    button.textContent =
+      category === "All"
+      ?
+      "🍽️ All"
+      :
+      "🍴 " + category;
+
+
+    button.onclick =
+      function(){
+
+        activeCategory =
+          category;
+
+        renderCategories();
+
+        renderMenu();
+
+      };
+
+
+    box.appendChild(
+      button
+    );
+
+  });
+
+}
+
+
+/* =========================================================
+   FILTER MENU
+========================================================= */
+
+function filteredMenu(){
+
+  return menuItems.filter(
+    function(item){
+
+      const category =
+        item.category &&
+        String(item.category).trim()
+        ?
+        String(item.category).trim()
+        :
+        "Other";
+
+
+      const matchesCategory =
+        activeCategory === "All" ||
+        category === activeCategory;
+
+
+      const searchable =
+        (
+          item.name || ""
+        ) +
+        " " +
+        (
+          item.description || ""
+        ) +
+        " " +
+        category;
+
+
+      const matchesSearch =
+        searchable
+          .toLowerCase()
+          .includes(
+            searchTerm
+          );
+
+
+      return (
+        matchesCategory &&
+        matchesSearch
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RENDER MENU
+========================================================= */
+
+function renderMenu(){
+
+  const box =
+    document.getElementById(
+      "menuContainer"
+    );
+
+
+  const items =
+    filteredMenu();
+
+
+  if(!items.length){
+
+    box.innerHTML = `
+
+      <div class="empty">
+
+        🍽️
+
+        <br><br>
+
+        No menu items found.
+
+      </div>
 
     `;
 
+    return;
 
-    menuItem
-      .querySelector("button")
-      .addEventListener(
-        "click",
-        function(){
-
-          addToCart(
-            currentRestaurant.id,
-            item
-          );
-
-        }
-      );
+  }
 
 
-    menuBox.appendChild(
-      menuItem
+  const groups = {};
+
+
+  items.forEach(function(item){
+
+    const category =
+      item.category &&
+      String(item.category).trim()
+      ?
+      String(item.category).trim()
+      :
+      "Other";
+
+
+    if(!groups[category]){
+
+      groups[category] = [];
+
+    }
+
+
+    groups[category].push(
+      item
     );
 
   });
 
 
-  searchFood();
+  box.innerHTML = "";
+
+
+  Object.keys(groups)
+    .forEach(function(category){
+
+      const section =
+        document.createElement(
+          "section"
+        );
+
+
+      section.className =
+        "menu-category";
+
+
+      section.innerHTML = `
+
+        <h3 class="menu-category-title">
+
+          🍽️
+          ${escapeHTML(
+            category
+          )}
+
+        </h3>
+
+        <div class="menu-grid"></div>
+
+      `;
+
+
+      const grid =
+        section.querySelector(
+          ".menu-grid"
+        );
+
+
+      groups[category]
+        .forEach(function(item){
+
+          grid.appendChild(
+            createMenuCard(item)
+          );
+
+        });
+
+
+      box.appendChild(
+        section
+      );
+
+    });
 
 }
 
 
-/* =========================================
-   ADD TO CART
-========================================= */
+/* =========================================================
+   CREATE MENU CARD
+========================================================= */
 
-function addToCart(
-  restaurantId,
-  item
-){
+function createMenuCard(item){
 
-  if(!carts[restaurantId]){
+  const card =
+    document.createElement("div");
 
-    carts[restaurantId] = [];
+
+  card.className =
+    "menu-card";
+
+
+  const image =
+    item.image_url ||
+    item.image ||
+    item.photo_url;
+
+
+  const isOffer =
+    (
+      String(item.name || "")
+        .toLowerCase()
+        .includes("offer")
+    ) ||
+    (
+      String(item.description || "")
+        .toLowerCase()
+        .includes("free")
+    );
+
+
+  card.innerHTML = `
+
+    ${
+      isOffer
+      ?
+      `<div class="offer-badge">
+         OFFER
+       </div>`
+      :
+      ""
+    }
+
+
+    <div class="menu-image">
+
+      ${
+        image
+        ?
+        `<img
+           src="${escapeHTML(image)}"
+           alt="${escapeHTML(item.name)}"
+           onerror="this.style.display='none'"
+         >`
+        :
+        `🍔`
+      }
+
+    </div>
+
+
+    <h4>
+      ${escapeHTML(
+        item.name
+      )}
+    </h4>
+
+
+    <p class="menu-description">
+
+      ${escapeHTML(
+        item.description ||
+        "Delicious food from " +
+        (currentRestaurant
+          ?
+          currentRestaurant.name
+          :
+          "MloHub")
+      )}
+
+    </p>
+
+
+    <div class="menu-bottom">
+
+      <span class="menu-price">
+
+        KSh
+        ${money(item.price)}
+
+      </span>
+
+
+      <button
+        class="add-button"
+      >
+        Add +
+      </button>
+
+    </div>
+
+  `;
+
+
+  const button =
+    card.querySelector(
+      ".add-button"
+    );
+
+
+  button.onclick =
+    function(){
+
+      addToCart(item);
+
+      button.textContent =
+        "✓ Added";
+
+      button.classList.add(
+        "added"
+      );
+
+
+      setTimeout(function(){
+
+        button.textContent =
+          "Add +";
+
+        button.classList.remove(
+          "added"
+        );
+
+      },1000);
+
+    };
+
+
+  return card;
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+document
+  .getElementById(
+    "searchInput"
+  )
+  .addEventListener(
+    "input",
+    function(){
+
+      searchTerm =
+        this.value
+          .toLowerCase()
+          .trim();
+
+
+      if(
+        currentRestaurant
+      ){
+
+        renderMenu();
+
+      }else{
+
+        searchRestaurants();
+
+      }
+
+    }
+  );
+
+
+function searchRestaurants(){
+
+  const query =
+    searchTerm;
+
+
+  const cards =
+    document.querySelectorAll(
+      ".restaurant-card"
+    );
+
+
+  cards.forEach(function(card){
+
+    const text =
+      card.textContent
+        .toLowerCase();
+
+
+    card.style.display =
+      text.includes(query)
+      ?
+      ""
+      :
+      "none";
+
+  });
+
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function addToCart(item){
+
+  if(!currentRestaurant){
+
+    showToast(
+      "Please choose a restaurant first."
+    );
+
+    return;
 
   }
 
 
-  const cart =
-    carts[restaurantId];
-
-
   const existing =
-    cart.find(
-      x =>
-        Number(x.menu_item_id) ===
-        Number(item.id)
-    );
+    cart.find(function(cartItem){
+
+      return Number(
+        cartItem.id
+      ) === Number(
+        item.id
+      );
+
+    });
 
 
   if(existing){
 
-    existing.qty++;
+    existing.quantity++;
 
   }else{
 
     cart.push({
 
-      menu_item_id:
+      id:
         item.id,
+
+      restaurant_id:
+        currentRestaurant.id,
 
       name:
         item.name,
 
       price:
-        Number(item.price),
+        Number(item.price || 0),
 
-      qty:
+      quantity:
         1
 
     });
@@ -973,54 +2516,34 @@ function addToCart(
 
   updateCart();
 
-}
 
-
-/* =========================================
-   GET CURRENT CART
-========================================= */
-
-function getCart(){
-
-  if(!currentRestaurant){
-
-    return [];
-
-  }
-
-
-  if(!carts[currentRestaurant.id]){
-
-    carts[currentRestaurant.id] = [];
-
-  }
-
-
-  return carts[currentRestaurant.id];
+  showToast(
+    item.name +
+    " added to cart 🛒"
+  );
 
 }
 
 
-/* =========================================
+/* =========================================================
    CHANGE QUANTITY
-========================================= */
+========================================================= */
 
-function changeQty(
+function changeQuantity(
   index,
   amount
 ){
 
-  const cart =
-    getCart();
-
-
   if(!cart[index]) return;
 
 
-  cart[index].qty += amount;
+  cart[index].quantity +=
+    amount;
 
 
-  if(cart[index].qty <= 0){
+  if(
+    cart[index].quantity <= 0
+  ){
 
     cart.splice(
       index,
@@ -1035,17 +2558,13 @@ function changeQty(
 }
 
 
-/* =========================================
-   REMOVE ITEM
-========================================= */
+/* =========================================================
+   REMOVE CART ITEM
+========================================================= */
 
-function removeFromCart(
+function removeCartItem(
   index
 ){
-
-  const cart =
-    getCart();
-
 
   if(!cart[index]) return;
 
@@ -1061,66 +2580,100 @@ function removeFromCart(
 }
 
 
-/* =========================================
+/* =========================================================
+   CART TOTAL
+========================================================= */
+
+function getCartCount(){
+
+  return cart.reduce(
+    function(total,item){
+
+      return total +
+        Number(item.quantity);
+
+    },
+    0
+  );
+
+}
+
+
+function getCartTotal(){
+
+  return cart.reduce(
+    function(total,item){
+
+      return total +
+        (
+          Number(item.price) *
+          Number(item.quantity)
+        );
+
+    },
+    0
+  );
+
+}
+
+
+/* =========================================================
    UPDATE CART
-========================================= */
+========================================================= */
 
 function updateCart(){
 
-  const cart =
-    getCart();
+  const count =
+    getCartCount();
 
 
-  let count = 0;
-
-  let total = 0;
-
-
-  cart.forEach(function(item){
-
-    count +=
-      Number(item.qty);
-
-    total +=
-      Number(item.price) *
-      Number(item.qty);
-
-  });
+  const total =
+    getCartTotal();
 
 
   document.getElementById(
-    "count"
+    "cartCount"
   ).textContent =
     count;
 
 
   document.getElementById(
-    "total"
+    "headerCartCount"
   ).textContent =
-    total.toLocaleString();
+    count;
+
+
+  document.getElementById(
+    "cartTotal"
+  ).textContent =
+    money(total);
 
 
   document.getElementById(
     "modalTotal"
   ).textContent =
-    total.toLocaleString();
+    money(total);
 
 
-  document.getElementById(
-    "cartRestaurant"
-  ).textContent =
-    currentRestaurant
-      ? "🍽️ " +
-        currentRestaurant.name
-      : "Restaurant";
+  const bar =
+    document.getElementById(
+      "cartBar"
+    );
 
 
-  document.getElementById(
-    "cartBar"
-  ).style.display =
-    count > 0
-      ? "flex"
-      : "none";
+  if(count > 0){
+
+    bar.classList.add(
+      "show"
+    );
+
+  }else{
+
+    bar.classList.remove(
+      "show"
+    );
+
+  }
 
 
   renderCart();
@@ -1128,28 +2681,33 @@ function updateCart(){
 }
 
 
-/* =========================================
+/* =========================================================
    RENDER CART
-========================================= */
+========================================================= */
 
 function renderCart(){
 
   const box =
     document.getElementById(
-      "items"
+      "cartItems"
     );
 
 
-  const cart =
-    getCart();
+  if(!cart.length){
 
+    box.innerHTML = `
 
-  if(cart.length === 0){
+      <div class="empty">
 
-    box.innerHTML =
-      '<div class="empty">' +
-      '🛒 Your cart is empty.' +
-      '</div>';
+        🛒
+
+        <br><br>
+
+        Your cart is empty.
+
+      </div>
+
+    `;
 
     return;
 
@@ -1176,65 +2734,62 @@ function renderCart(){
 
         <div>
 
-          <strong>
+          <div class="cart-item-name">
+
             ${escapeHTML(
               item.name
             )}
-          </strong>
 
-          <br>
+          </div>
 
-          <small>
+          <div class="cart-item-price">
+
             KSh
-            ${Number(
-              item.price
-            ).toLocaleString()}
+            ${money(item.price)}
             each
-          </small>
+
+          </div>
 
         </div>
+
 
         <div class="quantity">
 
           <button
-            onclick="changeQty(
-              ${index},
-              -1
-            )"
+            onclick="changeQuantity(${index},-1)"
           >
             −
           </button>
 
           <strong>
-            ${item.qty}
+            ${item.quantity}
           </strong>
 
           <button
-            onclick="changeQty(
-              ${index},
-              1
-            )"
+            onclick="changeQuantity(${index},1)"
           >
             +
           </button>
 
         </div>
 
+
         <div>
 
           <strong>
+
             KSh
-            ${(
-              Number(item.price) *
-              Number(item.qty)
-            ).toLocaleString()}
+            ${money(
+              item.price *
+              item.quantity
+            )}
+
           </strong>
 
+
           <button
-            class="remove"
-            onclick="removeFromCart(
-              ${index}
-            )"
+            class="delete-button"
+            onclick="removeCartItem(${index})"
           >
             ×
           </button>
@@ -1251,21 +2806,30 @@ function renderCart(){
     }
   );
 
+
+  document.getElementById(
+    "cartRestaurant"
+  ).textContent =
+    currentRestaurant
+    ?
+    "🍽️ Ordering from " +
+    currentRestaurant.name
+    :
+    "🍽️ MloHub";
+
 }
 
 
-/* =========================================
+/* =========================================================
    OPEN CART
-========================================= */
+========================================================= */
 
 function openCart(){
 
-  if(getCart().length === 0){
+  if(!cart.length){
 
-    alert(
-      "Your " +
-      currentRestaurant.name +
-      " cart is empty. Please add food first."
+    showToast(
+      "Your cart is empty. Add food first."
     );
 
     return;
@@ -1273,185 +2837,92 @@ function openCart(){
   }
 
 
+  renderCart();
+
+
   document.getElementById(
     "cartModal"
-  ).style.display =
-    "block";
+  ).classList.add(
+    "show"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
 
 }
 
 
-/* =========================================
+/* =========================================================
    CLOSE CART
-========================================= */
+========================================================= */
 
 function closeCart(){
 
   document.getElementById(
     "cartModal"
-  ).style.display =
-    "none";
+  ).classList.remove(
+    "show"
+  );
+
+
+  document.body.style.overflow =
+    "";
 
 }
 
 
-/* =========================================
-   PLACE ORDER
-========================================= */
+/* =========================================================
+   DELIVERY / PICKUP
+========================================================= */
 
-async function placeOrder(){
+document
+  .getElementById(
+    "orderType"
+  )
+  .addEventListener(
+    "change",
+    function(){
 
-  const cart =
-    getCart();
-
-
-  if(cart.length === 0){
-
-    alert(
-      "Please add food first."
-    );
-
-    return;
-
-  }
+      const group =
+        document.getElementById(
+          "locationGroup"
+        );
 
 
-  if(!currentRestaurant){
+      if(
+        this.value === "Pickup"
+      ){
 
-    alert(
-      "Please choose a restaurant."
-    );
+        group.style.display =
+          "none";
 
-    return;
+      }else{
 
-  }
+        group.style.display =
+          "block";
 
+      }
 
-  const name =
-    document.getElementById(
-      "name"
-    ).value.trim();
-
-
-  const phone =
-    document.getElementById(
-      "phone"
-    ).value.trim();
+    }
+  );
 
 
-  const type =
-    document.getElementById(
-      "type"
-    ).value;
+/* =========================================================
+   SAVE CUSTOMER
+========================================================= */
 
-
-  const payment =
-    document.getElementById(
-      "payment"
-    ).value;
-
-
-  const location =
-    document.getElementById(
-      "location"
-    ).value.trim();
-
-
-  if(!name){
-
-    alert(
-      "Please enter your name."
-    );
-
-    return;
-
-  }
-
-
-  if(!phone){
-
-    alert(
-      "Please enter your phone number."
-    );
-
-    return;
-
-  }
-
-
-  if(type === "Delivery" && !location){
-
-    alert(
-      "Please enter your delivery location."
-    );
-
-    return;
-
-  }
-
-
-  const whatsappNumber =
-    String(
-      currentRestaurant.whatsapp ||
-      ""
-    ).replace(
-      /[^0-9]/g,
-      ""
-    );
-
-
-  if(!whatsappNumber){
-
-    alert(
-      "This restaurant does not have a WhatsApp number registered yet."
-    );
-
-    return;
-
-  }
-
-
-  let total = 0;
-
-
-  cart.forEach(function(item){
-
-    total +=
-      Number(item.price) *
-      Number(item.qty);
-
-  });
-
-
-  const checkoutButton =
-    document.getElementById(
-      "checkoutButton"
-    );
-
-
-  checkoutButton.disabled =
-    true;
-
-
-  checkoutButton.textContent =
-    "Saving order...";
-
+async function saveCustomer(
+  name,
+  phone,
+  location
+){
 
   try{
 
-
-    /* ===============================
-       SAVE CUSTOMER
-    =============================== */
-
-    const {
-      data: customer,
-      error: customerError
-    } =
+    const result =
       await supabaseClient
-
         .from("customers")
-
         .insert({
 
           full_name:
@@ -1460,86 +2931,124 @@ async function placeOrder(){
           phone:
             phone,
 
-          email:
-            null,
-
           address:
             location ||
             "Pickup"
 
         })
-
         .select()
-
         .single();
 
 
-    if(customerError){
+    if(result.error){
 
-      throw new Error(
-        "Customer error: " +
-        customerError.message
+      console.warn(
+        "Customer was not saved:",
+        result.error
       );
+
+      return null;
 
     }
 
 
-    /* ===============================
-       SAVE ORDER
-    =============================== */
+    return result.data;
 
-    const {
-      data: order,
-      error: orderError
-    } =
+  }catch(error){
+
+    console.warn(
+      "Customer save failed:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE ORDER
+========================================================= */
+
+async function saveOrder(
+  customer,
+  name,
+  phone,
+  location,
+  orderType,
+  total
+){
+
+  if(!currentRestaurant){
+
+    return null;
+
+  }
+
+
+  try{
+
+    const orderData = {
+
+      restaurant_id:
+        currentRestaurant.id,
+
+      customer_name:
+        name,
+
+      customer_phone:
+        phone,
+
+      delivery_address:
+        location ||
+        "Pickup",
+
+      order_status:
+        "pending",
+
+      total_amount:
+        total
+
+    };
+
+
+    if(customer){
+
+      orderData.customer_id =
+        customer.id;
+
+    }
+
+
+    const result =
       await supabaseClient
-
         .from("orders")
-
-        .insert({
-
-          restaurant_id:
-            currentRestaurant.id,
-
-          customer_id:
-            customer.id,
-
-          customer_name:
-            name,
-
-          customer_phone:
-            phone,
-
-          delivery_address:
-            location ||
-            "Pickup",
-
-          order_status:
-            "pending",
-
-          total_amount:
-            total
-
-        })
-
+        .insert(
+          orderData
+        )
         .select()
-
         .single();
 
 
-    if(orderError){
+    if(result.error){
 
-      throw new Error(
-        "Order error: " +
-        orderError.message
+      console.warn(
+        "Order save failed:",
+        result.error
       );
+
+      return null;
 
     }
 
 
-    /* ===============================
-       SAVE ORDER ITEMS
-    =============================== */
+    const order =
+      result.data;
+
+
+    /* SAVE ORDER ITEMS */
 
     const orderItems =
       cart.map(function(item){
@@ -1550,10 +3059,10 @@ async function placeOrder(){
             order.id,
 
           menu_item_id:
-            item.menu_item_id,
+            item.id,
 
           quantity:
-            item.qty,
+            item.quantity,
 
           price:
             item.price
@@ -1563,327 +3072,395 @@ async function placeOrder(){
       });
 
 
-    const {
-      error: itemsError
-    } =
+    const itemResult =
       await supabaseClient
-
         .from("order_items")
-
         .insert(
           orderItems
         );
 
 
-    if(itemsError){
+    if(itemResult.error){
 
-      throw new Error(
-        "Order items error: " +
-        itemsError.message
+      console.warn(
+        "Order items save failed:",
+        itemResult.error
       );
 
     }
 
 
-    /* ===============================
-       PAYMENT TEXT
-    =============================== */
-
-    let paymentText =
-      "Cash on Delivery / Pickup";
-
-
-    if(
-      payment ===
-      "till4574509"
-    ){
-
-      paymentText =
-        "M-Pesa Till: 4574509";
-
-    }
-
-
-    if(
-      payment ===
-      "till4578247"
-    ){
-
-      paymentText =
-        "M-Pesa Till: 4578247";
-
-    }
-
-
-    /* ===============================
-       WHATSAPP MESSAGE
-    =============================== */
-
-    let message =
-      "🍽️ NEW MloHub ORDER\n\n";
-
-
-    message +=
-      "Order ID: #" +
-      order.id +
-      "\n";
-
-
-    message +=
-      "Restaurant: " +
-      currentRestaurant.name +
-      "\n";
-
-
-    message +=
-      "Customer: " +
-      name +
-      "\n";
-
-
-    message +=
-      "Phone: " +
-      phone +
-      "\n";
-
-
-    message +=
-      "Order Type: " +
-      type +
-      "\n";
-
-
-    if(location){
-
-      message +=
-        "Location: " +
-        location +
-        "\n";
-
-    }
-
-
-    message +=
-      "Payment: " +
-      paymentText +
-      "\n\n";
-
-
-    message +=
-      "ORDER ITEMS:\n";
-
-
-    cart.forEach(function(item){
-
-      const itemTotal =
-        Number(item.price) *
-        Number(item.qty);
-
-
-      message +=
-        item.qty +
-        " x " +
-        item.name +
-        " - KSh " +
-        itemTotal.toLocaleString() +
-        "\n";
-
-    });
-
-
-    message +=
-      "\nTOTAL: KSh " +
-      total.toLocaleString();
-
-
-    /* ===============================
-       WHATSAPP LINK
-    =============================== */
-
-    const whatsappLink =
-      "https://wa.me/" +
-      whatsappNumber +
-      "?text=" +
-      encodeURIComponent(
-        message
-      );
-
-
-    /* ===============================
-       CLEAR CART
-    =============================== */
-
-    carts[
-      currentRestaurant.id
-    ] = [];
-
-
-    updateCart();
-
-
-    closeCart();
-
-
-    alert(
-      "✅ MloHub Order #" +
-      order.id +
-      " saved successfully.\n\n" +
-      "WhatsApp will now open for " +
-      currentRestaurant.name +
-      "."
-    );
-
-
-    window.open(
-      whatsappLink,
-      "_blank"
-    );
-
+    return order;
 
   }catch(error){
 
-    console.error(
-      "PLACE ORDER ERROR:",
+    console.warn(
+      "Order process failed:",
       error
     );
 
+    return null;
 
-    alert(
-      "❌ Order could not be completed.\n\n" +
-      error.message
+  }
+
+}
+
+
+/* =========================================================
+   PLACE ORDER
+========================================================= */
+
+async function placeOrder(){
+
+  if(!cart.length){
+
+    showToast(
+      "Your cart is empty."
+    );
+
+    return;
+
+  }
+
+
+  if(!currentRestaurant){
+
+    showToast(
+      "Please select a restaurant."
+    );
+
+    return;
+
+  }
+
+
+  const name =
+    document.getElementById(
+      "customerName"
+    ).value.trim();
+
+
+  const phone =
+    document.getElementById(
+      "customerPhone"
+    ).value.trim();
+
+
+  const orderType =
+    document.getElementById(
+      "orderType"
+    ).value;
+
+
+  const location =
+    document.getElementById(
+      "customerLocation"
+    ).value.trim();
+
+
+  const payment =
+    document.getElementById(
+      "paymentMethod"
+    ).value;
+
+
+  if(!name){
+
+    showToast(
+      "Please enter your name."
+    );
+
+    return;
+
+  }
+
+
+  if(!phone){
+
+    showToast(
+      "Please enter your phone number."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    orderType === "Delivery" &&
+    !location
+  ){
+
+    showToast(
+      "Please enter your delivery location."
+    );
+
+    return;
+
+  }
+
+
+  const whatsapp =
+    restaurantWhatsApp(
+      currentRestaurant
     );
 
 
-  }finally{
+  if(!whatsapp){
 
-    checkoutButton.disabled =
+    showToast(
+      "This restaurant has no WhatsApp number."
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    document.getElementById(
+      "checkoutButton"
+    );
+
+
+  button.disabled = true;
+
+
+  button.textContent =
+    "Processing order...";
+
+
+  const total =
+    getCartTotal();
+
+
+  /* TRY TO SAVE CUSTOMER */
+
+  const customer =
+    await saveCustomer(
+      name,
+      phone,
+      location
+    );
+
+
+  /* TRY TO SAVE ORDER */
+
+  const order =
+    await saveOrder(
+      customer,
+      name,
+      phone,
+      location,
+      orderType,
+      total
+    );
+
+
+  let orderNumber =
+    order &&
+    order.id
+    ?
+    "#" + order.id
+    :
+    "MLO-" +
+    Date.now()
+      .toString()
+      .slice(-6);
+
+
+  /* =====================================================
+     WHATSAPP MESSAGE
+  ===================================================== */
+
+  let message =
+    "🍽️ *NEW MloHub ORDER*\n\n";
+
+
+  message +=
+    "*Order:* " +
+    orderNumber +
+    "\n";
+
+
+  message +=
+    "*Restaurant:* " +
+    currentRestaurant.name +
+    "\n\n";
+
+
+  message +=
+    "*CUSTOMER DETAILS*\n";
+
+
+  message +=
+    "Name: " +
+    name +
+    "\n";
+
+
+  message +=
+    "Phone: " +
+    phone +
+    "\n";
+
+
+  message +=
+    "Order Type: " +
+    orderType +
+    "\n";
+
+
+  if(orderType === "Delivery"){
+
+    message +=
+      "Location: " +
+      location +
+      "\n";
+
+  }
+
+
+  message +=
+    "Payment: " +
+    payment +
+    "\n\n";
+
+
+  message +=
+    "*ORDER ITEMS*\n";
+
+
+  cart.forEach(function(item){
+
+    message +=
+      item.quantity +
+      " x " +
+      item.name +
+      " — KSh " +
+      money(
+        item.price *
+        item.quantity
+      ) +
+      "\n";
+
+  });
+
+
+  message +=
+    "\n*TOTAL: KSh " +
+    money(total) +
+    "*";
+
+
+  message +=
+    "\n\nSent through MloHub 🍽️";
+
+
+  const url =
+    "https://wa.me/" +
+    whatsapp +
+    "?text=" +
+    encodeURIComponent(
+      message
+    );
+
+
+  /* OPEN WHATSAPP */
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+
+  /* SUCCESS */
+
+  button.textContent =
+    "✅ Order Sent";
+
+
+  showToast(
+    "Order sent to " +
+    currentRestaurant.name +
+    " on WhatsApp!"
+  );
+
+
+  setTimeout(function(){
+
+    cart = [];
+
+    updateCart();
+
+    closeCart();
+
+    button.disabled =
       false;
 
-    checkoutButton.textContent =
-      "📲 Place Order on WhatsApp";
+    button.textContent =
+      "📲 Order on WhatsApp";
 
-  }
+
+    document.getElementById(
+      "customerName"
+    ).value = "";
+
+
+    document.getElementById(
+      "customerPhone"
+    ).value = "";
+
+
+    document.getElementById(
+      "customerLocation"
+    ).value = "";
+
+
+  },1200);
 
 }
 
 
-/* =========================================
-   SEARCH FOOD
-========================================= */
+/* =========================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+========================================================= */
 
-function searchFood(){
+document
+  .getElementById(
+    "cartModal"
+  )
+  .addEventListener(
+    "click",
+    function(event){
 
-  const search =
-    document.getElementById(
-      "search"
-    ).value
-      .toLowerCase()
-      .trim();
+      if(
+        event.target === this
+      ){
 
+        closeCart();
 
-  if(!currentRestaurant)
-    return;
-
-
-  const activeRestaurant =
-    document.getElementById(
-      "restaurant-" +
-      currentRestaurant.id
-    );
-
-
-  if(!activeRestaurant)
-    return;
-
-
-  activeRestaurant
-    .querySelectorAll(
-      ".menu-item"
-    )
-    .forEach(function(item){
-
-      const text =
-        item.textContent
-          .toLowerCase();
-
-
-      item.style.display =
-        text.includes(search)
-          ? "flex"
-          : "none";
-
-    });
-
-}
-
-
-/* =========================================
-   CLOSE MODAL OUTSIDE
-========================================= */
-
-window.addEventListener(
-  "click",
-  function(event){
-
-    const modal =
-      document.getElementById(
-        "cartModal"
-      );
-
-
-    if(
-      event.target === modal
-    ){
-
-      closeCart();
+      }
 
     }
-
-  }
-);
+  );
 
 
-/* =========================================
-   ESCAPE HTML
-========================================= */
+/* =========================================================
+   START MLOHUB
+========================================================= */
 
-function escapeHTML(value){
+loadRestaurants();
 
-  return String(
-    value == null
-      ? ""
-      : value
-  )
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
+/* =========================================================
+   INITIAL CART
+========================================================= */
 
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
+updateCart();
 
 </script>
 
+
 </body>
 </html>
-```
