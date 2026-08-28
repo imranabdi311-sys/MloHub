@@ -796,8 +796,9 @@ async function loadMenu(
 
       .from("menu_items")
 
-      .select(
-        "id,restaurant_id,name,description,price,image_url,available,created_at"
+    .select(
+  "id,restaurant_id,name,description,price,image_url,available,created_at,category"
+) 
       )
 
       .eq(
