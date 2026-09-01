@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MloHub Driver Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f6f8;
+    color:#222;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:18px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+header h1{
+    font-size:24px;
+}
+
+.driver-status{
+    background:#16a34a;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:14px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.profile{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.profile h2{
+    margin-bottom:12px;
+}
+
+.profile-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.profile-box{
+    background:#f8fafc;
+    padding:14px;
+    border-radius:10px;
+}
+
+.profile-box small{
+    display:block;
+    color:#777;
+    margin-bottom:5px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.stat h3{
+    color:#666;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.stat strong{
+    font-size:28px;
+}
+
+.section-title{
+    margin:25px 0 15px;
+}
+
+.delivery-card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.delivery-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.order-number{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.badge{
+    padding:7px 12px;
+    border-radius:20px;
+    background:#fef3c7;
+    color:#92400e;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.info{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:15px;
+}
+
+.info-box{
+    background:#f8fafc;
+    padding:12px;
+    border-radius:10px;
+}
+
+.info-box strong{
+    display:block;
+    margin-top:4px;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:12px 18px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.accept{
+    background:#16a34a;
+    color:white;
+}
+
+.pickup{
+    background:#2563eb;
+    color:white;
+}
+
+.delivered{
+    background:#7c3aed;
+    color:white;
+}
+
+.call{
+    background:#059669;
+    color:white;
+}
+
+.maps{
+    background:#f59e0b;
+    color:white;
+}
+
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.empty{
+    background:white;
+    padding:30px;
+    text-align:center;
+    border-radius:15px;
+    color:#777;
+}
+
+.loading{
+    text-align:center;
+    padding:25px;
+}
+
+.toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#111827;
+    color:white;
+    padding:14px 20px;
+    border-radius:10px;
+    display:none;
+    z-index:9999;
+}
+
+@media(max-width:800px){
+    .profile-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+    header{
+        padding:15px;
+    }
+
+    .container{
+        padding:12px;
+    }
+
+    .profile-grid{
+        grid-template-columns:1fr;
+    }
+
+    .info{
+        grid-template-columns:1fr;
+    }
+
+    .buttons button{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛵 MloHub Driver</h1>
+    <div class="driver-status" id="driverStatus">Loading...</div>
+</header>
+
+<div class="container">
+
+    <!-- DRIVER PROFILE -->
+    <div class="profile">
+        <h2>👤 Driver Profile</h2>
+
+        <div class="profile-grid">
+
+            <div class="profile-box">
+                <small>Name</small>
+                <strong id="driverName">Loading...</strong>
+            </div>
+
+            <div class="profile-box">
+                <small>Phone</small>
+                <strong id="driverPhone">Loading...</strong>
+            </div>
+
+            <div class="profile-box">
+                <small>Vehicle</small>
+                <strong id="vehicleType">Loading...</strong>
+            </div>
+
+            <div class="profile-box">
+                <small>Plate Number</small>
+                <strong id="vehiclePlate">Loading...</strong>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="stats">
+
+        <div class="stat">
+            <h3>Available Deliveries</h3>
+            <strong id="availableCount">0</strong>
+        </div>
+
+        <div class="stat">
+            <h3>My Active Deliveries</h3>
+            <strong id="activeCount">0</strong>
+        </div>
+
+        <div class="stat">
+            <h3>Completed Today</h3>
+            <strong id="completedCount">0</strong>
+        </div>
+
+    </div>
+
+    <!-- AVAILABLE -->
+    <h2 class="section-title">📦 Available Deliveries</h2>
+
+    <div id="availableDeliveries">
+        <div class="loading">Loading deliveries...</div>
+    </div>
+
+    <!-- ACTIVE -->
+    <h2 class="section-title">🛵 My Active Deliveries</h2>
+
+    <div id="activeDeliveries">
+        <div class="loading">Loading active deliveries...</div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+const SUPABASE_URL =
+    "https://bhvzpycbztngtwuhxxex.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+
+const supabaseClient =
+    supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+// TEMPORARY DRIVER
+// We will replace this with driver login later.
+const DRIVER_ID = 1;
+
+
+// --------------------------------------------------
+// TOAST
+// --------------------------------------------------
+
+function showToast(message){
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.style.display = "block";
+
+    setTimeout(()=>{
+        toast.style.display = "none";
+    },3000);
+}
+
+
+// --------------------------------------------------
+// LOAD DRIVER
+// --------------------------------------------------
+
+async function loadDriver(){
+
+    const {data,error} = await supabaseClient
+        .from("drivers")
+        .select("*")
+        .eq("id",DRIVER_ID)
+        .single();
+
+    if(error){
+
+        console.error(error);
+
+        document.getElementById("driverName").textContent =
+            "Driver not found";
+
+        return;
+    }
+
+    document.getElementById("driverName").textContent =
+        data.full_name || "Driver";
+
+    document.getElementById("driverPhone").textContent =
+        data.phone || "-";
+
+    document.getElementById("vehicleType").textContent =
+        data.vehicle_type || "-";
+
+    document.getElementById("vehiclePlate").textContent =
+        data.vehicle_plate || "-";
+
+    document.getElementById("driverStatus").textContent =
+        data.status || "available";
+}
+
+
+// --------------------------------------------------
+// LOAD ALL DATA
+// --------------------------------------------------
+
+async function loadDashboard(){
+
+    await loadDriver();
+    await loadAvailableDeliveries();
+    await loadActiveDeliveries();
+    await loadCompletedToday();
+
+}
+
+
+// --------------------------------------------------
+// AVAILABLE DELIVERIES
+// --------------------------------------------------
+
+async function loadAvailableDeliveries(){
+
+    const container =
+        document.getElementById("availableDeliveries");
+
+    container.innerHTML =
+        '<div class="loading">Loading...</div>';
+
+    // Get ready orders
+    const {data:orders,error} = await supabaseClient
+        .from("orders")
+        .select("*")
+        .eq("order_status","ready")
+        .order("created_at",{ascending:false});
+
+    if(error){
+
+        console.error(error);
+
+        container.innerHTML =
+            '<div class="empty">Unable to load deliveries.</div>';
+
+        return;
+    }
+
+
+    // Get existing deliveries
+    const {data:deliveries,error:deliveryError} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*");
+
+    if(deliveryError){
+
+        console.error(deliveryError);
+
+        container.innerHTML =
+            '<div class="empty">Unable to check deliveries.</div>';
+
+        return;
+    }
+
+
+    // Only show ready orders which don't already have a delivery
+    const available = orders.filter(order => {
+
+        const alreadyAssigned =
+            deliveries.some(delivery =>
+                Number(delivery.order_id) === Number(order.id)
+            );
+
+        return !alreadyAssigned;
+
+    });
+
+
+    document.getElementById("availableCount").textContent =
+        available.length;
+
+
+    if(available.length === 0){
+
+        container.innerHTML =
+            '<div class="empty">No deliveries available right now.</div>';
+
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+    available.forEach(order => {
+
+        container.innerHTML +=
+            createAvailableCard(order);
+
+    });
+
+}
+
+
+// --------------------------------------------------
+// AVAILABLE CARD
+// --------------------------------------------------
+
+function createAvailableCard(order){
+
+    const address =
+        order.delivery_address || "No address provided";
+
+    const phone =
+        order.customer_phone || "";
+
+    return `
+
+        <div class="delivery-card">
+
+            <div class="delivery-header">
+
+                <div class="order-number">
+                    Order #${order.id}
+                </div>
+
+                <div class="badge">
+                    READY
+                </div>
+
+            </div>
+
+            <div class="info">
+
+                <div class="info-box">
+                    Customer
+                    <strong>
+                        ${escapeHtml(order.customer_name || "Customer")}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    Phone
+                    <strong>
+                        ${escapeHtml(phone || "-")}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    Delivery Address
+                    <strong>
+                        ${escapeHtml(address)}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    Order Total
+                    <strong>
+                        KSh ${Number(order.total_amount || 0).toLocaleString()}
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="buttons">
+
+                <button
+                    class="accept"
+                    onclick="acceptDelivery(${order.id})">
+                    ✅ Accept Delivery
+                </button>
+
+                ${
+                    phone
+                    ?
+                    `<button
+                        class="call"
+                        onclick="callCustomer('${phone}')">
+                        📞 Call Customer
+                    </button>`
+                    :
+                    ""
+                }
+
+                <button
+                    class="maps"
+                    onclick="openMaps('${encodeURIComponent(address)}')">
+                    🗺️ Open Maps
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+// --------------------------------------------------
+// ACCEPT DELIVERY
+// --------------------------------------------------
+
+async function acceptDelivery(orderId){
+
+    if(!confirm("Accept this delivery?")){
+        return;
+    }
+
+
+    // Check whether someone already accepted it
+    const {data:existing,error:checkError} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*")
+        .eq("order_id",orderId);
+
+
+    if(checkError){
+
+        console.error(checkError);
+
+        showToast("Could not check delivery.");
+
+        return;
+    }
+
+
+    if(existing && existing.length > 0){
+
+        showToast("This delivery has already been assigned.");
+
+        loadDashboard();
+
+        return;
+    }
+
+
+    // Get driver information
+    const {data:driver,error:driverError} =
+        await supabaseClient
+        .from("drivers")
+        .select("*")
+        .eq("id",DRIVER_ID)
+        .single();
+
+
+    if(driverError){
+
+        console.error(driverError);
+
+        showToast("Driver information not found.");
+
+        return;
+    }
+
+
+    // Create delivery
+    const {error} =
+        await supabaseClient
+        .from("deliveries")
+        .insert({
+
+            order_id: orderId,
+
+            driver_id: DRIVER_ID,
+
+            driver_name: driver.full_name,
+
+            driver_phone: driver.phone,
+
+            delivery_status: "assigned"
+
+        });
+
+
+    if(error){
+
+        console.error(error);
+
+        showToast("Could not accept delivery.");
+
+        return;
+    }
+
+
+    showToast("Delivery accepted successfully! 🛵");
+
+    loadDashboard();
+
+}
+
+
+// --------------------------------------------------
+// ACTIVE DELIVERIES
+// --------------------------------------------------
+
+async function loadActiveDeliveries(){
+
+    const container =
+        document.getElementById("activeDeliveries");
+
+    container.innerHTML =
+        '<div class="loading">Loading...</div>';
+
+
+    const {data:deliveries,error} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*")
+        .eq("driver_id",DRIVER_ID)
+        .in("delivery_status",[
+            "assigned",
+            "picked_up"
+        ])
+        .order("created_at",{ascending:false});
+
+
+    if(error){
+
+        console.error(error);
+
+        container.innerHTML =
+            '<div class="empty">Unable to load active deliveries.</div>';
+
+        return;
+    }
+
+
+    document.getElementById("activeCount").textContent =
+        deliveries.length;
+
+
+    if(deliveries.length === 0){
+
+        container.innerHTML =
+            '<div class="empty">You have no active deliveries.</div>';
+
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    for(const delivery of deliveries){
+
+        const {data:order} =
+            await supabaseClient
+            .from("orders")
+            .select("*")
+            .eq("id",delivery.order_id)
+            .single();
+
+
+        if(order){
+
+            container.innerHTML +=
+                createActiveCard(delivery,order);
+
+        }
+
+    }
+
+}
+
+
+// --------------------------------------------------
+// ACTIVE CARD
+// --------------------------------------------------
+
+function createActiveCard(delivery,order){
+
+    const address =
+        order.delivery_address || "No address provided";
+
+    const phone =
+        order.customer_phone || "";
+
+    let actionButton = "";
+
+
+    if(delivery.delivery_status === "assigned"){
+
+        actionButton = `
+
+            <button
+                class="pickup"
+                onclick="updateDelivery(${delivery.id},${order.id},'picked_up')">
+                🛵 Picked Up
+            </button>
+
+        `;
+
+    }
+
+
+    if(delivery.delivery_status === "picked_up"){
+
+        actionButton = `
+
+            <button
+                class="delivered"
+                onclick="updateDelivery(${delivery.id},${order.id},'delivered')">
+                🏠 Mark Delivered
+            </button>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="delivery-card">
+
+            <div class="delivery-header">
+
+                <div class="order-number">
+                    Order #${order.id}
+                </div>
+
+                <div class="badge">
+                    ${delivery.delivery_status.toUpperCase()}
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-box">
+                    Customer
+                    <strong>
+                        ${escapeHtml(order.customer_name || "Customer")}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    Phone
+                    <strong>
+                        ${escapeHtml(phone || "-")}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    Address
+                    <strong>
+                        ${escapeHtml(address)}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    Order Total
+                    <strong>
+                        KSh ${Number(order.total_amount || 0).toLocaleString()}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="buttons">
+
+                ${actionButton}
+
+                ${
+                    phone
+                    ?
+                    `<button
+                        class="call"
+                        onclick="callCustomer('${phone}')">
+                        📞 Call Customer
+                    </button>`
+                    :
+                    ""
+                }
+
+                <button
+                    class="maps"
+                    onclick="openMaps('${encodeURIComponent(address)}')">
+                    🗺️ Open Maps
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// --------------------------------------------------
+// UPDATE DELIVERY
+// --------------------------------------------------
+
+async function updateDelivery(
+    deliveryId,
+    orderId,
+    newStatus
+){
+
+    let updateData = {
+        delivery_status:newStatus
+    };
+
+
+    if(newStatus === "picked_up"){
+
+        updateData.picked_up_at =
+            new Date().toISOString();
+
+    }
+
+
+    if(newStatus === "delivered"){
+
+        updateData.delivered_at =
+            new Date().toISOString();
+
+    }
+
+
+    const {error} =
+        await supabaseClient
+        .from("deliveries")
+        .update(updateData)
+        .eq("id",deliveryId);
+
+
+    if(error){
+
+        console.error(error);
+
+        showToast("Could not update delivery.");
+
+        return;
+    }
+
+
+    // Update customer's order tracking
+    if(newStatus === "picked_up"){
+
+        await supabaseClient
+            .from("orders")
+            .update({
+                order_status:"ready"
+            })
+            .eq("id",orderId);
+
+    }
+
+
+    if(newStatus === "delivered"){
+
+        await supabaseClient
+            .from("orders")
+            .update({
+                order_status:"completed"
+            })
+            .eq("id",orderId);
+
+    }
+
+
+    showToast(
+        newStatus === "picked_up"
+        ? "Order picked up! 🛵"
+        : "Order delivered! 🎉"
+    );
+
+
+    loadDashboard();
+
+}
+
+
+// --------------------------------------------------
+// COMPLETED TODAY
+// --------------------------------------------------
+
+async function loadCompletedToday(){
+
+    const startOfDay =
+        new Date();
+
+    startOfDay.setHours(0,0,0,0);
+
+
+    const {data,error} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*")
+        .eq("driver_id",DRIVER_ID)
+        .eq("delivery_status","delivered")
+        .gte(
+            "delivered_at",
+            startOfDay.toISOString()
+        );
+
+
+    if(error){
+
+        console.error(error);
+
+        document.getElementById("completedCount")
+            .textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById("completedCount")
+        .textContent = data.length;
+
+}
+
+
+// --------------------------------------------------
+// CALL CUSTOMER
+// --------------------------------------------------
+
+function callCustomer(phone){
+
+    window.location.href =
+        "tel:" + phone;
+
+}
+
+
+// --------------------------------------------------
+// GOOGLE MAPS
+// --------------------------------------------------
+
+function openMaps(address){
+
+    const url =
+        "https://www.google.com/maps/search/?api=1&query="
+        + address;
+
+    window.open(url,"_blank");
+
+}
+
+
+// --------------------------------------------------
+// SECURITY / HTML ESCAPE
+// --------------------------------------------------
+
+function escapeHtml(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+// --------------------------------------------------
+// START
+// --------------------------------------------------
+
+loadDashboard();
+
+
+// Refresh every 10 seconds
+setInterval(()=>{
+    loadDashboard();
+},10000);
+
+</script>
+
+</body>
+</html>
