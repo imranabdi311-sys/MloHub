@@ -1,0 +1,2780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MloHub Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    color:#172033;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+    border:none;
+}
+
+.topbar{
+    height:70px;
+    background:#111827;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#f59e0b;
+}
+
+.admin-label{
+    font-size:13px;
+    opacity:.8;
+}
+
+.refresh-btn{
+    background:#f59e0b;
+    color:#111827;
+    padding:10px 16px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.layout{
+    display:flex;
+    min-height:calc(100vh - 70px);
+}
+
+.sidebar{
+    width:245px;
+    background:#1f2937;
+    color:white;
+    padding:20px 12px;
+    flex-shrink:0;
+}
+
+.sidebar h3{
+    font-size:12px;
+    text-transform:uppercase;
+    color:#9ca3af;
+    margin:10px 12px;
+}
+
+.nav-btn{
+    width:100%;
+    text-align:left;
+    background:transparent;
+    color:#d1d5db;
+    padding:13px 14px;
+    border-radius:8px;
+    margin-bottom:5px;
+    font-weight:600;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+    background:#374151;
+    color:white;
+}
+
+.main{
+    flex:1;
+    padding:25px;
+    overflow-x:hidden;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-title{
+    margin-bottom:20px;
+}
+
+.page-title h1{
+    font-size:27px;
+}
+
+.page-title p{
+    color:#6b7280;
+    margin-top:5px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
+}
+
+.stat-card{
+    position:relative;
+    overflow:hidden;
+}
+
+.stat-icon{
+    font-size:28px;
+    margin-bottom:12px;
+}
+
+.stat-title{
+    color:#6b7280;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.stat-number{
+    font-size:27px;
+    font-weight:800;
+}
+
+.content-card{
+    background:white;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
+    margin-bottom:20px;
+}
+
+.content-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+}
+
+.content-header h2{
+    font-size:19px;
+}
+
+.controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+input,select{
+    border:1px solid #dbe1ea;
+    padding:10px 12px;
+    border-radius:8px;
+    background:white;
+    outline:none;
+}
+
+input:focus,select:focus{
+    border-color:#f59e0b;
+}
+
+.primary-btn{
+    background:#f59e0b;
+    color:#111827;
+    padding:10px 15px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.danger-btn{
+    background:#fee2e2;
+    color:#b91c1c;
+    padding:8px 11px;
+    border-radius:7px;
+    font-weight:bold;
+}
+
+.small-btn{
+    background:#e5e7eb;
+    color:#111827;
+    padding:7px 10px;
+    border-radius:7px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.table-wrap{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+th{
+    text-align:left;
+    background:#f8fafc;
+    color:#64748b;
+    font-size:12px;
+    text-transform:uppercase;
+    padding:13px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+td{
+    padding:13px;
+    border-bottom:1px solid #eef2f7;
+    font-size:14px;
+}
+
+tr:hover td{
+    background:#fafafa;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+    text-transform:capitalize;
+}
+
+.status.pending{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status.preparing{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.status.ready{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status.completed,
+.status.delivered{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status.cancelled{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.empty{
+    text-align:center;
+    padding:35px;
+    color:#6b7280;
+}
+
+.restaurant-grid,
+.customer-grid,
+.driver-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.entity-card{
+    background:white;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
+}
+
+.entity-icon{
+    font-size:35px;
+    margin-bottom:12px;
+}
+
+.entity-card h3{
+    margin-bottom:8px;
+}
+
+.entity-card p{
+    color:#6b7280;
+    font-size:14px;
+    margin:5px 0;
+}
+
+.menu-form{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 2fr auto;
+    gap:10px;
+    align-items:center;
+}
+
+.menu-list{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.menu-card{
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:15px;
+}
+
+.menu-card h3{
+    margin-bottom:7px;
+}
+
+.menu-card .price{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.report-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.report-number{
+    font-size:25px;
+    font-weight:800;
+    margin-top:8px;
+}
+
+.message{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#111827;
+    color:white;
+    padding:14px 18px;
+    border-radius:9px;
+    display:none;
+    z-index:999;
+    max-width:350px;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.error{
+    background:#b91c1c;
+}
+
+.loading{
+    color:#6b7280;
+    padding:20px 0;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:500;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    border-radius:15px;
+    width:min(700px,100%);
+    max-height:85vh;
+    overflow:auto;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.close-btn{
+    background:#f3f4f6;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    font-size:20px;
+}
+
+.order-detail{
+    background:#f8fafc;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.order-detail p{
+    margin:7px 0;
+}
+
+.order-items{
+    margin-top:15px;
+}
+
+.item-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.security-box{
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    padding:18px;
+    border-radius:12px;
+    line-height:1.6;
+}
+
+@media(max-width:1100px){
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .restaurant-grid,
+    .customer-grid,
+    .driver-grid,
+    .menu-list,
+    .report-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .menu-form{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:750px){
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .sidebar h3{
+        display:none;
+    }
+
+    .nav-btn{
+        text-align:center;
+        padding:12px 5px;
+        font-size:0;
+    }
+
+    .nav-btn:first-letter{
+        font-size:20px;
+    }
+
+    .main{
+        padding:15px;
+    }
+
+    .cards,
+    .restaurant-grid,
+    .customer-grid,
+    .driver-grid,
+    .menu-list,
+    .report-grid{
+        grid-template-columns:1fr;
+    }
+
+    .menu-form{
+        grid-template-columns:1fr;
+    }
+
+    .topbar{
+        padding:0 12px;
+    }
+
+    .admin-label{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">🍽️ Mlo<span>Hub</span> <small style="font-size:12px;">ADMIN</small></div>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+        <div class="admin-label">Platform Administration</div>
+        <button class="refresh-btn" onclick="loadAll()">🔄 Refresh</button>
+    </div>
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+    <h3>Management</h3>
+
+    <button class="nav-btn active" onclick="showPage('overview',this)">
+        📊 Overview
+    </button>
+
+    <button class="nav-btn" onclick="showPage('orders',this)">
+        🛒 Orders
+    </button>
+
+    <button class="nav-btn" onclick="showPage('restaurants',this)">
+        🍽️ Restaurants
+    </button>
+
+    <button class="nav-btn" onclick="showPage('customers',this)">
+        👥 Customers
+    </button>
+
+    <button class="nav-btn" onclick="showPage('drivers',this)">
+        🛵 Drivers
+    </button>
+
+    <button class="nav-btn" onclick="showPage('menus',this)">
+        🍔 Menus
+    </button>
+
+    <button class="nav-btn" onclick="showPage('reports',this)">
+        📈 Reports
+    </button>
+
+    <h3>System</h3>
+
+    <button class="nav-btn" onclick="showPage('settings',this)">
+        ⚙️ Settings
+    </button>
+
+</aside>
+
+<main class="main">
+
+<!-- ================= OVERVIEW ================= -->
+
+<section id="overview" class="page active">
+
+    <div class="page-title">
+        <h1>Admin Overview</h1>
+        <p>Monitor your entire MloHub platform.</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card stat-card">
+            <div class="stat-icon">🛒</div>
+            <div class="stat-title">Total Orders</div>
+            <div class="stat-number" id="totalOrders">0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-title">Today's Orders</div>
+            <div class="stat-number" id="todayOrders">0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-title">Total Sales</div>
+            <div class="stat-number" id="totalSales">KSh 0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon">💵</div>
+            <div class="stat-title">Today's Sales</div>
+            <div class="stat-number" id="todaySales">KSh 0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-title">Pending Orders</div>
+            <div class="stat-number" id="pendingOrders">0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon">🍽️</div>
+            <div class="stat-title">Restaurants</div>
+            <div class="stat-number" id="restaurantCount">0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-title">Customers</div>
+            <div class="stat-number" id="customerCount">0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon">🛵</div>
+            <div class="stat-title">Drivers</div>
+            <div class="stat-number" id="driverCount">0</div>
+        </div>
+
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+            <h2>Recent Orders</h2>
+            <button class="small-btn" onclick="showPageByName('orders')">
+                View All Orders
+            </button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Restaurant</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="recentOrdersBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ORDERS ================= -->
+
+<section id="orders" class="page">
+
+    <div class="page-title">
+        <h1>All Orders</h1>
+        <p>Manage orders from every restaurant.</p>
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+
+            <h2>Orders</h2>
+
+            <div class="controls">
+
+                <input
+                    id="orderSearch"
+                    type="text"
+                    placeholder="Search order, customer, phone..."
+                    oninput="renderOrders()"
+                >
+
+                <select id="orderRestaurantFilter" onchange="renderOrders()">
+                    <option value="">All Restaurants</option>
+                </select>
+
+                <select id="orderStatusFilter" onchange="renderOrders()">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="ready">Ready</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Restaurant</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="ordersBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= RESTAURANTS ================= -->
+
+<section id="restaurants" class="page">
+
+    <div class="page-title">
+        <h1>Restaurants</h1>
+        <p>All restaurants registered on MloHub.</p>
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+            <h2>Restaurant List</h2>
+
+            <input
+                id="restaurantSearch"
+                placeholder="Search restaurant..."
+                oninput="renderRestaurants()"
+            >
+        </div>
+
+        <div id="restaurantGrid" class="restaurant-grid"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CUSTOMERS ================= -->
+
+<section id="customers" class="page">
+
+    <div class="page-title">
+        <h1>Customers</h1>
+        <p>View customers using MloHub.</p>
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+
+            <h2>Customer List</h2>
+
+            <input
+                id="customerSearch"
+                placeholder="Search customer or phone..."
+                oninput="renderCustomers()"
+            >
+
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Orders</th>
+                    </tr>
+                </thead>
+
+                <tbody id="customersBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= DRIVERS ================= -->
+
+<section id="drivers" class="page">
+
+    <div class="page-title">
+        <h1>Drivers</h1>
+        <p>Manage delivery drivers and delivery information.</p>
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+
+            <h2>Driver List</h2>
+
+            <input
+                id="driverSearch"
+                placeholder="Search driver..."
+                oninput="renderDrivers()"
+            >
+
+        </div>
+
+        <div id="driverGrid" class="driver-grid"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MENUS ================= -->
+
+<section id="menus" class="page">
+
+    <div class="page-title">
+        <h1>Menu Management</h1>
+        <p>Add and remove food items for any restaurant.</p>
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+            <h2>Add Food Item</h2>
+
+            <select id="menuRestaurantSelect" onchange="renderMenus()">
+                <option value="">Select Restaurant</option>
+            </select>
+        </div>
+
+        <div class="menu-form">
+
+            <input id="menuName" placeholder="Food name">
+
+            <input id="menuPrice" type="number" min="0" placeholder="Price">
+
+            <input id="menuImage" placeholder="Image URL (optional)">
+
+            <input id="menuDescription" placeholder="Description">
+
+            <button class="primary-btn" onclick="addMenuItem()">
+                + Add Food
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+            <h2>Food Items</h2>
+        </div>
+
+        <div id="menuList" class="menu-list"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= REPORTS ================= -->
+
+<section id="reports" class="page">
+
+    <div class="page-title">
+        <h1>Sales & Reports</h1>
+        <p>Business performance across the entire platform.</p>
+    </div>
+
+    <div class="report-grid">
+
+        <div class="card">
+            <div class="stat-title">Gross Order Value</div>
+            <div class="report-number" id="reportGross">KSh 0</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-title">Completed Sales</div>
+            <div class="report-number" id="reportCompleted">KSh 0</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-title">Average Order</div>
+            <div class="report-number" id="reportAverage">KSh 0</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-title">Completed Orders</div>
+            <div class="report-number" id="reportCompletedOrders">0</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-title">Cancelled Orders</div>
+            <div class="report-number" id="reportCancelled">0</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-title">Active/Pending Orders</div>
+            <div class="report-number" id="reportActive">0</div>
+        </div>
+
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-header">
+            <h2>Restaurant Performance</h2>
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Restaurant</th>
+                        <th>Orders</th>
+                        <th>Gross Sales</th>
+                        <th>Completed Sales</th>
+                        <th>Average Order</th>
+                    </tr>
+                </thead>
+
+                <tbody id="performanceBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SETTINGS ================= -->
+
+<section id="settings" class="page">
+
+    <div class="page-title">
+        <h1>Admin Settings</h1>
+        <p>MloHub administration information.</p>
+    </div>
+
+    <div class="content-card">
+
+        <h2 style="margin-bottom:15px;">Platform</h2>
+
+        <p style="margin:8px 0;">
+            <strong>Platform:</strong> MloHub
+        </p>
+
+        <p style="margin:8px 0;">
+            <strong>Database:</strong> Supabase
+        </p>
+
+        <p style="margin:8px 0;">
+            <strong>Admin Panel:</strong> Active
+        </p>
+
+    </div>
+
+    <div class="content-card">
+
+        <h2 style="margin-bottom:15px;">Security</h2>
+
+        <div class="security-box">
+
+            <strong>Important:</strong>
+
+            <p>
+                This dashboard currently uses the Supabase publishable key.
+                Before launching MloHub publicly, the admin area should be
+                protected with Supabase Authentication and proper Row Level
+                Security policies.
+            </p>
+
+            <p>
+                Never put a Supabase service-role/secret key inside this
+                HTML file.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+</div>
+
+
+<!-- ================= ORDER MODAL ================= -->
+
+<div id="orderModal" class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>Order Details</h2>
+
+            <button class="close-btn" onclick="closeOrderModal()">×</button>
+
+        </div>
+
+        <div id="orderDetails"></div>
+
+    </div>
+
+</div>
+
+
+<div id="message" class="message"></div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+"https://bhvzpycbztngtwuhxxex.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let orders = [];
+let restaurants = [];
+let customers = [];
+let drivers = [];
+let menuItems = [];
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHTML(value){
+
+    if(value === null || value === undefined){
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+function money(value){
+
+    const number = Number(value || 0);
+
+    return "KSh " + number.toLocaleString(
+        "en-KE",
+        {
+            maximumFractionDigits:2
+        }
+    );
+}
+
+
+function restaurantName(id){
+
+    const restaurant =
+        restaurants.find(
+            r => String(r.id) === String(id)
+        );
+
+    if(!restaurant){
+        return "Restaurant #" + id;
+    }
+
+    return (
+        restaurant.name ||
+        restaurant.restaurant_name ||
+        restaurant.title ||
+        restaurant.business_name ||
+        "Restaurant #" + id
+    );
+}
+
+
+function customerName(customer){
+
+    if(!customer){
+        return "—";
+    }
+
+    return (
+        customer.name ||
+        customer.customer_name ||
+        customer.full_name ||
+        customer.username ||
+        "Customer #" + (customer.id || "")
+    );
+}
+
+
+function customerPhone(customer){
+
+    if(!customer){
+        return "—";
+    }
+
+    return (
+        customer.phone ||
+        customer.phone_number ||
+        customer.mobile ||
+        customer.customer_phone ||
+        "—"
+    );
+}
+
+
+function driverName(driver){
+
+    if(!driver){
+        return "Driver";
+    }
+
+    return (
+        driver.name ||
+        driver.driver_name ||
+        driver.full_name ||
+        driver.username ||
+        "Driver #" + (driver.id || "")
+    );
+}
+
+
+function formatDate(date){
+
+    if(!date){
+        return "—";
+    }
+
+    const d = new Date(date);
+
+    if(isNaN(d.getTime())){
+        return date;
+    }
+
+    return d.toLocaleString("en-KE",{
+        dateStyle:"medium",
+        timeStyle:"short"
+    });
+}
+
+
+function isToday(date){
+
+    if(!date){
+        return false;
+    }
+
+    const d = new Date(date);
+    const now = new Date();
+
+    return (
+        d.getFullYear() === now.getFullYear() &&
+        d.getMonth() === now.getMonth() &&
+        d.getDate() === now.getDate()
+    );
+}
+
+
+function statusClass(status){
+
+    return String(status || "pending")
+        .toLowerCase()
+        .replace(/\s+/g,"-");
+}
+
+
+function showMessage(text,error=false){
+
+    const box =
+        document.getElementById("message");
+
+    box.textContent = text;
+
+    box.className =
+        "message show" +
+        (error ? " error" : "");
+
+    setTimeout(()=>{
+        box.className = "message";
+    },3500);
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(page,button){
+
+    document.querySelectorAll(".page")
+        .forEach(p=>{
+            p.classList.remove("active");
+        });
+
+    const target =
+        document.getElementById(page);
+
+    if(target){
+        target.classList.add("active");
+    }
+
+    document.querySelectorAll(".nav-btn")
+        .forEach(b=>{
+            b.classList.remove("active");
+        });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    if(page === "reports"){
+        renderReports();
+    }
+
+    if(page === "menus"){
+        renderMenus();
+    }
+}
+
+
+function showPageByName(page){
+
+    const button =
+        [...document.querySelectorAll(".nav-btn")]
+        .find(b =>
+            b.getAttribute("onclick") &&
+            b.getAttribute("onclick").includes("'" + page + "'")
+        );
+
+    showPage(page,button);
+}
+
+
+/* =========================================================
+   LOAD ALL DATA
+========================================================= */
+
+async function loadAll(){
+
+    showMessage("Loading MloHub data...");
+
+    await Promise.all([
+        loadOrders(),
+        loadRestaurants(),
+        loadCustomers(),
+        loadDrivers(),
+        loadMenuItems()
+    ]);
+
+    populateRestaurantFilters();
+
+    updateOverview();
+
+    renderRecentOrders();
+    renderOrders();
+    renderRestaurants();
+    renderCustomers();
+    renderDrivers();
+    renderMenus();
+    renderReports();
+
+    showMessage("Dashboard refreshed successfully.");
+}
+
+
+/* =========================================================
+   ORDERS
+========================================================= */
+
+async function loadOrders(){
+
+    const {data,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order("created_at",{ascending:false});
+
+    if(error){
+
+        console.error("Orders error:",error);
+
+        orders = [];
+
+        showMessage(
+            "Could not load orders: " + error.message,
+            true
+        );
+
+        return;
+    }
+
+    orders = data || [];
+}
+
+
+function updateOverview(){
+
+    const todayOrders =
+        orders.filter(o=>isToday(o.created_at));
+
+    const totalSales =
+        orders.reduce(
+            (sum,o)=>sum + Number(o.total_amount || 0),
+            0
+        );
+
+    const todaySales =
+        todayOrders.reduce(
+            (sum,o)=>sum + Number(o.total_amount || 0),
+            0
+        );
+
+    const pending =
+        orders.filter(
+            o => String(o.order_status || "")
+                .toLowerCase() === "pending"
+        ).length;
+
+    document.getElementById("totalOrders")
+        .textContent = orders.length;
+
+    document.getElementById("todayOrders")
+        .textContent = todayOrders.length;
+
+    document.getElementById("totalSales")
+        .textContent = money(totalSales);
+
+    document.getElementById("todaySales")
+        .textContent = money(todaySales);
+
+    document.getElementById("pendingOrders")
+        .textContent = pending;
+
+    document.getElementById("restaurantCount")
+        .textContent = restaurants.length;
+
+    document.getElementById("customerCount")
+        .textContent = customers.length;
+
+    document.getElementById("driverCount")
+        .textContent = drivers.length;
+}
+
+
+function renderRecentOrders(){
+
+    const body =
+        document.getElementById("recentOrdersBody");
+
+    const recent =
+        orders.slice(0,10);
+
+    if(!recent.length){
+
+        body.innerHTML =
+            `<tr>
+                <td colspan="6" class="empty">
+                    No orders found.
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    body.innerHTML =
+        recent.map(order=>`
+
+        <tr>
+
+            <td>
+                <strong>#${escapeHTML(order.id)}</strong>
+            </td>
+
+            <td>
+                ${escapeHTML(
+                    restaurantName(order.restaurant_id)
+                )}
+            </td>
+
+            <td>
+                ${escapeHTML(order.customer_name || "—")}
+            </td>
+
+            <td>
+                <strong>
+                    ${money(order.total_amount)}
+                </strong>
+            </td>
+
+            <td>
+                <span class="status ${statusClass(order.order_status)}">
+                    ${escapeHTML(order.order_status || "pending")}
+                </span>
+            </td>
+
+            <td>
+                ${escapeHTML(formatDate(order.created_at))}
+            </td>
+
+        </tr>
+
+        `).join("");
+}
+
+
+function renderOrders(){
+
+    const body =
+        document.getElementById("ordersBody");
+
+    const search =
+        (document.getElementById("orderSearch")?.value || "")
+        .toLowerCase()
+        .trim();
+
+    const restaurantFilter =
+        document.getElementById(
+            "orderRestaurantFilter"
+        )?.value || "";
+
+    const statusFilter =
+        document.getElementById(
+            "orderStatusFilter"
+        )?.value || "";
+
+    const filtered =
+        orders.filter(order=>{
+
+            const text = [
+                order.id,
+                order.customer_name,
+                order.customer_phone,
+                order.delivery_address,
+                restaurantName(order.restaurant_id)
+            ]
+            .join(" ")
+            .toLowerCase();
+
+            const matchesSearch =
+                !search || text.includes(search);
+
+            const matchesRestaurant =
+                !restaurantFilter ||
+                String(order.restaurant_id) ===
+                String(restaurantFilter);
+
+            const matchesStatus =
+                !statusFilter ||
+                String(order.order_status || "").toLowerCase() ===
+                statusFilter.toLowerCase();
+
+            return (
+                matchesSearch &&
+                matchesRestaurant &&
+                matchesStatus
+            );
+        });
+
+    if(!filtered.length){
+
+        body.innerHTML =
+            `<tr>
+                <td colspan="8" class="empty">
+                    No matching orders.
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    body.innerHTML =
+        filtered.map(order=>`
+
+        <tr>
+
+            <td>
+                <strong>#${escapeHTML(order.id)}</strong>
+            </td>
+
+            <td>
+                ${escapeHTML(
+                    restaurantName(order.restaurant_id)
+                )}
+            </td>
+
+            <td>
+                ${escapeHTML(order.customer_name || "—")}
+            </td>
+
+            <td>
+                ${escapeHTML(order.customer_phone || "—")}
+            </td>
+
+            <td>
+                <strong>
+                    ${money(order.total_amount)}
+                </strong>
+            </td>
+
+            <td>
+
+                <select
+                    onchange="updateOrderStatus(${Number(order.id)},this.value)"
+                    style="padding:6px;"
+                >
+
+                    ${statusOptions(order.order_status)}
+
+                </select>
+
+            </td>
+
+            <td>
+                ${escapeHTML(formatDate(order.created_at))}
+            </td>
+
+            <td>
+
+                <button
+                    class="small-btn"
+                    onclick="viewOrder(${Number(order.id)})"
+                >
+                    View
+                </button>
+
+            </td>
+
+        </tr>
+
+        `).join("");
+}
+
+
+function statusOptions(current){
+
+    const statuses = [
+        "pending",
+        "preparing",
+        "ready",
+        "completed",
+        "cancelled"
+    ];
+
+    return statuses.map(status=>`
+
+        <option
+            value="${status}"
+            ${String(current || "pending").toLowerCase() === status ? "selected" : ""}
+        >
+            ${status.charAt(0).toUpperCase()+status.slice(1)}
+        </option>
+
+    `).join("");
+}
+
+
+async function updateOrderStatus(orderId,newStatus){
+
+    const {error} =
+        await supabaseClient
+        .from("orders")
+        .update({
+            order_status:newStatus
+        })
+        .eq("id",orderId);
+
+    if(error){
+
+        console.error(error);
+
+        showMessage(
+            "Could not update order: " + error.message,
+            true
+        );
+
+        return;
+    }
+
+    const order =
+        orders.find(
+            o => String(o.id) === String(orderId)
+        );
+
+    if(order){
+        order.order_status = newStatus;
+    }
+
+    updateOverview();
+    renderOrders();
+    renderRecentOrders();
+    renderReports();
+
+    showMessage(
+        "Order #" + orderId +
+        " changed to " + newStatus
+    );
+}
+
+
+/* =========================================================
+   VIEW ORDER
+========================================================= */
+
+async function viewOrder(orderId){
+
+    const order =
+        orders.find(
+            o => String(o.id) === String(orderId)
+        );
+
+    if(!order){
+        showMessage("Order not found.",true);
+        return;
+    }
+
+    const details =
+        document.getElementById("orderDetails");
+
+    details.innerHTML = `
+
+        <div class="order-detail">
+
+            <p>
+                <strong>Order:</strong>
+                #${escapeHTML(order.id)}
+            </p>
+
+            <p>
+                <strong>Restaurant:</strong>
+                ${escapeHTML(
+                    restaurantName(order.restaurant_id)
+                )}
+            </p>
+
+            <p>
+                <strong>Customer:</strong>
+                ${escapeHTML(order.customer_name || "—")}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                ${escapeHTML(order.customer_phone || "—")}
+            </p>
+
+            <p>
+                <strong>Address:</strong>
+                ${escapeHTML(order.delivery_address || "—")}
+            </p>
+
+            <p>
+                <strong>Total:</strong>
+                ${money(order.total_amount)}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                <span class="status ${statusClass(order.order_status)}">
+                    ${escapeHTML(order.order_status || "pending")}
+                </span>
+            </p>
+
+            <p>
+                <strong>Created:</strong>
+                ${escapeHTML(formatDate(order.created_at))}
+            </p>
+
+        </div>
+
+        <div class="order-items">
+
+            <h3>Order Items</h3>
+
+            <div id="modalItems">
+                Loading items...
+            </div>
+
+        </div>
+
+    `;
+
+    document
+        .getElementById("orderModal")
+        .classList.add("show");
+
+    await loadOrderItems(orderId);
+}
+
+
+async function loadOrderItems(orderId){
+
+    const box =
+        document.getElementById("modalItems");
+
+    const {data,error} =
+        await supabaseClient
+        .from("order_items")
+        .select("*")
+        .eq("order_id",orderId);
+
+    if(error){
+
+        box.innerHTML =
+            `<p style="color:#b91c1c;">
+                Could not load order items.
+            </p>`;
+
+        console.error(error);
+
+        return;
+    }
+
+    if(!data || !data.length){
+
+        box.innerHTML =
+            `<p style="color:#6b7280;">
+                No order item details found.
+            </p>`;
+
+        return;
+    }
+
+    const menuIds =
+        data
+        .map(item=>item.menu_item_id)
+        .filter(id=>id !== null && id !== undefined);
+
+    let menuMap = {};
+
+    if(menuIds.length){
+
+        const {data:menus} =
+            await supabaseClient
+            .from("menu_items")
+            .select("*")
+            .in("id",menuIds);
+
+        (menus || []).forEach(menu=>{
+            menuMap[menu.id] = menu;
+        });
+    }
+
+    box.innerHTML =
+        data.map(item=>{
+
+            const menu =
+                menuMap[item.menu_item_id];
+
+            const name =
+                menu?.name ||
+                item.name ||
+                "Menu Item #" +
+                (item.menu_item_id || "");
+
+            const quantity =
+                item.quantity || 1;
+
+            const price =
+                Number(
+                    item.price ??
+                    menu?.price ??
+                    0
+                );
+
+            return `
+
+                <div class="item-row">
+
+                    <div>
+                        <strong>
+                            ${escapeHTML(name)}
+                        </strong>
+
+                        <div style="color:#6b7280;font-size:12px;">
+                            Qty: ${escapeHTML(quantity)}
+                        </div>
+                    </div>
+
+                    <strong>
+                        ${money(price * Number(quantity))}
+                    </strong>
+
+                </div>
+
+            `;
+
+        }).join("");
+}
+
+
+function closeOrderModal(){
+
+    document
+        .getElementById("orderModal")
+        .classList.remove("show");
+}
+
+
+/* =========================================================
+   RESTAURANTS
+========================================================= */
+
+async function loadRestaurants(){
+
+    const {data,error} =
+        await supabaseClient
+        .from("restaurants")
+        .select("*")
+        .order("id",{ascending:true});
+
+    if(error){
+
+        console.error("Restaurants error:",error);
+
+        restaurants = [];
+
+        return;
+    }
+
+    restaurants = data || [];
+}
+
+
+function renderRestaurants(){
+
+    const box =
+        document.getElementById("restaurantGrid");
+
+    const search =
+        (document.getElementById("restaurantSearch")?.value || "")
+        .toLowerCase()
+        .trim();
+
+    const filtered =
+        restaurants.filter(r=>{
+
+            const name =
+                r.name ||
+                r.restaurant_name ||
+                r.title ||
+                r.business_name ||
+                "";
+
+            return (
+                !search ||
+                String(name)
+                    .toLowerCase()
+                    .includes(search)
+            );
+        });
+
+    if(!filtered.length){
+
+        box.innerHTML =
+            `<div class="empty">
+                No restaurants found.
+            </div>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        filtered.map(r=>{
+
+            const name =
+                r.name ||
+                r.restaurant_name ||
+                r.title ||
+                r.business_name ||
+                "Restaurant #" + r.id;
+
+            const phone =
+                r.phone ||
+                r.phone_number ||
+                r.mobile ||
+                "";
+
+            const location =
+                r.location ||
+                r.address ||
+                r.location_name ||
+                "";
+
+            return `
+
+                <div class="entity-card">
+
+                    <div class="entity-icon">🍽️</div>
+
+                    <h3>
+                        ${escapeHTML(name)}
+                    </h3>
+
+                    <p>
+                        <strong>ID:</strong>
+                        ${escapeHTML(r.id)}
+                    </p>
+
+                    ${
+                        phone
+                        ?
+                        `<p>📞 ${escapeHTML(phone)}</p>`
+                        :
+                        ""
+                    }
+
+                    ${
+                        location
+                        ?
+                        `<p>📍 ${escapeHTML(location)}</p>`
+                        :
+                        ""
+                    }
+
+                    <p style="margin-top:12px;">
+                        <strong>
+                            ${
+                                orders.filter(
+                                    o =>
+                                    String(o.restaurant_id) ===
+                                    String(r.id)
+                                ).length
+                            }
+                        </strong>
+                        orders
+                    </p>
+
+                </div>
+
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   CUSTOMERS
+========================================================= */
+
+async function loadCustomers(){
+
+    const {data,error} =
+        await supabaseClient
+        .from("customers")
+        .select("*");
+
+    if(error){
+
+        console.error("Customers error:",error);
+
+        customers = [];
+
+        return;
+    }
+
+    customers = data || [];
+}
+
+
+function renderCustomers(){
+
+    const body =
+        document.getElementById("customersBody");
+
+    const search =
+        (document.getElementById("customerSearch")?.value || "")
+        .toLowerCase()
+        .trim();
+
+    const filtered =
+        customers.filter(c=>{
+
+            const text = [
+                c.id,
+                c.name,
+                c.customer_name,
+                c.full_name,
+                c.phone,
+                c.phone_number,
+                c.email
+            ]
+            .join(" ")
+            .toLowerCase();
+
+            return !search || text.includes(search);
+        });
+
+    if(!filtered.length){
+
+        body.innerHTML =
+            `<tr>
+                <td colspan="5" class="empty">
+                    No customers found.
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    body.innerHTML =
+        filtered.map(c=>{
+
+            const name =
+                customerName(c);
+
+            const phone =
+                customerPhone(c);
+
+            const email =
+                c.email ||
+                c.email_address ||
+                "—";
+
+            const customerOrders =
+                orders.filter(o=>
+                    String(o.customer_id) ===
+                    String(c.id)
+                ).length;
+
+            return `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(c.id)}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(name)}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(phone)}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(email)}
+                    </td>
+
+                    <td>
+                        ${customerOrders}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   DRIVERS
+========================================================= */
+
+async function loadDrivers(){
+
+    const {data,error} =
+        await supabaseClient
+        .from("drivers")
+        .select("*");
+
+    if(error){
+
+        console.error("Drivers error:",error);
+
+        drivers = [];
+
+        return;
+    }
+
+    drivers = data || [];
+}
+
+
+function renderDrivers(){
+
+    const box =
+        document.getElementById("driverGrid");
+
+    const search =
+        (document.getElementById("driverSearch")?.value || "")
+        .toLowerCase()
+        .trim();
+
+    const filtered =
+        drivers.filter(d=>{
+
+            const text =
+                JSON.stringify(d)
+                .toLowerCase();
+
+            return !search || text.includes(search);
+        });
+
+    if(!filtered.length){
+
+        box.innerHTML =
+            `<div class="empty">
+                No drivers found.
+            </div>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        filtered.map(d=>{
+
+            const name =
+                driverName(d);
+
+            const phone =
+                d.phone ||
+                d.phone_number ||
+                d.mobile ||
+                "—";
+
+            const status =
+                d.status ||
+                d.driver_status ||
+                "—";
+
+            return `
+
+                <div class="entity-card">
+
+                    <div class="entity-icon">🛵</div>
+
+                    <h3>
+                        ${escapeHTML(name)}
+                    </h3>
+
+                    <p>
+                        <strong>ID:</strong>
+                        ${escapeHTML(d.id)}
+                    </p>
+
+                    <p>
+                        📞 ${escapeHTML(phone)}
+                    </p>
+
+                    <p>
+                        Status:
+                        <strong>
+                            ${escapeHTML(status)}
+                        </strong>
+                    </p>
+
+                </div>
+
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+async function loadMenuItems(){
+
+    const {data,error} =
+        await supabaseClient
+        .from("menu_items")
+        .select("*")
+        .order("id",{ascending:false});
+
+    if(error){
+
+        console.error("Menu error:",error);
+
+        menuItems = [];
+
+        return;
+    }
+
+    menuItems = data || [];
+}
+
+
+function populateRestaurantFilters(){
+
+    const filter =
+        document.getElementById(
+            "orderRestaurantFilter"
+        );
+
+    const menuSelect =
+        document.getElementById(
+            "menuRestaurantSelect"
+        );
+
+    const currentFilter =
+        filter.value;
+
+    const currentMenu =
+        menuSelect.value;
+
+    filter.innerHTML =
+        `<option value="">All Restaurants</option>` +
+        restaurants.map(r=>{
+
+            const name =
+                r.name ||
+                r.restaurant_name ||
+                r.title ||
+                r.business_name ||
+                "Restaurant #" + r.id;
+
+            return `
+                <option value="${escapeHTML(r.id)}">
+                    ${escapeHTML(name)}
+                </option>
+            `;
+
+        }).join("");
+
+    menuSelect.innerHTML =
+        `<option value="">Select Restaurant</option>` +
+        restaurants.map(r=>{
+
+            const name =
+                r.name ||
+                r.restaurant_name ||
+                r.title ||
+                r.business_name ||
+                "Restaurant #" + r.id;
+
+            return `
+                <option value="${escapeHTML(r.id)}">
+                    ${escapeHTML(name)}
+                </option>
+            `;
+
+        }).join("");
+
+    if(
+        restaurants.some(
+            r=>String(r.id) === String(currentFilter)
+        )
+    ){
+        filter.value = currentFilter;
+    }
+
+    if(
+        restaurants.some(
+            r=>String(r.id) === String(currentMenu)
+        )
+    ){
+        menuSelect.value = currentMenu;
+    }
+}
+
+
+function renderMenus(){
+
+    const box =
+        document.getElementById("menuList");
+
+    const restaurantId =
+        document.getElementById(
+            "menuRestaurantSelect"
+        ).value;
+
+    if(!restaurantId){
+
+        box.innerHTML =
+            `<div class="empty">
+                Select a restaurant to view its menu.
+            </div>`;
+
+        return;
+    }
+
+    const items =
+        menuItems.filter(
+            item =>
+            String(item.restaurant_id) ===
+            String(restaurantId)
+        );
+
+    if(!items.length){
+
+        box.innerHTML =
+            `<div class="empty">
+                No menu items found for this restaurant.
+            </div>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        items.map(item=>`
+
+            <div class="menu-card">
+
+                ${
+                    item.image_url
+                    ?
+                    `
+                    <img
+                        src="${escapeHTML(item.image_url)}"
+                        alt="${escapeHTML(item.name)}"
+                        style="
+                            width:100%;
+                            height:150px;
+                            object-fit:cover;
+                            border-radius:9px;
+                            margin-bottom:12px;
+                        "
+                        onerror="this.style.display='none'"
+                    >
+                    `
+                    :
+                    ""
+                }
+
+                <h3>
+                    ${escapeHTML(item.name)}
+                </h3>
+
+                <div class="price">
+                    ${money(item.price)}
+                </div>
+
+                <p style="color:#6b7280;margin-bottom:12px;">
+                    ${escapeHTML(item.description || "")}
+                </p>
+
+                <p style="font-size:12px;color:#6b7280;margin-bottom:12px;">
+                    Restaurant:
+                    ${escapeHTML(
+                        restaurantName(item.restaurant_id)
+                    )}
+                </p>
+
+                <button
+                    class="danger-btn"
+                    onclick="deleteMenuItem(${Number(item.id)})"
+                >
+                    🗑 Delete
+                </button>
+
+            </div>
+
+        `).join("");
+}
+
+
+async function addMenuItem(){
+
+    const restaurantId =
+        document.getElementById(
+            "menuRestaurantSelect"
+        ).value;
+
+    const name =
+        document.getElementById(
+            "menuName"
+        ).value.trim();
+
+    const price =
+        Number(
+            document.getElementById(
+                "menuPrice"
+            ).value
+        );
+
+    const image =
+        document.getElementById(
+            "menuImage"
+        ).value.trim();
+
+    const description =
+        document.getElementById(
+            "menuDescription"
+        ).value.trim();
+
+    if(!restaurantId){
+
+        showMessage(
+            "Please select a restaurant.",
+            true
+        );
+
+        return;
+    }
+
+    if(!name){
+
+        showMessage(
+            "Please enter the food name.",
+            true
+        );
+
+        return;
+    }
+
+    if(isNaN(price) || price < 0){
+
+        showMessage(
+            "Please enter a valid price.",
+            true
+        );
+
+        return;
+    }
+
+    const {error} =
+        await supabaseClient
+        .from("menu_items")
+        .insert({
+
+            restaurant_id:Number(restaurantId),
+
+            name:name,
+
+            description:description,
+
+            price:price,
+
+            image_url:image,
+
+            available:true
+
+        });
+
+    if(error){
+
+        console.error(error);
+
+        showMessage(
+            "Could not add menu item: " +
+            error.message,
+            true
+        );
+
+        return;
+    }
+
+    document.getElementById("menuName").value = "";
+    document.getElementById("menuPrice").value = "";
+    document.getElementById("menuImage").value = "";
+    document.getElementById("menuDescription").value = "";
+
+    await loadMenuItems();
+
+    renderMenus();
+
+    showMessage(
+        "Food item added successfully."
+    );
+}
+
+
+async function deleteMenuItem(id){
+
+    if(
+        !confirm(
+            "Are you sure you want to delete this food item?"
+        )
+    ){
+        return;
+    }
+
+    const {error} =
+        await supabaseClient
+        .from("menu_items")
+        .delete()
+        .eq("id",id);
+
+    if(error){
+
+        console.error(error);
+
+        showMessage(
+            "Could not delete menu item: " +
+            error.message,
+            true
+        );
+
+        return;
+    }
+
+    menuItems =
+        menuItems.filter(
+            item => String(item.id) !== String(id)
+        );
+
+    renderMenus();
+
+    showMessage(
+        "Food item deleted."
+    );
+}
+
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+function renderReports(){
+
+    const gross =
+        orders.reduce(
+            (sum,o)=>
+            sum + Number(o.total_amount || 0),
+            0
+        );
+
+    const completedOrders =
+        orders.filter(
+            o =>
+            String(o.order_status || "")
+            .toLowerCase() === "completed"
+        );
+
+    const completedSales =
+        completedOrders.reduce(
+            (sum,o)=>
+            sum + Number(o.total_amount || 0),
+            0
+        );
+
+    const cancelled =
+        orders.filter(
+            o =>
+            String(o.order_status || "")
+            .toLowerCase() === "cancelled"
+        ).length;
+
+    const active =
+        orders.filter(
+            o => {
+
+                const status =
+                    String(
+                        o.order_status || ""
+                    ).toLowerCase();
+
+                return [
+                    "pending",
+                    "preparing",
+                    "ready"
+                ].includes(status);
+
+            }
+        ).length;
+
+    const average =
+        orders.length
+        ?
+        gross / orders.length
+        :
+        0;
+
+    document.getElementById(
+        "reportGross"
+    ).textContent = money(gross);
+
+    document.getElementById(
+        "reportCompleted"
+    ).textContent = money(completedSales);
+
+    document.getElementById(
+        "reportAverage"
+    ).textContent = money(average);
+
+    document.getElementById(
+        "reportCompletedOrders"
+    ).textContent =
+        completedOrders.length;
+
+    document.getElementById(
+        "reportCancelled"
+    ).textContent =
+        cancelled;
+
+    document.getElementById(
+        "reportActive"
+    ).textContent =
+        active;
+
+    renderPerformance();
+}
+
+
+function renderPerformance(){
+
+    const body =
+        document.getElementById(
+            "performanceBody"
+        );
+
+    if(!restaurants.length){
+
+        body.innerHTML =
+            `<tr>
+                <td colspan="5" class="empty">
+                    No restaurant data.
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    body.innerHTML =
+        restaurants.map(r=>{
+
+            const restaurantOrders =
+                orders.filter(
+                    o =>
+                    String(o.restaurant_id) ===
+                    String(r.id)
+                );
+
+            const gross =
+                restaurantOrders.reduce(
+                    (sum,o)=>
+                    sum + Number(o.total_amount || 0),
+                    0
+                );
+
+            const completed =
+                restaurantOrders.filter(
+                    o =>
+                    String(o.order_status || "")
+                    .toLowerCase() === "completed"
+                );
+
+            const completedSales =
+                completed.reduce(
+                    (sum,o)=>
+                    sum + Number(o.total_amount || 0),
+                    0
+                );
+
+            const average =
+                restaurantOrders.length
+                ?
+                gross / restaurantOrders.length
+                :
+                0;
+
+            return `
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                restaurantName(r.id)
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${restaurantOrders.length}
+                    </td>
+
+                    <td>
+                        ${money(gross)}
+                    </td>
+
+                    <td>
+                        ${money(completedSales)}
+                    </td>
+
+                    <td>
+                        ${money(average)}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+loadAll();
+
+
+/* Refresh orders automatically every 10 seconds */
+
+setInterval(async ()=>{
+
+    await loadOrders();
+
+    updateOverview();
+
+    renderRecentOrders();
+    renderOrders();
+    renderReports();
+
+},10000);
+
+
+/* Close modal by clicking outside */
+
+document
+    .getElementById("orderModal")
+    .addEventListener("click",function(e){
+
+        if(e.target === this){
+            closeOrderModal();
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
