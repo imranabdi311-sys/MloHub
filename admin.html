@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MloHub Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  background:#f4f6f9;
+  color:#202124;
+}
+
+header{
+  background:linear-gradient(135deg,#ff7a00,#ff3d00);
+  color:white;
+  padding:18px 25px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 3px 15px rgba(0,0,0,.15);
+}
+
+.header{
+  max-width:1400px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.logo{
+  font-size:27px;
+  font-weight:bold;
+}
+
+.subtitle{
+  margin-top:4px;
+  opacity:.9;
+  font-size:14px;
+}
+
+.refresh{
+  border:0;
+  background:white;
+  color:#ff5500;
+  padding:11px 16px;
+  border-radius:9px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.container{
+  max-width:1400px;
+  margin:auto;
+  padding:25px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:16px;
+  margin-bottom:25px;
+}
+
+.stat{
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 3px 12px rgba(0,0,0,.07);
+}
+
+.stat-icon{
+  font-size:28px;
+}
+
+.stat h2{
+  margin:8px 0;
+  font-size:27px;
+}
+
+.stat p{
+  color:#777;
+}
+
+.tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  overflow-x:auto;
+}
+
+.tab{
+  border:0;
+  background:white;
+  padding:13px 18px;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.tab.active{
+  background:#ff5a00;
+  color:white;
+}
+
+.panel{
+  display:none;
+}
+
+.panel.active{
+  display:block;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 3px 12px rgba(0,0,0,.07);
+}
+
+.card h2{
+  margin-bottom:18px;
+}
+
+.search{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:9px;
+  margin-bottom:18px;
+  font-size:15px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:15px;
+}
+
+.restaurant-card,
+.order-card,
+.customer-card,
+.driver-card,
+.menu-card{
+  border:1px solid #eee;
+  border-radius:14px;
+  padding:17px;
+  background:#fff;
+}
+
+.restaurant-card h3,
+.order-card h3,
+.customer-card h3,
+.driver-card h3,
+.menu-card h3{
+  margin-bottom:8px;
+}
+
+.muted{
+  color:#777;
+  font-size:14px;
+}
+
+.price{
+  color:#e84d00;
+  font-size:18px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+  margin:4px 0;
+}
+
+.pending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.preparing{
+  background:#cfe2ff;
+  color:#084298;
+}
+
+.ready{
+  background:#d1e7dd;
+  color:#0f5132;
+}
+
+.completed{
+  background:#d1e7dd;
+  color:#0f5132;
+}
+
+.cancelled{
+  background:#f8d7da;
+  color:#842029;
+}
+
+.active-badge{
+  background:#d1e7dd;
+  color:#0f5132;
+}
+
+.inactive-badge{
+  background:#f8d7da;
+  color:#842029;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:13px;
+}
+
+button{
+  cursor:pointer;
+}
+
+.primary{
+  border:0;
+  background:#ff5a00;
+  color:white;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+.success{
+  border:0;
+  background:#168c39;
+  color:white;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+.danger{
+  border:0;
+  background:#dc3545;
+  color:white;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+.secondary{
+  border:0;
+  background:#eee;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+select{
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  margin-top:10px;
+}
+
+.message{
+  padding:13px;
+  border-radius:10px;
+  margin-bottom:18px;
+  display:none;
+}
+
+.message.show{
+  display:block;
+}
+
+.info{
+  background:#e7f1ff;
+  color:#084298;
+}
+
+.success-message{
+  background:#d1e7dd;
+  color:#0f5132;
+}
+
+.error{
+  background:#f8d7da;
+  color:#842029;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,
+td{
+  padding:13px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+  white-space:nowrap;
+}
+
+th{
+  background:#f8f9fa;
+}
+
+.loading{
+  padding:20px;
+  text-align:center;
+  color:#777;
+}
+
+.empty{
+  padding:25px;
+  text-align:center;
+  color:#777;
+}
+
+.revenue{
+  font-size:24px;
+  font-weight:bold;
+  color:#168c39;
+}
+
+@media(max-width:1100px){
+  .stats{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:700px){
+  .container{
+    padding:12px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .header{
+    align-items:flex-start;
+  }
+
+  .logo{
+    font-size:22px;
+  }
+}
+
+@media(max-width:450px){
+  .stats{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="header">
+
+<div>
+<div class="logo">🍽️ MloHub Admin</div>
+<div class="subtitle">
+Main Platform Control Center
+</div>
+</div>
+
+<button class="refresh" onclick="refreshDashboard()">
+🔄 Refresh
+</button>
+
+</div>
+
+</header>
+
+<div class="container">
+
+<div id="message" class="message"></div>
+
+<!-- STATISTICS -->
+
+<div class="stats">
+
+<div class="stat">
+<div class="stat-icon">📦</div>
+<h2 id="totalOrders">0</h2>
+<p>Total Orders</p>
+</div>
+
+<div class="stat">
+<div class="stat-icon">⏳</div>
+<h2 id="pendingOrders">0</h2>
+<p>Pending Orders</p>
+</div>
+
+<div class="stat">
+<div class="stat-icon">🏪</div>
+<h2 id="totalRestaurants">0</h2>
+<p>Restaurants</p>
+</div>
+
+<div class="stat">
+<div class="stat-icon">👥</div>
+<h2 id="totalCustomers">0</h2>
+<p>Customers</p>
+</div>
+
+<div class="stat">
+<div class="stat-icon">💰</div>
+<h2 id="totalSales">KSh 0</h2>
+<p>Total Sales</p>
+</div>
+
+</div>
+
+<!-- TABS -->
+
+<div class="tabs">
+
+<button class="tab active"
+onclick="showPanel('overview',this)">
+📊 Overview </button>
+
+<button class="tab"
+onclick="showPanel('orders',this)">
+📦 Orders </button>
+
+<button class="tab"
+onclick="showPanel('restaurants',this)">
+🏪 Restaurants </button>
+
+<button class="tab"
+onclick="showPanel('customers',this)">
+👥 Customers </button>
+
+<button class="tab"
+onclick="showPanel('drivers',this)">
+🛵 Drivers </button>
+
+<button class="tab"
+onclick="showPanel('menu',this)">
+🍔 Menu </button>
+
+</div>
+
+<!-- OVERVIEW -->
+
+<section id="overviewPanel" class="panel active">
+
+<div class="card">
+
+<h2>📊 MloHub Overview</h2>
+
+<p class="muted">
+Welcome to your MloHub platform administration dashboard.
+</p>
+
+<br>
+
+<div class="grid">
+
+<div class="restaurant-card">
+<h3>💰 Platform Sales</h3>
+<div class="revenue" id="overviewSales">
+KSh 0
+</div>
+<p class="muted">
+All non-cancelled orders
+</p>
+</div>
+
+<div class="restaurant-card">
+<h3>📦 Orders Today</h3>
+<div class="revenue" id="ordersToday">
+0
+</div>
+<p class="muted">
+Orders received today
+</p>
+</div>
+
+<div class="restaurant-card">
+<h3>🍔 Menu Items</h3>
+<div class="revenue" id="overviewMenu">
+0
+</div>
+<p class="muted">
+All restaurant menu items
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ORDERS -->
+
+<section id="ordersPanel" class="panel">
+
+<div class="card">
+
+<h2>📦 All Orders</h2>
+
+<input
+class="search"
+id="orderSearch"
+placeholder="🔎 Search order, customer or phone..."
+oninput="filterOrders()"
+
+>
+
+<div id="ordersList" class="grid">
+<div class="loading">Loading orders...</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- RESTAURANTS -->
+
+<section id="restaurantsPanel" class="panel">
+
+<div class="card">
+
+<h2>🏪 Restaurants</h2>
+
+<input
+class="search"
+id="restaurantSearch"
+placeholder="🔎 Search restaurants..."
+oninput="filterRestaurants()"
+
+>
+
+<div id="restaurantsList" class="grid">
+<div class="loading">Loading restaurants...</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- CUSTOMERS -->
+
+<section id="customersPanel" class="panel">
+
+<div class="card">
+
+<h2>👥 Customers</h2>
+
+<input
+class="search"
+id="customerSearch"
+placeholder="🔎 Search customer..."
+oninput="filterCustomers()"
+
+>
+
+<div id="customersList" class="grid">
+<div class="loading">Loading customers...</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- DRIVERS -->
+
+<section id="driversPanel" class="panel">
+
+<div class="card">
+
+<h2>🛵 Drivers / Riders</h2>
+
+<input
+class="search"
+id="driverSearch"
+placeholder="🔎 Search driver..."
+oninput="filterDrivers()"
+
+>
+
+<div id="driversList" class="grid">
+<div class="loading">Loading drivers...</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- MENU -->
+
+<section id="menuPanel" class="panel">
+
+<div class="card">
+
+<h2>🍔 All Menu Items</h2>
+
+<input
+class="search"
+id="menuSearch"
+placeholder="🔎 Search food..."
+oninput="filterMenu()"
+
+>
+
+<div id="menuList" class="grid">
+<div class="loading">Loading menu...</div>
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+<script>
+
+/* =========================================
+SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://bhvzpycbztngtwuhxxex.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+
+const db =
+supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================================
+DATA
+========================================= */
+
+let allOrders = [];
+let allRestaurants = [];
+let allCustomers = [];
+let allDrivers = [];
+let allMenu = [];
+
+
+/* =========================================
+MESSAGE
+========================================= */
+
+function showMessage(text,type){
+
+const box =
+document.getElementById("message");
+
+box.textContent = text;
+
+box.className =
+"message show " + type;
+
+setTimeout(function(){
+
+box.className = "message";
+
+},4000);
+
+}
+
+
+/* =========================================
+RESTAURANTS
+========================================= */
+
+async function loadRestaurants(){
+
+const {data,error} =
+await db
+.from("restaurants")
+.select("*")
+.order("id",{ascending:true});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("restaurantsList").innerHTML =
+'<div class="message show error">'+
+escapeHTML(error.message)+
+'</div>';
+
+return;
+
+}
+
+allRestaurants = data || [];
+
+document.getElementById("totalRestaurants").textContent =
+allRestaurants.length;
+
+displayRestaurants(allRestaurants);
+
+}
+
+
+/* =========================================
+DISPLAY RESTAURANTS
+========================================= */
+
+function displayRestaurants(list){
+
+const box =
+document.getElementById("restaurantsList");
+
+box.innerHTML = "";
+
+if(!list.length){
+
+box.innerHTML =
+'<div class="empty">No restaurants found.</div>';
+
+return;
+
+}
+
+list.forEach(function(r){
+
+const card =
+document.createElement("div");
+
+card.className =
+"restaurant-card";
+
+card.innerHTML = `
+
+<h3>🏪 ${escapeHTML(r.name || "Restaurant")}</h3>
+
+<p class="muted">
+Restaurant ID: ${escapeHTML(r.id)}
+</p>
+
+<p class="muted">
+${escapeHTML(
+r.location ||
+r.address ||
+"No location"
+)}
+</p>
+
+<div class="actions">
+
+<span class="badge active-badge">
+🟢 Active
+</span>
+
+</div>
+
+`;
+
+box.appendChild(card);
+
+});
+
+}
+
+
+/* =========================================
+ORDERS
+========================================= */
+
+async function loadOrders(){
+
+const {data,error} =
+await db
+.from("orders")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("ordersList").innerHTML =
+'<div class="message show error">'+
+escapeHTML(error.message)+
+'</div>';
+
+return;
+
+}
+
+allOrders = data || [];
+
+document.getElementById("totalOrders").textContent =
+allOrders.length;
+
+const pending =
+allOrders.filter(function(o){
+
+return String(
+o.order_status || ""
+).toLowerCase() === "pending";
+
+}).length;
+
+document.getElementById("pendingOrders").textContent =
+pending;
+
+
+const sales =
+allOrders.reduce(function(total,o){
+
+const status =
+String(
+o.order_status || ""
+).toLowerCase();
+
+if(status === "cancelled"){
+return total;
+}
+
+return total +
+Number(o.total_amount || 0);
+
+},0);
+
+
+document.getElementById("totalSales").textContent =
+"KSh " + sales.toLocaleString();
+
+document.getElementById("overviewSales").textContent =
+"KSh " + sales.toLocaleString();
+
+
+const today =
+new Date().toDateString();
+
+const todayOrders =
+allOrders.filter(function(o){
+
+return o.created_at &&
+new Date(o.created_at).toDateString() === today;
+
+}).length;
+
+document.getElementById("ordersToday").textContent =
+todayOrders;
+
+
+displayOrders(allOrders);
+
+}
+
+
+/* =========================================
+DISPLAY ORDERS
+========================================= */
+
+function displayOrders(list){
+
+const box =
+document.getElementById("ordersList");
+
+box.innerHTML = "";
+
+if(!list.length){
+
+box.innerHTML =
+'<div class="empty">No orders found.</div>';
+
+return;
+
+}
+
+list.forEach(function(order){
+
+const card =
+document.createElement("div");
+
+card.className =
+"order-card";
+
+const status =
+String(
+order.order_status || "pending"
+).toLowerCase();
+
+const total =
+Number(
+order.total_amount || 0
+);
+
+const date =
+order.created_at
+?
+new Date(order.created_at).toLocaleString()
+:
+"";
+
+card.innerHTML = `
+
+<h3>
+📦 Order #${escapeHTML(order.id)}
+</h3>
+
+<p class="muted">
+🕐 ${escapeHTML(date)}
+</p>
+
+<br>
+
+<p>
+<strong>Customer:</strong>
+${escapeHTML(order.customer_name || "Unknown")}
+</p>
+
+<p>
+<strong>Phone:</strong>
+${escapeHTML(order.customer_phone || "-")}
+</p>
+
+<p>
+<strong>Address:</strong>
+${escapeHTML(order.delivery_address || "-")}
+</p>
+
+<p>
+<strong>Restaurant ID:</strong>
+${escapeHTML(order.restaurant_id)}
+</p>
+
+<p class="price">
+KSh ${total.toLocaleString()}
+</p>
+
+<span class="badge ${status}">
+${escapeHTML(
+order.order_status || "pending"
+)}
+</span>
+
+<div class="actions">
+
+<select
+onchange="updateOrderStatus(${order.id},this.value)"
+>
+
+<option value="pending"
+${status==="pending"?"selected":""}>
+Pending
+</option>
+
+<option value="preparing"
+${status==="preparing"?"selected":""}>
+Preparing
+</option>
+
+<option value="ready"
+${status==="ready"?"selected":""}>
+Ready
+</option>
+
+<option value="completed"
+${status==="completed"?"selected":""}>
+Completed
+</option>
+
+<option value="cancelled"
+${status==="cancelled"?"selected":""}>
+Cancelled
+</option>
+
+</select>
+
+</div>
+
+`;
+
+box.appendChild(card);
+
+});
+
+}
+
+
+/* =========================================
+UPDATE ORDER
+========================================= */
+
+async function updateOrderStatus(id,status){
+
+const {error} =
+await db
+.from("orders")
+.update({
+order_status:status
+})
+.eq("id",id);
+
+if(error){
+
+showMessage(
+"Could not update order: " +
+error.message,
+"error"
+);
+
+return;
+
+}
+
+showMessage(
+"Order #"+id+
+" updated to "+status,
+"success-message"
+);
+
+loadOrders();
+
+}
+
+
+/* =========================================
+CUSTOMERS
+========================================= */
+
+async function loadCustomers(){
+
+const {data,error} =
+await db
+.from("customers")
+.select("*")
+.order("id",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("customersList").innerHTML =
+'<div class="message show error">'+
+escapeHTML(error.message)+
+'</div>';
+
+return;
+
+}
+
+allCustomers = data || [];
+
+document.getElementById("totalCustomers").textContent =
+allCustomers.length;
+
+displayCustomers(allCustomers);
+
+}
+
+
+/* =========================================
+DISPLAY CUSTOMERS
+========================================= */
+
+function displayCustomers(list){
+
+const box =
+document.getElementById("customersList");
+
+box.innerHTML = "";
+
+if(!list.length){
+
+box.innerHTML =
+'<div class="empty">No customers found.</div>';
+
+return;
+
+}
+
+list.forEach(function(c){
+
+const card =
+document.createElement("div");
+
+card.className =
+"customer-card";
+
+card.innerHTML = `
+
+<h3>👤 ${escapeHTML(
+c.name ||
+c.customer_name ||
+"Customer"
+)}</h3>
+
+<p>
+📞 ${escapeHTML(
+c.phone ||
+c.customer_phone ||
+"-"
+)}
+</p>
+
+<p class="muted">
+Customer ID: ${escapeHTML(c.id)}
+</p>
+
+`;
+
+box.appendChild(card);
+
+});
+
+}
+
+
+/* =========================================
+DRIVERS
+========================================= */
+
+async function loadDrivers(){
+
+const {data,error} =
+await db
+.from("drivers")
+.select("*")
+.order("id",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("driversList").innerHTML =
+'<div class="message show error">'+
+escapeHTML(error.message)+
+'</div>';
+
+return;
+
+}
+
+allDrivers = data || [];
+
+displayDrivers(allDrivers);
+
+}
+
+
+/* =========================================
+DISPLAY DRIVERS
+========================================= */
+
+function displayDrivers(list){
+
+const box =
+document.getElementById("driversList");
+
+box.innerHTML = "";
+
+if(!list.length){
+
+box.innerHTML =
+'<div class="empty">No drivers found.</div>';
+
+return;
+
+}
+
+list.forEach(function(d){
+
+const card =
+document.createElement("div");
+
+card.className =
+"driver-card";
+
+card.innerHTML = `
+
+<h3>🛵 ${escapeHTML(
+d.name ||
+d.full_name ||
+"Driver"
+)}</h3>
+
+<p>
+📞 ${escapeHTML(
+d.phone || "-"
+)}
+</p>
+
+<p class="muted">
+Driver ID: ${escapeHTML(d.id)}
+</p>
+
+`;
+
+box.appendChild(card);
+
+});
+
+}
+
+
+/* =========================================
+MENU
+========================================= */
+
+async function loadMenu(){
+
+const {data,error} =
+await db
+.from("menu_items")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("menuList").innerHTML =
+'<div class="message show error">'+
+escapeHTML(error.message)+
+'</div>';
+
+return;
+
+}
+
+allMenu = data || [];
+
+document.getElementById("overviewMenu").textContent =
+allMenu.length;
+
+displayMenu(allMenu);
+
+}
+
+
+/* =========================================
+DISPLAY MENU
+========================================= */
+
+function displayMenu(list){
+
+const box =
+document.getElementById("menuList");
+
+box.innerHTML = "";
+
+if(!list.length){
+
+box.innerHTML =
+'<div class="empty">No menu items found.</div>';
+
+return;
+
+}
+
+list.forEach(function(item){
+
+const card =
+document.createElement("div");
+
+card.className =
+"menu-card";
+
+const status =
+item.available
+?
+"active-badge"
+:
+"inactive-badge";
+
+card.innerHTML = `
+
+<h3>🍔 ${escapeHTML(item.name)}</h3>
+
+<p class="muted">
+${escapeHTML(
+item.description || ""
+)}
+</p>
+
+<p class="price">
+KSh ${Number(
+item.price || 0
+).toLocaleString()}
+</p>
+
+<p class="muted">
+Restaurant ID:
+${escapeHTML(item.restaurant_id)}
+</p>
+
+<span class="badge ${status}">
+${item.available ? "Available" : "Hidden"}
+</span>
+
+`;
+
+box.appendChild(card);
+
+});
+
+}
+
+
+/* =========================================
+SEARCH
+========================================= */
+
+function filterOrders(){
+
+const term =
+document.getElementById("orderSearch")
+.value.toLowerCase()
+.trim();
+
+displayOrders(
+allOrders.filter(function(o){
+
+return (
+String(o.id).includes(term) ||
+String(o.customer_name || "")
+.toLowerCase()
+.includes(term) ||
+String(o.customer_phone || "")
+.toLowerCase()
+.includes(term)
+);
+
+})
+);
+
+}
+
+
+function filterRestaurants(){
+
+const term =
+document.getElementById("restaurantSearch")
+.value.toLowerCase()
+.trim();
+
+displayRestaurants(
+allRestaurants.filter(function(r){
+
+return String(
+r.name || ""
+)
+.toLowerCase()
+.includes(term);
+
+})
+);
+
+}
+
+
+function filterCustomers(){
+
+const term =
+document.getElementById("customerSearch")
+.value.toLowerCase()
+.trim();
+
+displayCustomers(
+allCustomers.filter(function(c){
+
+return (
+String(c.name || "")
+.toLowerCase()
+.includes(term) ||
+String(c.phone || "")
+.toLowerCase()
+.includes(term)
+);
+
+})
+);
+
+}
+
+
+function filterDrivers(){
+
+const term =
+document.getElementById("driverSearch")
+.value.toLowerCase()
+.trim();
+
+displayDrivers(
+allDrivers.filter(function(d){
+
+return (
+String(d.name || "")
+.toLowerCase()
+.includes(term) ||
+String(d.phone || "")
+.toLowerCase()
+.includes(term)
+);
+
+})
+);
+
+}
+
+
+function filterMenu(){
+
+const term =
+document.getElementById("menuSearch")
+.value.toLowerCase()
+.trim();
+
+displayMenu(
+allMenu.filter(function(item){
+
+return (
+String(item.name || "")
+.toLowerCase()
+.includes(term) ||
+String(item.category || "")
+.toLowerCase()
+.includes(term)
+);
+
+})
+);
+
+}
+
+
+/* =========================================
+TABS
+========================================= */
+
+function showPanel(panel,button){
+
+document
+.querySelectorAll(".panel")
+.forEach(function(p){
+
+p.classList.remove("active");
+
+});
+
+document
+.getElementById(panel+"Panel")
+.classList.add("active");
+
+
+document
+.querySelectorAll(".tab")
+.forEach(function(t){
+
+t.classList.remove("active");
+
+});
+
+button.classList.add("active");
+
+}
+
+
+/* =========================================
+REFRESH
+========================================= */
+
+async function refreshDashboard(){
+
+showMessage(
+"Refreshing MloHub dashboard...",
+"info"
+);
+
+await Promise.all([
+loadRestaurants(),
+loadOrders(),
+loadCustomers(),
+loadDrivers(),
+loadMenu()
+]);
+
+showMessage(
+"MloHub dashboard refreshed successfully.",
+"success-message"
+);
+
+}
+
+
+/* =========================================
+ESCAPE HTML
+========================================= */
+
+function escapeHTML(value){
+
+return String(value ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================
+START
+========================================= */
+
+async function start(){
+
+await Promise.all([
+loadRestaurants(),
+loadOrders(),
+loadCustomers(),
+loadDrivers(),
+loadMenu()
+]);
+
+}
+
+start();
+
+</script>
+
+</body>
+</html>
