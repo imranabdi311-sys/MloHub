@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,9 +37,7 @@ button{
   cursor:pointer;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 
 header{
   background:linear-gradient(135deg,#ff7a00,#ff3d00);
@@ -82,9 +79,7 @@ header{
   box-shadow:0 3px 10px rgba(0,0,0,.12);
 }
 
-/* =========================
-   HERO
-========================= */
+/* HERO */
 
 .hero{
   background:
@@ -127,9 +122,7 @@ header{
   box-shadow:0 5px 20px rgba(0,0,0,.15);
 }
 
-/* =========================
-   CONTAINER
-========================= */
+/* CONTAINER */
 
 .container{
   max-width:1200px;
@@ -142,9 +135,7 @@ header{
   margin-bottom:17px;
 }
 
-/* =========================
-   MESSAGE
-========================= */
+/* MESSAGE */
 
 .message{
   padding:13px 15px;
@@ -172,9 +163,7 @@ header{
   color:#0f5132;
 }
 
-/* =========================
-   RESTAURANTS
-========================= */
+/* RESTAURANTS */
 
 .restaurant-grid{
   display:grid;
@@ -238,9 +227,7 @@ header{
   font-weight:bold;
 }
 
-/* =========================
-   RESTAURANT MENU
-========================= */
+/* RESTAURANT MENU */
 
 #restaurantSection{
   display:none;
@@ -301,9 +288,7 @@ header{
   color:white;
 }
 
-/* =========================
-   MENU GRID
-========================= */
+/* MENU GRID */
 
 .menu-grid{
   display:grid;
@@ -379,9 +364,7 @@ header{
   font-size:14px;
 }
 
-/* =========================
-   CART BAR
-========================= */
+/* CART BAR */
 
 .cart-bar{
   position:fixed;
@@ -414,9 +397,7 @@ header{
   font-weight:bold;
 }
 
-/* =========================
-   MODAL
-========================= */
+/* MODALS */
 
 .modal{
   position:fixed;
@@ -458,9 +439,7 @@ header{
   font-size:20px;
 }
 
-/* =========================
-   CART ITEMS
-========================= */
+/* CART ITEMS */
 
 .cart-item{
   display:flex;
@@ -509,9 +488,7 @@ header{
   font-weight:bold;
 }
 
-/* =========================
-   FORMS
-========================= */
+/* FORMS */
 
 .form-group{
   margin-bottom:14px;
@@ -552,6 +529,17 @@ header{
   margin-right:7px;
 }
 
+.mpesa-note{
+  background:#eef9f0;
+  border:1px solid #b8dfbd;
+  color:#176b27;
+  padding:12px;
+  border-radius:9px;
+  margin-top:10px;
+  font-size:14px;
+  display:none;
+}
+
 .checkout-btn{
   width:100%;
   border:0;
@@ -564,6 +552,11 @@ header{
   font-size:16px;
 }
 
+.checkout-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
 .cancel-btn{
   width:100%;
   border:0;
@@ -573,9 +566,7 @@ header{
   margin-top:9px;
 }
 
-/* =========================
-   ORDER SUCCESS
-========================= */
+/* SUCCESS */
 
 .success-screen{
   text-align:center;
@@ -585,6 +576,16 @@ header{
 .success-icon{
   font-size:70px;
   margin-bottom:15px;
+}
+
+.payment-status{
+  margin-top:15px;
+  padding:13px;
+  background:#fff7e6;
+  border:1px solid #ffd98a;
+  border-radius:10px;
+  color:#875600;
+  font-weight:bold;
 }
 
 .track-btn{
@@ -609,9 +610,7 @@ header{
   margin-top:10px;
 }
 
-/* =========================
-   LOADING
-========================= */
+/* LOADING */
 
 .loading{
   text-align:center;
@@ -643,9 +642,7 @@ header{
   color:#777;
 }
 
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 
 footer{
   margin-top:40px;
@@ -675,9 +672,7 @@ footer p{
   text-decoration:none;
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media(max-width:650px){
 
@@ -724,48 +719,33 @@ footer p{
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
+<!-- HEADER -->
 
 <header>
-
   <div class="header-inner">
 
     <div>
-      <div class="logo">
-        🍽️ MloHub
-      </div>
-
+      <div class="logo">🍽️ MloHub</div>
       <div class="tagline">
         Discover food. Order easily. Enjoy.
       </div>
     </div>
 
-    <button
-      class="cart-header"
-      onclick="openCart()"
-    >
-      🛒 Cart
-      <span id="headerCartCount">0</span>
+    <button class="cart-header" onclick="openCart()">
+      🛒 Cart <span id="headerCartCount">0</span>
     </button>
 
   </div>
-
 </header>
 
 
-<!-- =========================
-     HERO
-========================= -->
+<!-- HERO -->
 
 <section class="hero">
 
   <div class="hero-inner">
 
-    <h1>
-      Delicious food, delivered.
-    </h1>
+    <h1>Delicious food, delivered.</h1>
 
     <p>
       Find your favourite restaurant and order in minutes.
@@ -787,16 +767,11 @@ footer p{
 </section>
 
 
-<!-- =========================
-     MAIN
-========================= -->
+<!-- MAIN -->
 
 <main class="container">
 
-  <div
-    id="message"
-    class="message"
-  ></div>
+  <div id="message" class="message"></div>
 
 
   <!-- RESTAURANTS -->
@@ -807,14 +782,14 @@ footer p{
       🍽️ Choose a Restaurant
     </h2>
 
-    <div
-      id="restaurantList"
-      class="restaurant-grid"
-    >
+    <div id="restaurantList" class="restaurant-grid">
 
       <div class="loading">
+
         <div class="spinner"></div>
+
         Loading restaurants...
+
       </div>
 
     </div>
@@ -838,19 +813,21 @@ footer p{
 
           <p
             id="selectedRestaurantLocation"
-            class="restaurant-location"
-          ></p>
+            class="restaurant-location">
+          </p>
 
         </div>
 
         <button
           class="back-btn"
-          onclick="backToRestaurants()"
-        >
+          onclick="backToRestaurants()">
+
           ← Restaurants
+
         </button>
 
       </div>
+
 
       <input
         id="menuSearch"
@@ -862,30 +839,18 @@ footer p{
     </div>
 
 
-    <div
-      id="categoryBar"
-      class="category-bar"
-    ></div>
+    <div id="categoryBar" class="category-bar"></div>
 
-
-    <div
-      id="menuList"
-      class="menu-grid"
-    ></div>
+    <div id="menuList" class="menu-grid"></div>
 
   </section>
 
 </main>
 
 
-<!-- =========================
-     CART BAR
-========================= -->
+<!-- CART BAR -->
 
-<div
-  id="cartBar"
-  class="cart-bar"
->
+<div id="cartBar" class="cart-bar">
 
   <div class="cart-bar-inner">
 
@@ -903,11 +868,13 @@ footer p{
 
     </div>
 
+
     <button
       class="view-cart-btn"
-      onclick="openCart()"
-    >
+      onclick="openCart()">
+
       View Cart →
+
     </button>
 
   </div>
@@ -915,29 +882,25 @@ footer p{
 </div>
 
 
-<!-- =========================
-     CART MODAL
-========================= -->
+<!-- CART MODAL -->
 
 <div
   id="cartModal"
   class="modal"
-  onclick="closeModalOutside(event,'cartModal')"
->
+  onclick="closeModalOutside(event,'cartModal')">
 
   <div class="modal-box">
 
     <div class="modal-header">
 
-      <h2>
-        🛒 Your Cart
-      </h2>
+      <h2>🛒 Your Cart</h2>
 
       <button
         class="close-btn"
-        onclick="closeCart()"
-      >
+        onclick="closeCart()">
+
         ×
+
       </button>
 
     </div>
@@ -949,20 +912,18 @@ footer p{
     <div
       id="cartEmpty"
       class="empty"
-      style="display:none"
-    >
+      style="display:none">
+
       Your cart is empty.
+
     </div>
 
 
     <div
       id="cartTotalBox"
-      class="cart-total"
-    >
+      class="cart-total">
 
-      <span>
-        Total
-      </span>
+      <span>Total</span>
 
       <span id="cartTotal">
         KSh 0
@@ -974,9 +935,10 @@ footer p{
     <button
       id="checkoutButton"
       class="checkout-btn"
-      onclick="openCheckout()"
-    >
+      onclick="openCheckout()">
+
       Proceed to Checkout
+
     </button>
 
   </div>
@@ -984,29 +946,25 @@ footer p{
 </div>
 
 
-<!-- =========================
-     CHECKOUT MODAL
-========================= -->
+<!-- CHECKOUT MODAL -->
 
 <div
   id="checkoutModal"
   class="modal"
-  onclick="closeModalOutside(event,'checkoutModal')"
->
+  onclick="closeModalOutside(event,'checkoutModal')">
 
   <div class="modal-box">
 
     <div class="modal-header">
 
-      <h2>
-        📍 Delivery Details
-      </h2>
+      <h2>📍 Delivery Details</h2>
 
       <button
         class="close-btn"
-        onclick="closeCheckout()"
-      >
+        onclick="closeCheckout()">
+
         ×
+
       </button>
 
     </div>
@@ -1014,9 +972,11 @@ footer p{
 
     <div
       id="checkoutMessage"
-      class="message"
-    ></div>
+      class="message">
+    </div>
 
+
+    <!-- NAME -->
 
     <div class="form-group">
 
@@ -1026,11 +986,12 @@ footer p{
 
       <input
         id="customerName"
-        placeholder="Enter your name"
-      >
+        placeholder="Enter your name">
 
     </div>
 
+
+    <!-- PHONE -->
 
     <div class="form-group">
 
@@ -1041,11 +1002,12 @@ footer p{
       <input
         id="customerPhone"
         type="tel"
-        placeholder="07XXXXXXXX"
-      >
+        placeholder="07XXXXXXXX">
 
     </div>
 
+
+    <!-- ORDER TYPE -->
 
     <div class="form-group">
 
@@ -1068,10 +1030,11 @@ footer p{
     </div>
 
 
+    <!-- ADDRESS -->
+
     <div
       id="addressGroup"
-      class="form-group"
-    >
+      class="form-group">
 
       <label>
         Delivery Address
@@ -1080,11 +1043,13 @@ footer p{
       <textarea
         id="deliveryAddress"
         rows="3"
-        placeholder="Building, street, area..."
-      ></textarea>
+        placeholder="Building, street, area...">
+      </textarea>
 
     </div>
 
+
+    <!-- PAYMENT -->
 
     <div class="form-group">
 
@@ -1100,8 +1065,7 @@ footer p{
             type="radio"
             name="payment"
             value="cash"
-            checked
-          >
+            checked>
 
           💵 Cash
 
@@ -1113,8 +1077,7 @@ footer p{
           <input
             type="radio"
             name="payment"
-            value="mpesa"
-          >
+            value="mpesa">
 
           📱 M-Pesa
 
@@ -1122,8 +1085,22 @@ footer p{
 
       </div>
 
+
+      <div
+        id="mpesaNote"
+        class="mpesa-note">
+
+        📱 You will receive an M-Pesa payment
+        request on the phone number above.
+        Enter your M-Pesa PIN on your phone
+        to complete the payment.
+
+      </div>
+
     </div>
 
+
+    <!-- TOTAL -->
 
     <div class="cart-total">
 
@@ -1138,20 +1115,24 @@ footer p{
     </div>
 
 
+    <!-- PLACE ORDER -->
+
     <button
       id="placeOrderBtn"
       class="checkout-btn"
-      onclick="placeOrder()"
-    >
+      onclick="placeOrder()">
+
       📦 Place Order
+
     </button>
 
 
     <button
       class="cancel-btn"
-      onclick="closeCheckout()"
-    >
+      onclick="closeCheckout()">
+
       Cancel
+
     </button>
 
   </div>
@@ -1159,14 +1140,11 @@ footer p{
 </div>
 
 
-<!-- =========================
-     SUCCESS MODAL
-========================= -->
+<!-- SUCCESS MODAL -->
 
 <div
   id="successModal"
-  class="modal"
->
+  class="modal">
 
   <div class="modal-box">
 
@@ -1176,12 +1154,18 @@ footer p{
         🎉
       </div>
 
-      <h2>
+
+      <h2 id="successTitle">
         Order Placed Successfully!
       </h2>
 
-      <p style="margin-top:10px;color:#666;">
+
+      <p
+        id="successMessage"
+        style="margin-top:10px;color:#666;">
+
         Your order has been sent to the restaurant.
+
       </p>
 
 
@@ -1191,12 +1175,10 @@ footer p{
           background:#f5f5f5;
           padding:15px;
           border-radius:10px;
-        "
-      >
+        ">
 
         <strong>
-          Order #
-          <span id="successOrderId"></span>
+          Order #<span id="successOrderId"></span>
         </strong>
 
         <br>
@@ -1210,12 +1192,21 @@ footer p{
       </div>
 
 
+      <div
+        id="paymentStatus"
+        class="payment-status"
+        style="display:none;">
+
+      </div>
+
+
       <a
         id="trackingLink"
         class="track-btn"
-        href="#"
-      >
+        href="#">
+
         📦 Track My Order
+
       </a>
 
 
@@ -1223,17 +1214,19 @@ footer p{
         id="whatsappLink"
         class="whatsapp-btn"
         href="#"
-        target="_blank"
-      >
+        target="_blank">
+
         💬 WhatsApp Order Details
+
       </a>
 
 
       <button
         class="cancel-btn"
-        onclick="closeSuccess()"
-      >
+        onclick="closeSuccess()">
+
         Done
+
       </button>
 
     </div>
@@ -1243,9 +1236,7 @@ footer p{
 </div>
 
 
-<!-- =========================
-     FOOTER
-========================= -->
+<!-- FOOTER -->
 
 <footer>
 
@@ -1296,6 +1287,28 @@ const supabaseClient =
 
 
 /* =====================================================
+   M-PESA EDGE FUNCTION
+===================================================== */
+
+/*
+  IMPORTANT:
+
+  This must be the EXACT name of your deployed
+  Supabase Edge Function.
+
+  We are using:
+
+  mpesa-stk-push
+
+  If your function has another name, change only
+  the value below.
+*/
+
+const MPESA_STK_FUNCTION =
+  "mpesa-stk-push";
+
+
+/* =====================================================
    APP DATA
 ===================================================== */
 
@@ -1317,6 +1330,7 @@ let selectedCategory = "All";
 function escapeHTML(value){
 
   return String(value ?? "")
+
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
@@ -1335,7 +1349,10 @@ function money(value){
 }
 
 
-function showMessage(text,type="info"){
+function showMessage(
+  text,
+  type="info"
+){
 
   const box =
     document.getElementById("message");
@@ -1356,12 +1373,13 @@ function showMessage(text,type="info"){
 }
 
 
-function showCheckoutMessage(text,type="error"){
+function showCheckoutMessage(
+  text,
+  type="error"
+){
 
   const box =
-    document.getElementById(
-      "checkoutMessage"
-    );
+    document.getElementById("checkoutMessage");
 
   box.textContent = text;
 
@@ -1371,11 +1389,78 @@ function showCheckoutMessage(text,type="error"){
 }
 
 
+/* =====================================================
+   PHONE NUMBER
+===================================================== */
+
+function normalizeKenyanPhone(phone){
+
+  let value =
+    String(phone || "")
+      .replace(/\s+/g,"")
+      .replace(/-/g,"");
+
+
+  if(value.startsWith("+254")){
+
+    return "254" +
+      value.substring(4);
+
+  }
+
+
+  if(value.startsWith("254")){
+
+    return value;
+
+  }
+
+
+  if(value.startsWith("07")){
+
+    return "254" +
+      value.substring(1);
+
+  }
+
+
+  if(value.startsWith("01")){
+
+    return "254" +
+      value.substring(1);
+
+  }
+
+
+  return value;
+
+}
+
+
+function validKenyanPhone(phone){
+
+  const normalized =
+    normalizeKenyanPhone(phone);
+
+  return /^254(7|1)\d{8}$/.test(
+    normalized
+  );
+
+}
+
+
+/* =====================================================
+   CART TOTALS
+===================================================== */
+
 function getCartCount(){
 
   return cart.reduce(
     function(total,item){
-      return total + item.quantity;
+
+      return total +
+        item.quantity;
+
     },
     0
   );
@@ -1412,11 +1497,17 @@ async function loadRestaurants(){
       "restaurantList"
     );
 
+
   box.innerHTML = `
+
     <div class="loading">
+
       <div class="spinner"></div>
+
       Loading restaurants...
+
     </div>
+
   `;
 
 
@@ -1425,9 +1516,15 @@ async function loadRestaurants(){
     error
   } =
     await supabaseClient
+
       .from("restaurants")
+
       .select("*")
-      .order("id",{ascending:true});
+
+      .order(
+        "id",
+        {ascending:true}
+      );
 
 
   if(error){
@@ -1435,10 +1532,17 @@ async function loadRestaurants(){
     console.error(error);
 
     box.innerHTML = `
+
       <div class="empty">
-        Unable to load restaurants.<br><br>
+
+        Unable to load restaurants.
+
+        <br><br>
+
         ${escapeHTML(error.message)}
+
       </div>
+
     `;
 
     return;
@@ -1468,89 +1572,109 @@ function displayRestaurants(items){
       "restaurantList"
     );
 
+
   box.innerHTML = "";
 
 
   if(items.length === 0){
 
-    box.innerHTML = `
-      <div class="empty">
+    box.innerHTML =
+      `<div class="empty">
         No restaurants available yet.
-      </div>
-    `;
+      </div>`;
 
     return;
 
   }
 
 
-  items.forEach(function(restaurant){
+  items.forEach(
+    function(restaurant){
 
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "restaurant-card";
-
-
-    const image =
-      restaurant.image_url ||
-      restaurant.image;
+      const card =
+        document.createElement(
+          "div"
+        );
 
 
-    card.innerHTML = `
-
-      <div class="restaurant-image">
-
-        ${
-          image
-          ?
-          `<img
-             src="${escapeHTML(image)}"
-             alt="${escapeHTML(restaurant.name)}"
-             onerror="this.style.display='none'"
-           >`
-          :
-          "🍽️"
-        }
-
-      </div>
-
-      <div class="restaurant-info">
-
-        <h3>
-          ${escapeHTML(
-            restaurant.name ||
-            "Restaurant"
-          )}
-        </h3>
-
-        <p class="restaurant-location">
-
-          📍
-          ${escapeHTML(
-            restaurant.location ||
-            restaurant.address ||
-            "Nairobi"
-          )}
-
-        </p>
-
-        <button
-          class="open-btn"
-          onclick="openRestaurant(${restaurant.id})"
-        >
-          View Menu →
-        </button>
-
-      </div>
-
-    `;
+      card.className =
+        "restaurant-card";
 
 
-    box.appendChild(card);
+      const image =
+        restaurant.image_url ||
+        restaurant.image;
 
-  });
+
+      card.innerHTML = `
+
+        <div class="restaurant-image">
+
+          ${
+            image
+
+            ?
+
+            `<img
+              src="${escapeHTML(image)}"
+              alt="${escapeHTML(
+                restaurant.name
+              )}"
+              onerror="
+                this.style.display='none'
+              "
+            >`
+
+            :
+
+            "🍽️"
+          }
+
+        </div>
+
+
+        <div class="restaurant-info">
+
+          <h3>
+            ${escapeHTML(
+              restaurant.name ||
+              "Restaurant"
+            )}
+          </h3>
+
+
+          <p class="restaurant-location">
+
+            📍
+
+            ${escapeHTML(
+              restaurant.location ||
+              restaurant.address ||
+              "Nairobi"
+            )}
+
+          </p>
+
+
+          <button
+            class="open-btn"
+            onclick="openRestaurant(
+              ${restaurant.id}
+            )">
+
+            View Menu →
+
+          </button>
+
+        </div>
+
+      `;
+
+
+      box.appendChild(card);
+
+    }
+  );
 
 }
 
@@ -1564,7 +1688,10 @@ async function openRestaurant(id){
   selectedRestaurant =
     restaurants.find(
       function(r){
-        return Number(r.id) === Number(id);
+
+        return Number(r.id) ===
+          Number(id);
+
       }
     );
 
@@ -1581,34 +1708,26 @@ async function openRestaurant(id){
   }
 
 
-  document
-    .getElementById(
-      "restaurantsSection"
-    )
-    .style.display = "none";
+  document.getElementById(
+    "restaurantsSection"
+  ).style.display = "none";
 
 
-  document
-    .getElementById(
-      "restaurantSection"
-    )
-    .style.display = "block";
+  document.getElementById(
+    "restaurantSection"
+  ).style.display = "block";
 
 
-  document
-    .getElementById(
-      "selectedRestaurantName"
-    )
-    .textContent =
+  document.getElementById(
+    "selectedRestaurantName"
+  ).textContent =
     selectedRestaurant.name ||
     "Restaurant";
 
 
-  document
-    .getElementById(
-      "selectedRestaurantLocation"
-    )
-    .textContent =
+  document.getElementById(
+    "selectedRestaurantLocation"
+  ).textContent =
     "📍 " +
     (
       selectedRestaurant.location ||
@@ -1617,17 +1736,16 @@ async function openRestaurant(id){
     );
 
 
-  document
-    .getElementById(
-      "menuSearch"
-    )
-    .value = "";
+  document.getElementById(
+    "menuSearch"
+  ).value = "";
 
 
   selectedCategory = "All";
 
 
   await loadRestaurantMenu();
+
 
   window.scrollTo({
     top:0,
@@ -1648,11 +1766,17 @@ async function loadRestaurantMenu(){
       "menuList"
     );
 
+
   box.innerHTML = `
+
     <div class="loading">
+
       <div class="spinner"></div>
+
       Loading menu...
+
     </div>
+
   `;
 
 
@@ -1661,7 +1785,9 @@ async function loadRestaurantMenu(){
     error
   } =
     await supabaseClient
+
       .from("menu_items")
+
       .select(`
         id,
         restaurant_id,
@@ -1673,15 +1799,15 @@ async function loadRestaurantMenu(){
         created_at,
         category
       `)
+
       .eq(
         "restaurant_id",
         selectedRestaurant.id
       )
+
       .order(
         "created_at",
-        {
-          ascending:true
-        }
+        {ascending:true}
       );
 
 
@@ -1690,10 +1816,17 @@ async function loadRestaurantMenu(){
     console.error(error);
 
     box.innerHTML = `
+
       <div class="empty">
-        Unable to load menu.<br><br>
+
+        Unable to load menu.
+
+        <br><br>
+
         ${escapeHTML(error.message)}
+
       </div>
+
     `;
 
     return;
@@ -1725,71 +1858,90 @@ function buildCategories(){
       "categoryBar"
     );
 
+
   box.innerHTML = "";
 
 
-  const categories =
-    [
-      "All",
-      ...new Set(
-        menuItems
-          .map(
-            item =>
-              item.category
-          )
-          .filter(Boolean)
-      )
-    ];
+  const categories = [
+
+    "All",
+
+    ...new Set(
+
+      menuItems
+
+        .map(
+          item => item.category
+        )
+
+        .filter(Boolean)
+
+    )
+
+  ];
 
 
-  categories.forEach(function(category){
+  categories.forEach(
+    function(category){
 
-    const button =
-      document.createElement("button");
-
-    button.className =
-      "category-btn " +
-      (
-        category === selectedCategory
-        ? "active"
-        : ""
-      );
-
-
-    button.textContent =
-      category;
-
-
-    button.onclick =
-      function(){
-
-        selectedCategory =
-          category;
-
-        document
-          .querySelectorAll(
-            ".category-btn"
-          )
-          .forEach(
-            function(btn){
-              btn.classList.remove(
-                "active"
-              );
-            }
-          );
-
-        button.classList.add(
-          "active"
+      const button =
+        document.createElement(
+          "button"
         );
 
-        filterMenu();
 
-      };
+      button.className =
+        "category-btn " +
+        (
+          category ===
+          selectedCategory
+            ? "active"
+            : ""
+        );
 
 
-    box.appendChild(button);
+      button.textContent =
+        category;
 
-  });
+
+      button.onclick =
+        function(){
+
+          selectedCategory =
+            category;
+
+
+          document
+            .querySelectorAll(
+              ".category-btn"
+            )
+            .forEach(
+              function(btn){
+
+                btn.classList.remove(
+                  "active"
+                );
+
+              }
+            );
+
+
+          button.classList.add(
+            "active"
+          );
+
+
+          filterMenu();
+
+        };
+
+
+      box.appendChild(
+        button
+      );
+
+    }
+  );
 
 }
 
@@ -1805,105 +1957,131 @@ function displayMenu(items){
       "menuList"
     );
 
+
   box.innerHTML = "";
 
 
   if(items.length === 0){
 
-    box.innerHTML = `
-      <div class="empty">
+    box.innerHTML =
+      `<div class="empty">
         No menu items found.
-      </div>
-    `;
+      </div>`;
 
     return;
 
   }
 
 
-  items.forEach(function(item){
+  items.forEach(
+    function(item){
 
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "menu-card";
-
-
-    const image =
-      item.image_url;
+      const card =
+        document.createElement(
+          "div"
+        );
 
 
-    card.innerHTML = `
-
-      <div class="menu-image">
-
-        ${
-          image
-          ?
-          `<img
-             src="${escapeHTML(image)}"
-             alt="${escapeHTML(item.name)}"
-             onerror="this.style.display='none'"
-           >`
-          :
-          "🍔"
-        }
-
-      </div>
+      card.className =
+        "menu-card";
 
 
-      <div class="menu-content">
-
-        <h3>
-          ${escapeHTML(item.name)}
-        </h3>
-
-        <p class="menu-description">
-
-          ${escapeHTML(
-            item.description || ""
-          )}
-
-        </p>
+      const image =
+        item.image_url;
 
 
-        <div class="menu-bottom">
+      card.innerHTML = `
 
-          <span class="price">
-            ${money(item.price)}
-          </span>
-
+        <div class="menu-image">
 
           ${
-            item.available
+            image
+
             ?
-            `
-              <button
-                class="add-btn"
-                onclick="addToCart(${item.id})"
-              >
-                + Add
-              </button>
-            `
+
+            `<img
+              src="${escapeHTML(image)}"
+              alt="${escapeHTML(
+                item.name
+              )}"
+              onerror="
+                this.style.display='none'
+              "
+            >`
+
             :
-            `
-              <span class="unavailable">
-                Not Available
-              </span>
-            `
+
+            "🍔"
           }
 
         </div>
 
-      </div>
 
-    `;
+        <div class="menu-content">
+
+          <h3>
+            ${escapeHTML(
+              item.name
+            )}
+          </h3>
 
 
-    box.appendChild(card);
+          <p class="menu-description">
 
-  });
+            ${escapeHTML(
+              item.description || ""
+            )}
+
+          </p>
+
+
+          <div class="menu-bottom">
+
+            <span class="price">
+
+              ${money(item.price)}
+
+            </span>
+
+
+            ${
+              item.available
+
+              ?
+
+              `<button
+                class="add-btn"
+                onclick="addToCart(
+                  ${item.id}
+                )">
+
+                + Add
+
+              </button>`
+
+              :
+
+              `<span
+                class="unavailable">
+
+                Not Available
+
+              </span>`
+            }
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      box.appendChild(
+        card
+      );
+
+    }
+  );
 
 }
 
@@ -1915,13 +2093,12 @@ function displayMenu(items){
 function filterMenu(){
 
   const search =
-    document
-      .getElementById(
-        "menuSearch"
-      )
-      .value
-      .toLowerCase()
-      .trim();
+    document.getElementById(
+      "menuSearch"
+    )
+    .value
+    .toLowerCase()
+    .trim();
 
 
   const filtered =
@@ -1929,17 +2106,25 @@ function filterMenu(){
       function(item){
 
         const matchesSearch =
+
           !search ||
+
           String(
             item.name || ""
           )
           .toLowerCase()
-          .includes(search) ||
+          .includes(search)
+
+          ||
+
           String(
             item.description || ""
           )
           .toLowerCase()
-          .includes(search) ||
+          .includes(search)
+
+          ||
+
           String(
             item.category || ""
           )
@@ -1948,7 +2133,12 @@ function filterMenu(){
 
 
         const matchesCategory =
-          selectedCategory === "All" ||
+
+          selectedCategory ===
+          "All"
+
+          ||
+
           item.category ===
           selectedCategory;
 
@@ -1962,7 +2152,9 @@ function filterMenu(){
     );
 
 
-  displayMenu(filtered);
+  displayMenu(
+    filtered
+  );
 
 }
 
@@ -1974,13 +2166,12 @@ function filterMenu(){
 function globalSearch(){
 
   const term =
-    document
-      .getElementById(
-        "globalSearch"
-      )
-      .value
-      .toLowerCase()
-      .trim();
+    document.getElementById(
+      "globalSearch"
+    )
+    .value
+    .toLowerCase()
+    .trim();
 
 
   if(!term){
@@ -1999,12 +2190,15 @@ function globalSearch(){
       function(restaurant){
 
         return (
+
           String(
             restaurant.name || ""
           )
           .toLowerCase()
           .includes(term)
+
           ||
+
           String(
             restaurant.location ||
             restaurant.address ||
@@ -2012,6 +2206,7 @@ function globalSearch(){
           )
           .toLowerCase()
           .includes(term)
+
         );
 
       }
@@ -2026,23 +2221,19 @@ function globalSearch(){
 
 
 /* =====================================================
-   BACK
+   BACK TO RESTAURANTS
 ===================================================== */
 
 function backToRestaurants(){
 
-  document
-    .getElementById(
-      "restaurantSection"
-    )
-    .style.display = "none";
+  document.getElementById(
+    "restaurantSection"
+  ).style.display = "none";
 
 
-  document
-    .getElementById(
-      "restaurantsSection"
-    )
-    .style.display = "block";
+  document.getElementById(
+    "restaurantsSection"
+  ).style.display = "block";
 
 
   window.scrollTo({
@@ -2054,7 +2245,7 @@ function backToRestaurants(){
 
 
 /* =====================================================
-   CART
+   ADD TO CART
 ===================================================== */
 
 function addToCart(itemId){
@@ -2062,8 +2253,10 @@ function addToCart(itemId){
   const item =
     menuItems.find(
       function(x){
+
         return Number(x.id) ===
-               Number(itemId);
+          Number(itemId);
+
       }
     );
 
@@ -2093,23 +2286,28 @@ function addToCart(itemId){
 
 
   if(
+
     selectedRestaurant &&
+
     cart.length > 0 &&
-    cart[0].restaurant_id !==
-    selectedRestaurant.id
+
+    Number(
+      cart[0].restaurant_id
+    ) !== Number(
+      selectedRestaurant.id
+    )
+
   ){
 
     const replace =
       confirm(
+
         "Your cart contains food from another restaurant. Clear the cart and add this item?"
+
       );
 
 
-    if(!replace){
-
-      return;
-
-    }
+    if(!replace) return;
 
 
     cart = [];
@@ -2120,8 +2318,10 @@ function addToCart(itemId){
   const existing =
     cart.find(
       function(x){
+
         return Number(x.id) ===
-               Number(item.id);
+          Number(item.id);
+
       }
     );
 
@@ -2175,31 +2375,26 @@ function updateCartUI(){
   const count =
     getCartCount();
 
+
   const total =
     getCartTotal();
 
 
-  document
-    .getElementById(
-      "headerCartCount"
-    )
-    .textContent =
+  document.getElementById(
+    "headerCartCount"
+  ).textContent =
     count;
 
 
-  document
-    .getElementById(
-      "cartCount"
-    )
-    .textContent =
+  document.getElementById(
+    "cartCount"
+  ).textContent =
     count;
 
 
-  document
-    .getElementById(
-      "cartBarTotal"
-    )
-    .textContent =
+  document.getElementById(
+    "cartBarTotal"
+  ).textContent =
     money(total);
 
 
@@ -2211,11 +2406,13 @@ function updateCartUI(){
 
   if(count > 0){
 
-    bar.style.display = "block";
+    bar.style.display =
+      "block";
 
   }else{
 
-    bar.style.display = "none";
+    bar.style.display =
+      "none";
 
   }
 
@@ -2230,11 +2427,11 @@ function openCart(){
 
   renderCart();
 
-  document
-    .getElementById(
-      "cartModal"
-    )
-    .classList.add("show");
+  document.getElementById(
+    "cartModal"
+  ).classList.add(
+    "show"
+  );
 
 }
 
@@ -2245,11 +2442,11 @@ function openCart(){
 
 function closeCart(){
 
-  document
-    .getElementById(
-      "cartModal"
-    )
-    .classList.remove("show");
+  document.getElementById(
+    "cartModal"
+  ).classList.remove(
+    "show"
+  );
 
 }
 
@@ -2265,15 +2462,18 @@ function renderCart(){
       "cartItems"
     );
 
+
   const empty =
     document.getElementById(
       "cartEmpty"
     );
 
+
   const totalBox =
     document.getElementById(
       "cartTotalBox"
     );
+
 
   const checkout =
     document.getElementById(
@@ -2289,11 +2489,14 @@ function renderCart(){
     empty.style.display =
       "block";
 
+
     totalBox.style.display =
       "none";
 
+
     checkout.style.display =
       "none";
+
 
     return;
 
@@ -2303,73 +2506,94 @@ function renderCart(){
   empty.style.display =
     "none";
 
+
   totalBox.style.display =
     "flex";
+
 
   checkout.style.display =
     "block";
 
 
-  cart.forEach(function(item){
+  cart.forEach(
+    function(item){
 
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "cart-item";
-
-
-    div.innerHTML = `
-
-      <div class="cart-item-info">
-
-        <h4>
-          ${escapeHTML(item.name)}
-        </h4>
-
-        <p>
-          ${money(item.price)}
-        </p>
-
-      </div>
+      const div =
+        document.createElement(
+          "div"
+        );
 
 
-      <div class="qty-controls">
-
-        <button
-          class="qty-btn"
-          onclick="changeQuantity(${item.id},-1)"
-        >
-          −
-        </button>
-
-        <strong>
-          ${item.quantity}
-        </strong>
-
-        <button
-          class="qty-btn"
-          onclick="changeQuantity(${item.id},1)"
-        >
-          +
-        </button>
-
-      </div>
-
-    `;
+      div.className =
+        "cart-item";
 
 
-    box.appendChild(div);
+      div.innerHTML = `
 
-  });
+        <div class="cart-item-info">
+
+          <h4>
+            ${escapeHTML(
+              item.name
+            )}
+          </h4>
+
+          <p>
+            ${money(item.price)}
+          </p>
+
+        </div>
 
 
-  document
-    .getElementById(
-      "cartTotal"
-    )
-    .textContent =
-    money(getCartTotal());
+        <div class="qty-controls">
+
+          <button
+            class="qty-btn"
+            onclick="changeQuantity(
+              ${item.id},
+              -1
+            )">
+
+            −
+
+          </button>
+
+
+          <strong>
+            ${item.quantity}
+          </strong>
+
+
+          <button
+            class="qty-btn"
+            onclick="changeQuantity(
+              ${item.id},
+              1
+            )">
+
+            +
+
+          </button>
+
+        </div>
+
+      `;
+
+
+      box.appendChild(
+        div
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    "cartTotal"
+  ).textContent =
+    money(
+      getCartTotal()
+    );
 
 }
 
@@ -2378,25 +2602,27 @@ function renderCart(){
    CHANGE QUANTITY
 ===================================================== */
 
-function changeQuantity(id,change){
+function changeQuantity(
+  id,
+  change
+){
 
   const item =
     cart.find(
       function(x){
+
         return Number(x.id) ===
-               Number(id);
+          Number(id);
+
       }
     );
 
 
-  if(!item){
-
-    return;
-
-  }
+  if(!item) return;
 
 
-  item.quantity += change;
+  item.quantity +=
+    change;
 
 
   if(item.quantity <= 0){
@@ -2404,8 +2630,10 @@ function changeQuantity(id,change){
     cart =
       cart.filter(
         function(x){
+
           return Number(x.id) !==
-                 Number(id);
+            Number(id);
+
         }
       );
 
@@ -2437,22 +2665,22 @@ function openCheckout(){
   }
 
 
-  document
-    .getElementById(
-      "checkoutTotal"
-    )
-    .textContent =
-    money(getCartTotal());
+  document.getElementById(
+    "checkoutTotal"
+  ).textContent =
+    money(
+      getCartTotal()
+    );
 
 
   closeCart();
 
 
-  document
-    .getElementById(
-      "checkoutModal"
-    )
-    .classList.add("show");
+  document.getElementById(
+    "checkoutModal"
+  ).classList.add(
+    "show"
+  );
 
 }
 
@@ -2463,11 +2691,11 @@ function openCheckout(){
 
 function closeCheckout(){
 
-  document
-    .getElementById(
-      "checkoutModal"
-    )
-    .classList.remove("show");
+  document.getElementById(
+    "checkoutModal"
+  ).classList.remove(
+    "show"
+  );
 
 }
 
@@ -2476,34 +2704,217 @@ function closeCheckout(){
    ORDER TYPE
 ===================================================== */
 
+document.getElementById(
+  "orderType"
+).addEventListener(
+  "change",
+  function(){
+
+    const group =
+      document.getElementById(
+        "addressGroup"
+      );
+
+
+    if(this.value === "pickup"){
+
+      group.style.display =
+        "none";
+
+    }else{
+
+      group.style.display =
+        "block";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   PAYMENT METHOD DISPLAY
+===================================================== */
+
 document
-  .getElementById(
-    "orderType"
+  .querySelectorAll(
+    'input[name="payment"]'
   )
-  .addEventListener(
-    "change",
-    function(){
+  .forEach(
+    function(radio){
 
-      const group =
-        document.getElementById(
-          "addressGroup"
-        );
+      radio.addEventListener(
+        "change",
+        function(){
+
+          const note =
+            document.getElementById(
+              "mpesaNote"
+            );
 
 
-      if(this.value === "pickup"){
+          if(this.value === "mpesa"){
 
-        group.style.display =
-          "none";
+            note.style.display =
+              "block";
 
-      }else{
+          }else{
 
-        group.style.display =
-          "block";
+            note.style.display =
+              "none";
 
-      }
+          }
+
+        }
+      );
 
     }
   );
+
+
+/* =====================================================
+   START M-PESA STK PUSH
+===================================================== */
+
+async function startMpesaPayment(
+  order,
+  phone,
+  amount
+){
+
+  const normalizedPhone =
+    normalizeKenyanPhone(
+      phone
+    );
+
+
+  console.log(
+    "Starting M-Pesa STK Push...",
+    {
+      order_id:order.id,
+      phone:normalizedPhone,
+      amount:amount
+    }
+  );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .functions
+      .invoke(
+        MPESA_STK_FUNCTION,
+        {
+          body:{
+
+            phone:
+              normalizedPhone,
+
+            amount:
+              Math.round(amount),
+
+            order_id:
+              order.id,
+
+            account_reference:
+              "MloHub-" +
+              order.id,
+
+            transaction_desc:
+              "MloHub order " +
+              order.id
+
+          }
+        }
+      );
+
+
+  if(error){
+
+    console.error(
+      "M-Pesa Function Error:",
+      error
+    );
+
+    throw new Error(
+      error.message ||
+      "Could not connect to M-Pesa."
+    );
+
+  }
+
+
+  console.log(
+    "M-Pesa response:",
+    data
+  );
+
+
+  /*
+    The Edge Function may return:
+
+    {
+      success: true
+    }
+
+    OR a Daraja response such as:
+
+    {
+      ResponseCode: "0"
+    }
+  */
+
+
+  if(
+    data &&
+    data.success === false
+  ){
+
+    throw new Error(
+      data.message ||
+      data.error ||
+      "M-Pesa payment request failed."
+    );
+
+  }
+
+
+  if(
+    data &&
+    data.error
+  ){
+
+    throw new Error(
+      data.error
+    );
+
+  }
+
+
+  const responseCode =
+    data?.ResponseCode ??
+    data?.response?.ResponseCode;
+
+
+  if(
+    responseCode &&
+    String(responseCode) !== "0"
+  ){
+
+    throw new Error(
+      data?.ResponseDescription ||
+      data?.response?.ResponseDescription ||
+      "M-Pesa rejected the payment request."
+    );
+
+  }
+
+
+  return data;
+
+}
 
 
 /* =====================================================
@@ -2525,48 +2936,43 @@ async function placeOrder(){
 
 
   const name =
-    document
-      .getElementById(
-        "customerName"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "customerName"
+    )
+    .value
+    .trim();
 
 
   const phone =
-    document
-      .getElementById(
-        "customerPhone"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "customerPhone"
+    )
+    .value
+    .trim();
 
 
   const orderType =
-    document
-      .getElementById(
-        "orderType"
-      )
-      .value;
+    document.getElementById(
+      "orderType"
+    ).value;
 
 
   const address =
-    document
-      .getElementById(
-        "deliveryAddress"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "deliveryAddress"
+    )
+    .value
+    .trim();
 
 
   const payment =
-    document
-      .querySelector(
-        'input[name="payment"]:checked'
-      )
-      ?.value ||
+    document.querySelector(
+      'input[name="payment"]:checked'
+    )?.value ||
     "cash";
 
+
+  /* VALIDATION */
 
   if(!name){
 
@@ -2592,7 +2998,22 @@ async function placeOrder(){
   }
 
 
-  if(orderType === "delivery" && !address){
+  if(!validKenyanPhone(phone)){
+
+    showCheckoutMessage(
+      "Please enter a valid Kenyan phone number, for example 0712345678.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    orderType === "delivery" &&
+    !address
+  ){
 
     showCheckoutMessage(
       "Please enter your delivery address.",
@@ -2612,8 +3033,18 @@ async function placeOrder(){
 
   btn.disabled = true;
 
-  btn.textContent =
-    "⏳ Placing Order...";
+
+  if(payment === "mpesa"){
+
+    btn.textContent =
+      "📱 Starting M-Pesa...";
+
+  }else{
+
+    btn.textContent =
+      "⏳ Placing Order...";
+
+  }
 
 
   try{
@@ -2626,10 +3057,9 @@ async function placeOrder(){
       getCartTotal();
 
 
-    /*
-      Your orders table uses:
-      order_status
-    */
+    /* =================================================
+       CREATE ORDER
+    ================================================= */
 
     const orderData = {
 
@@ -2644,8 +3074,8 @@ async function placeOrder(){
 
       delivery_address:
         orderType === "delivery"
-        ? address
-        : "Pickup",
+          ? address
+          : "Pickup",
 
       order_status:
         "pending",
@@ -2661,11 +3091,13 @@ async function placeOrder(){
       error:orderError
     } =
       await supabaseClient
+
         .from("orders")
-        .insert(
-          orderData
-        )
+
+        .insert(orderData)
+
         .select()
+
         .single();
 
 
@@ -2676,10 +3108,9 @@ async function placeOrder(){
     }
 
 
-    /*
-      Insert every cart item
-      into order_items.
-    */
+    /* =================================================
+       CREATE ORDER ITEMS
+    ================================================= */
 
     const orderItems =
       cart.map(
@@ -2709,36 +3140,30 @@ async function placeOrder(){
       error:itemError
     } =
       await supabaseClient
+
         .from("order_items")
-        .insert(
-          orderItems
-        );
+
+        .insert(orderItems);
 
 
     if(itemError){
-
-      /*
-        If order_items has different
-        column names in your database,
-        the order may be created but
-        this part will report the exact
-        database error.
-      */
 
       throw itemError;
 
     }
 
 
-    /*
-      Get restaurant name.
-    */
+    /* =================================================
+       FIND RESTAURANT
+    ================================================= */
 
     const restaurant =
       restaurants.find(
         function(r){
+
           return Number(r.id) ===
-                 Number(restaurantId);
+            Number(restaurantId);
+
         }
       );
 
@@ -2748,123 +3173,191 @@ async function placeOrder(){
       "MloHub Restaurant";
 
 
-    /*
-      Success screen.
-    */
+    /* =================================================
+       M-PESA PAYMENT
+    ================================================= */
 
-    document
-      .getElementById(
-        "successOrderId"
-      )
-      .textContent =
+    if(payment === "mpesa"){
+
+      btn.textContent =
+        "📱 Sending M-Pesa request...";
+
+
+      await startMpesaPayment(
+        order,
+        phone,
+        total
+      );
+
+
+      /*
+        STK PUSH was accepted by the
+        M-Pesa Edge Function.
+
+        The customer must now enter
+        their M-Pesa PIN on the phone.
+      */
+
+
+      document.getElementById(
+        "successTitle"
+      ).textContent =
+        "📱 M-Pesa Request Sent";
+
+
+      document.getElementById(
+        "successMessage"
+      ).textContent =
+        "Check your phone and enter your M-Pesa PIN to complete the payment.";
+
+
+      const status =
+        document.getElementById(
+          "paymentStatus"
+        );
+
+
+      status.style.display =
+        "block";
+
+
+      status.innerHTML =
+        "📱 Waiting for M-Pesa payment";
+
+
+    }else{
+
+      /* CASH ORDER */
+
+      document.getElementById(
+        "successTitle"
+      ).textContent =
+        "Order Placed Successfully!";
+
+
+      document.getElementById(
+        "successMessage"
+      ).textContent =
+        "Your order has been sent to the restaurant.";
+
+
+      document.getElementById(
+        "paymentStatus"
+      ).style.display =
+        "none";
+
+    }
+
+
+    /* =================================================
+       SUCCESS INFORMATION
+    ================================================= */
+
+    document.getElementById(
+      "successOrderId"
+    ).textContent =
       order.id;
 
 
-    document
-      .getElementById(
-        "successRestaurant"
-      )
-      .textContent =
+    document.getElementById(
+      "successRestaurant"
+    ).textContent =
       restaurantName;
 
 
-    document
-      .getElementById(
-        "successTotal"
-      )
-      .textContent =
+    document.getElementById(
+      "successTotal"
+    ).textContent =
       money(total);
 
 
-    /*
-      Tracking link.
-    */
+    /* TRACKING */
 
-    document
-      .getElementById(
-        "trackingLink"
-      )
-      .href =
+    document.getElementById(
+      "trackingLink"
+    ).href =
       "tracking.html?order=" +
       encodeURIComponent(
         order.id
       );
 
 
-    /*
-      WhatsApp message.
-    */
+    /* WHATSAPP */
 
     const whatsappText =
-      `Hello MloHub!%0A%0A` +
-      `I placed Order #${order.id}.%0A` +
-      `Restaurant: ${restaurantName}%0A` +
-      `Customer: ${name}%0A` +
-      `Phone: ${phone}%0A` +
-      `Order Type: ${orderType}%0A` +
-      `Payment: ${payment}%0A` +
+
+      `Hello MloHub!\n\n` +
+
+      `I placed Order #${order.id}\n` +
+
+      `Restaurant: ${restaurantName}\n` +
+
+      `Customer: ${name}\n` +
+
+      `Phone: ${phone}\n` +
+
+      `Order Type: ${orderType}\n` +
+
+      `Payment: ${payment === "mpesa" ? "M-Pesa" : "Cash"}\n` +
+
       `Total: KSh ${total.toLocaleString()}`;
 
-
-    /*
-      Replace this number later
-      with the official MloHub
-      WhatsApp business number.
-    */
 
     const MLOHUB_WHATSAPP =
       "254746355403";
 
 
-    document
-      .getElementById(
-        "whatsappLink"
-      )
-      .href =
+    document.getElementById(
+      "whatsappLink"
+    ).href =
+
       "https://wa.me/" +
       MLOHUB_WHATSAPP +
       "?text=" +
-      whatsappText;
+      encodeURIComponent(
+        whatsappText
+      );
 
+
+    /* =================================================
+       CLEAN CART
+    ================================================= */
 
     closeCheckout();
 
 
     cart = [];
 
+
     updateCartUI();
 
 
-    document
-      .getElementById(
-        "successModal"
-      )
-      .classList.add("show");
+    /* =================================================
+       SHOW SUCCESS
+    ================================================= */
+
+    document.getElementById(
+      "successModal"
+    ).classList.add(
+      "show"
+    );
 
 
-    /*
-      Clear checkout fields.
-    */
+    /* CLEAR FORM */
 
-    document
-      .getElementById(
-        "customerName"
-      )
-      .value = "";
+    document.getElementById(
+      "customerName"
+    ).value = "";
 
 
-    document
-      .getElementById(
-        "customerPhone"
-      )
-      .value = "";
+    document.getElementById(
+      "customerPhone"
+    ).value = "";
 
 
-    document
-      .getElementById(
-        "deliveryAddress"
-      )
-      .value = "";
+    document.getElementById(
+      "deliveryAddress"
+    ).value = "";
 
 
   }catch(error){
@@ -2876,9 +3369,15 @@ async function placeOrder(){
 
 
     showCheckoutMessage(
+
       "Could not place order: " +
-      error.message,
+      (
+        error.message ||
+        "Unknown error"
+      ),
+
       "error"
+
     );
 
   }finally{
@@ -2894,16 +3393,16 @@ async function placeOrder(){
 
 
 /* =====================================================
-   SUCCESS
+   CLOSE SUCCESS
 ===================================================== */
 
 function closeSuccess(){
 
-  document
-    .getElementById(
-      "successModal"
-    )
-    .classList.remove("show");
+  document.getElementById(
+    "successModal"
+  ).classList.remove(
+    "show"
+  );
 
 }
 
@@ -2922,11 +3421,11 @@ function closeModalOutside(
     modalId
   ){
 
-    document
-      .getElementById(
-        modalId
-      )
-      .classList.remove("show");
+    document.getElementById(
+      modalId
+    ).classList.remove(
+      "show"
+    );
 
   }
 
@@ -2934,7 +3433,7 @@ function closeModalOutside(
 
 
 /* =====================================================
-   START
+   START APP
 ===================================================== */
 
 async function startApp(){
@@ -2952,4 +3451,3 @@ startApp();
 
 </body>
 </html>
-```
