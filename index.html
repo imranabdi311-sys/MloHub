@@ -1304,9 +1304,7 @@ const supabaseClient =
   the value below.
 */
 
-const MPESA_STK_FUNCTION =
-  "mpesa-stk-push";
-
+const MPESA_STK_FUNCTION = "mpesa-payment";
 
 /* =====================================================
    APP DATA
@@ -3303,20 +3301,20 @@ async function placeOrder(){
       `Total: KSh ${total.toLocaleString()}`;
 
 
-    const MLOHUB_WHATSAPP =
-      "254746355403";
+const restaurantWhatsApp = restaurant.whatsapp;
 
+if (!restaurantWhatsApp) {
+  alert("This restaurant has no WhatsApp number registered.");
+  return;
+}
 
-    document.getElementById(
-      "whatsappLink"
-    ).href =
+const cleanWhatsApp = restaurantWhatsApp
+  .toString()
+  .replace(/\D/g, "");
 
-      "https://wa.me/" +
-      MLOHUB_WHATSAPP +
-      "?text=" +
-      encodeURIComponent(
-        whatsappText
-      );
+document.getElementById("whatsappLink").href =
+  "https://wa.me/" + cleanWhatsApp + "?text=" +
+  encodeURIComponent(whatsappText);
 
 
     /* =================================================
