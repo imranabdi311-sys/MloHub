@@ -1,845 +1,493 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>MloHub | Food Delivery</title>
-
-<meta name="description"
-      content="MloHub - Discover restaurants, order food and track your delivery.">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-  background:#f5f6f8;
-  color:#222;
-  padding-bottom:80px;
-}
-
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-/* HEADER */
-
-header{
-  background:linear-gradient(135deg,#ff7a00,#ff3d00);
-  color:white;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  box-shadow:0 3px 15px rgba(0,0,0,.18);
-}
-
-.header-inner{
-  max-width:1200px;
-  margin:auto;
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-}
-
-.logo{
-  font-size:27px;
-  font-weight:800;
-}
-
-.tagline{
-  font-size:12px;
-  opacity:.9;
-  margin-top:3px;
-}
-
-.cart-header{
-  background:white;
-  color:#ff4d00;
-  border:0;
-  border-radius:25px;
-  padding:11px 17px;
-  font-weight:bold;
-  box-shadow:0 3px 10px rgba(0,0,0,.12);
-}
-
-/* HERO */
-
-.hero{
-  background:
-    linear-gradient(
-      rgba(0,0,0,.35),
-      rgba(0,0,0,.35)
-    ),
-    linear-gradient(135deg,#ff8a00,#ff3d00);
-  color:white;
-  padding:45px 20px;
-}
-
-.hero-inner{
-  max-width:1200px;
-  margin:auto;
-}
-
-.hero h1{
-  font-size:42px;
-  margin-bottom:10px;
-}
-
-.hero p{
-  font-size:17px;
-  margin-bottom:22px;
-}
-
-.search-box{
-  max-width:700px;
-  position:relative;
-}
-
-.search-box input{
-  width:100%;
-  border:0;
-  padding:17px 20px;
-  border-radius:30px;
-  outline:none;
-  font-size:16px;
-  box-shadow:0 5px 20px rgba(0,0,0,.15);
-}
-
-/* CONTAINER */
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:25px 20px;
-}
-
-.section-title{
-  font-size:25px;
-  margin-bottom:17px;
-}
-
-/* MESSAGE */
-
-.message{
-  padding:13px 15px;
-  border-radius:10px;
-  margin-bottom:18px;
-  display:none;
-}
-
-.message.show{
-  display:block;
-}
-
-.message.info{
-  background:#e7f1ff;
-  color:#084298;
-}
-
-.message.error{
-  background:#f8d7da;
-  color:#842029;
-}
-
-.message.success{
-  background:#d1e7dd;
-  color:#0f5132;
-}
-
-/* RESTAURANTS */
-
-.restaurant-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
-  gap:18px;
-  margin-bottom:35px;
-}
-
-.restaurant-card{
-  background:white;
-  border-radius:17px;
-  overflow:hidden;
-  box-shadow:0 4px 15px rgba(0,0,0,.08);
-  transition:.2s;
-}
-
-.restaurant-card:hover{
-  transform:translateY(-3px);
-}
-
-.restaurant-image{
-  height:160px;
-  background:
-    linear-gradient(135deg,#ff9a00,#ff4500);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:65px;
-  color:white;
-  overflow:hidden;
-}
-
-.restaurant-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.restaurant-info{
-  padding:17px;
-}
-
-.restaurant-info h3{
-  margin-bottom:7px;
-}
-
-.restaurant-location{
-  color:#777;
-  font-size:14px;
-  margin-bottom:12px;
-}
-
-.open-btn{
-  width:100%;
-  border:0;
-  background:#ff5a00;
-  color:white;
-  padding:12px;
-  border-radius:9px;
-  font-weight:bold;
-}
-
-/* RESTAURANT MENU */
-
-#restaurantSection{
-  display:none;
-}
-
-.restaurant-header{
-  background:white;
-  padding:20px;
-  border-radius:16px;
-  margin-bottom:20px;
-  box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.restaurant-header-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  flex-wrap:wrap;
-}
-
-.back-btn{
-  background:#eee;
-  border:0;
-  padding:10px 15px;
-  border-radius:9px;
-  font-weight:bold;
-}
-
-.menu-search{
-  width:100%;
-  margin-top:15px;
-  padding:13px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  outline:none;
-}
-
-.category-bar{
-  display:flex;
-  gap:9px;
-  overflow:auto;
-  margin-bottom:20px;
-  padding-bottom:4px;
-}
-
-.category-btn{
-  white-space:nowrap;
-  border:0;
-  background:white;
-  padding:10px 15px;
-  border-radius:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
-}
-
-.category-btn.active{
-  background:#ff5a00;
-  color:white;
-}
-
-/* MENU GRID */
-
-.menu-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(auto-fit,minmax(270px,1fr));
-  gap:16px;
-}
-
-.menu-card{
-  background:white;
-  border-radius:15px;
-  overflow:hidden;
-  box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.menu-image{
-  height:170px;
-  background:#eee;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:55px;
-  overflow:hidden;
-}
-
-.menu-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.menu-content{
-  padding:16px;
-}
-
-.menu-content h3{
-  margin-bottom:7px;
-}
-
-.menu-description{
-  color:#777;
-  font-size:14px;
-  line-height:1.4;
-  min-height:39px;
-}
-
-.menu-bottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:15px;
-}
-
-.price{
-  color:#e84d00;
-  font-weight:bold;
-  font-size:18px;
-}
-
-.add-btn{
-  border:0;
-  background:#ff5a00;
-  color:white;
-  padding:10px 15px;
-  border-radius:9px;
-  font-weight:bold;
-}
-
-.unavailable{
-  color:#dc3545;
-  font-weight:bold;
-  font-size:14px;
-}
-
-/* CART BAR */
-
-.cart-bar{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:1500;
-  background:white;
-  border-top:1px solid #ddd;
-  padding:12px 18px;
-  box-shadow:0 -4px 15px rgba(0,0,0,.12);
-  display:none;
-}
-
-.cart-bar-inner{
-  max-width:800px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-}
-
-.view-cart-btn{
-  border:0;
-  background:#ff5a00;
-  color:white;
-  padding:13px 22px;
-  border-radius:10px;
-  font-weight:bold;
-}
-
-/* MODALS */
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  z-index:3000;
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-box{
-  background:white;
-  width:100%;
-  max-width:650px;
-  max-height:92vh;
-  overflow:auto;
-  border-radius:22px 22px 0 0;
-  padding:22px;
-}
-
-.modal-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:18px;
-}
-
-.close-btn{
-  border:0;
-  background:#eee;
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  font-size:20px;
-}
-
-/* CART ITEMS */
-
-.cart-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:14px 0;
-  border-bottom:1px solid #eee;
-}
-
-.cart-item-info{
-  flex:1;
-}
-
-.cart-item-info h4{
-  margin-bottom:5px;
-}
-
-.cart-item-info p{
-  color:#777;
-  font-size:14px;
-}
-
-.qty-controls{
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-
-.qty-btn{
-  width:32px;
-  height:32px;
-  border:0;
-  background:#eee;
-  border-radius:7px;
-  font-weight:bold;
-}
-
-.cart-total{
-  margin-top:18px;
-  padding-top:15px;
-  border-top:2px solid #eee;
-  display:flex;
-  justify-content:space-between;
-  font-size:20px;
-  font-weight:bold;
-}
-
-/* FORMS */
-
-.form-group{
-  margin-bottom:14px;
-}
-
-.form-group label{
-  display:block;
-  margin-bottom:6px;
-  font-weight:bold;
-  font-size:14px;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select{
-  width:100%;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:9px;
-  outline:none;
-}
-
-.payment-options{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.payment-option{
-  border:1px solid #ddd;
-  border-radius:10px;
-  padding:13px;
-  cursor:pointer;
-}
-
-.payment-option input{
-  width:auto;
-  margin-right:7px;
-}
-
-.mpesa-note{
-  background:#eef9f0;
-  border:1px solid #b8dfbd;
-  color:#176b27;
-  padding:12px;
-  border-radius:9px;
-  margin-top:10px;
-  font-size:14px;
-  display:none;
-}
-
-.checkout-btn{
-  width:100%;
-  border:0;
-  background:#ff5a00;
-  color:white;
-  padding:15px;
-  border-radius:10px;
-  font-weight:bold;
-  margin-top:10px;
-  font-size:16px;
-}
-
-.checkout-btn:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-
-.cancel-btn{
-  width:100%;
-  border:0;
-  background:#eee;
-  padding:13px;
-  border-radius:10px;
-  margin-top:9px;
-}
-
-/* SUCCESS */
-
-.success-screen{
-  text-align:center;
-  padding:25px 10px;
-}
-
-.success-icon{
-  font-size:70px;
-  margin-bottom:15px;
-}
-
-.payment-status{
-  margin-top:15px;
-  padding:13px;
-  background:#fff7e6;
-  border:1px solid #ffd98a;
-  border-radius:10px;
-  color:#875600;
-  font-weight:bold;
-}
-
-.track-btn{
-  display:block;
-  text-decoration:none;
-  background:#168c39;
-  color:white;
-  padding:14px;
-  border-radius:10px;
-  font-weight:bold;
-  margin-top:18px;
-}
-
-.whatsapp-btn{
-  display:block;
-  text-decoration:none;
-  background:#25D366;
-  color:white;
-  padding:14px;
-  border-radius:10px;
-  font-weight:bold;
-  margin-top:10px;
-}
-
-/* LOADING */
-
-.loading{
-  text-align:center;
-  padding:35px;
-  color:#777;
-}
-
-.spinner{
-  width:35px;
-  height:35px;
-  border:4px solid #eee;
-  border-top:4px solid #ff5a00;
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-  margin:0 auto 12px;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-.empty{
-  background:white;
-  padding:30px;
-  border-radius:12px;
-  text-align:center;
-  color:#777;
-}
-
-/* FOOTER */
-
-footer{
-  margin-top:40px;
-  background:#171717;
-  color:white;
-  padding:35px 20px;
-  text-align:center;
-}
-
-footer h2{
-  margin-bottom:8px;
-}
-
-footer p{
-  color:#bbb;
-  font-size:14px;
-  margin:5px;
-}
-
-.footer-links{
-  margin-top:15px;
-}
-
-.footer-links a{
-  color:white;
-  margin:0 8px;
-  text-decoration:none;
-}
-
-/* MOBILE */
-
-@media(max-width:650px){
-
-  .header-inner{
-    padding:12px;
-  }
-
-  .logo{
-    font-size:22px;
-  }
-
-  .hero{
-    padding:35px 15px;
-  }
-
-  .hero h1{
-    font-size:30px;
-  }
-
-  .container{
-    padding:20px 12px;
-  }
-
-  .menu-grid{
-    grid-template-columns:1fr;
-  }
-
-  .restaurant-grid{
-    grid-template-columns:1fr;
-  }
-
-  .payment-options{
-    grid-template-columns:1fr;
-  }
-
-  .cart-bar-inner{
-    gap:10px;
-  }
-
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MloHub — Discover Food. Order Easily.</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    header {
+      background: linear-gradient(135deg, #ff6b00, #ff9d00);
+      color: white;
+      padding: 16px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .logo span {
+      color: #fff;
+    }
+
+    .cart-button {
+      background: white;
+      color: #ff6500;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hero {
+      background: linear-gradient(
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.55)
+      ),
+      url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80");
+
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 80px 5%;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+
+    .search-box {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 30px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 35px auto;
+    }
+
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .restaurants {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .restaurant-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,.08);
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .restaurant-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .restaurant-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .restaurant-info {
+      padding: 18px;
+    }
+
+    .restaurant-info h3 {
+      margin-bottom: 8px;
+    }
+
+    .restaurant-info p {
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .menu-section {
+      margin-top: 45px;
+    }
+
+    .restaurant-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .back-button {
+      background: #222;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .menu-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .menu-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .menu-content {
+      padding: 16px;
+    }
+
+    .menu-content h3 {
+      margin-bottom: 7px;
+    }
+
+    .menu-content p {
+      color: #666;
+      font-size: 14px;
+      min-height: 38px;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff6500;
+      margin: 12px 0;
+    }
+
+    .add-button {
+      width: 100%;
+      padding: 12px;
+      background: #ff6500;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .add-button:hover {
+      background: #e95500;
+    }
+
+    .cart-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 600px;
+      background: #222;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 14px;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 5px 30px rgba(0,0,0,.3);
+    }
+
+    .cart-bar button {
+      background: #ff6500;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      z-index: 2000;
+      overflow-y: auto;
+      padding: 30px 15px;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 550px;
+      margin: auto;
+      border-radius: 16px;
+      padding: 25px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    .modal h2 {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .checkout-total {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .checkout-button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #ff6500;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .success-box {
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
+
+    .success-box h2 {
+      color: #159447;
+    }
+
+    .success-box p {
+      margin: 10px 0;
+    }
+
+    .success-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .success-links a {
+      flex: 1;
+      min-width: 150px;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .track-link {
+      background: #222;
+      color: white;
+    }
+
+    .whatsapp-link {
+      background: #25D366;
+      color: white;
+    }
+
+    .cart-items {
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      gap: 10px;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-info strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .cart-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-controls button {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      background: #eee;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+      background: white;
+      border-radius: 12px;
+    }
+
+    footer {
+      margin-top: 70px;
+      background: #222;
+      color: white;
+      padding: 35px 5%;
+      text-align: center;
+    }
+
+    footer a {
+      color: #ff9d00;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .cart-bar {
+        bottom: 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-
 <header>
-  <div class="header-inner">
+  <div class="logo">Mlo<span>Hub</span></div>
 
-    <div>
-      <div class="logo">🍽️ MloHub</div>
-      <div class="tagline">
-        Discover food. Order easily. Enjoy.
-      </div>
-    </div>
-
-    <button class="cart-header" onclick="openCart()">
-      🛒 Cart <span id="headerCartCount">0</span>
-    </button>
-
-  </div>
+  <button class="cart-button" onclick="openCart()">
+    🛒 Cart (<span id="cartCount">0</span>)
+  </button>
 </header>
 
-
-<!-- HERO -->
-
 <section class="hero">
+  <h1>Discover Food. Order Easily.</h1>
+  <p>Order your favourite meals from restaurants around you.</p>
 
-  <div class="hero-inner">
-
-    <h1>Delicious food, delivered.</h1>
-
-    <p>
-      Find your favourite restaurant and order in minutes.
-    </p>
-
-    <div class="search-box">
-
-      <input
-        id="globalSearch"
-        type="search"
-        placeholder="🔎 Search restaurants or food..."
-        oninput="globalSearch()"
-      >
-
-    </div>
-
+  <div class="search-box">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search restaurants or food..."
+      oninput="searchRestaurants()"
+    />
   </div>
-
 </section>
-
-
-<!-- MAIN -->
 
 <main class="container">
 
-  <div id="message" class="message"></div>
+  <section id="restaurantSection">
+    <h2 class="section-title">Restaurants</h2>
 
-
-  <!-- RESTAURANTS -->
-
-  <section id="restaurantsSection">
-
-    <h2 class="section-title">
-      🍽️ Choose a Restaurant
-    </h2>
-
-    <div id="restaurantList" class="restaurant-grid">
-
-      <div class="loading">
-
-        <div class="spinner"></div>
-
-        Loading restaurants...
-
-      </div>
-
+    <div id="restaurantList" class="restaurants">
+      <div class="loading">Loading restaurants...</div>
     </div>
-
   </section>
 
-
-  <!-- RESTAURANT MENU -->
-
-  <section id="restaurantSection">
+  <section id="menuSection" class="menu-section" style="display:none;">
 
     <div class="restaurant-header">
-
-      <div class="restaurant-header-top">
-
-        <div>
-
-          <h2 id="selectedRestaurantName">
-            Restaurant
-          </h2>
-
-          <p
-            id="selectedRestaurantLocation"
-            class="restaurant-location">
-          </p>
-
-        </div>
-
-        <button
-          class="back-btn"
-          onclick="backToRestaurants()">
-
-          ← Restaurants
-
-        </button>
-
+      <div>
+        <h2 id="selectedRestaurantName"></h2>
+        <p id="selectedRestaurantLocation"></p>
       </div>
 
-
-      <input
-        id="menuSearch"
-        class="menu-search"
-        placeholder="🔎 Search menu..."
-        oninput="filterMenu()"
-      >
-
+      <button class="back-button" onclick="backToRestaurants()">
+        ← Back
+      </button>
     </div>
-
-
-    <div id="categoryBar" class="category-bar"></div>
 
     <div id="menuList" class="menu-grid"></div>
 
@@ -847,387 +495,154 @@ footer p{
 
 </main>
 
-
-<!-- CART BAR -->
-
 <div id="cartBar" class="cart-bar">
-
-  <div class="cart-bar-inner">
-
-    <div>
-
-      <strong>
-        🛒 <span id="cartCount">0</span> items
-      </strong>
-
-      <br>
-
-      <span id="cartBarTotal">
-        KSh 0
-      </span>
-
-    </div>
-
-
-    <button
-      class="view-cart-btn"
-      onclick="openCart()">
-
-      View Cart →
-
-    </button>
-
+  <div>
+    <strong><span id="cartBarCount">0</span> items</strong>
+    <div>KSh <span id="cartBarTotal">0</span></div>
   </div>
 
+  <button onclick="openCart()">View Cart</button>
 </div>
-
 
 <!-- CART MODAL -->
+<div id="cartModal" class="modal">
 
-<div
-  id="cartModal"
-  class="modal"
-  onclick="closeModalOutside(event,'cartModal')">
+  <div class="modal-content">
 
-  <div class="modal-box">
+    <span class="close" onclick="closeModal('cartModal')">&times;</span>
 
-    <div class="modal-header">
+    <h2>Your Cart</h2>
 
-      <h2>🛒 Your Cart</h2>
+    <div id="cartItems" class="cart-items"></div>
 
-      <button
-        class="close-btn"
-        onclick="closeCart()">
-
-        ×
-
-      </button>
-
+    <div class="checkout-total">
+      Total: KSh <span id="cartTotal">0</span>
     </div>
 
-
-    <div id="cartItems"></div>
-
-
-    <div
-      id="cartEmpty"
-      class="empty"
-      style="display:none">
-
-      Your cart is empty.
-
-    </div>
-
-
-    <div
-      id="cartTotalBox"
-      class="cart-total">
-
-      <span>Total</span>
-
-      <span id="cartTotal">
-        KSh 0
-      </span>
-
-    </div>
-
-
-    <button
-      id="checkoutButton"
-      class="checkout-btn"
-      onclick="openCheckout()">
-
-      Proceed to Checkout
-
+    <button class="checkout-button" onclick="openCheckout()">
+      Continue to Checkout
     </button>
 
   </div>
 
 </div>
 
-
 <!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="modal">
 
-<div
-  id="checkoutModal"
-  class="modal"
-  onclick="closeModalOutside(event,'checkoutModal')">
+  <div class="modal-content">
 
-  <div class="modal-box">
+    <span class="close" onclick="closeModal('checkoutModal')">&times;</span>
 
-    <div class="modal-header">
-
-      <h2>📍 Delivery Details</h2>
-
-      <button
-        class="close-btn"
-        onclick="closeCheckout()">
-
-        ×
-
-      </button>
-
-    </div>
-
-
-    <div
-      id="checkoutMessage"
-      class="message">
-    </div>
-
-
-    <!-- NAME -->
+    <h2>Checkout</h2>
 
     <div class="form-group">
-
-      <label>
-        Your Name
-      </label>
-
+      <label>Customer Name</label>
       <input
+        type="text"
         id="customerName"
-        placeholder="Enter your name">
-
+        placeholder="Enter your name"
+      />
     </div>
 
-
-    <!-- PHONE -->
-
     <div class="form-group">
-
-      <label>
-        Phone Number
-      </label>
-
+      <label>Phone Number</label>
       <input
-        id="customerPhone"
         type="tel"
-        placeholder="07XXXXXXXX">
-
+        id="customerPhone"
+        placeholder="07XXXXXXXX"
+      />
     </div>
-
-
-    <!-- ORDER TYPE -->
 
     <div class="form-group">
+      <label>Order Type</label>
 
-      <label>
-        Order Type
-      </label>
-
-      <select id="orderType">
-
-        <option value="delivery">
-          🚚 Delivery
-        </option>
-
-        <option value="pickup">
-          🏪 Pickup
-        </option>
-
+      <select id="orderType" onchange="handleOrderType()">
+        <option value="delivery">Delivery</option>
+        <option value="pickup">Pickup</option>
       </select>
-
     </div>
 
-
-    <!-- ADDRESS -->
-
-    <div
-      id="addressGroup"
-      class="form-group">
-
-      <label>
-        Delivery Address
-      </label>
+    <div class="form-group" id="addressGroup">
+      <label>Delivery Address</label>
 
       <textarea
         id="deliveryAddress"
-        rows="3"
-        placeholder="Building, street, area...">
-      </textarea>
-
+        placeholder="Enter delivery location"
+      ></textarea>
     </div>
-
-
-    <!-- PAYMENT -->
 
     <div class="form-group">
+      <label>Payment Method</label>
 
-      <label>
-        Payment Method
-      </label>
-
-      <div class="payment-options">
-
-        <label class="payment-option">
-
-          <input
-            type="radio"
-            name="payment"
-            value="cash"
-            checked>
-
-          💵 Cash
-
-        </label>
-
-
-        <label class="payment-option">
-
-          <input
-            type="radio"
-            name="payment"
-            value="mpesa">
-
-          📱 M-Pesa
-
-        </label>
-
-      </div>
-
-
-      <div
-        id="mpesaNote"
-        class="mpesa-note">
-
-        📱 You will receive an M-Pesa payment
-        request on the phone number above.
-        Enter your M-Pesa PIN on your phone
-        to complete the payment.
-
-      </div>
-
+      <select id="paymentMethod">
+        <option value="cash">Cash</option>
+        <option value="mpesa">M-Pesa</option>
+      </select>
     </div>
 
-
-    <!-- TOTAL -->
-
-    <div class="cart-total">
-
-      <span>
-        Order Total
-      </span>
-
-      <span id="checkoutTotal">
-        KSh 0
-      </span>
-
+    <div class="checkout-total">
+      Total: KSh <span id="checkoutTotal">0</span>
     </div>
 
-
-    <!-- PLACE ORDER -->
-
     <button
-      id="placeOrderBtn"
-      class="checkout-btn"
-      onclick="placeOrder()">
-
-      📦 Place Order
-
-    </button>
-
-
-    <button
-      class="cancel-btn"
-      onclick="closeCheckout()">
-
-      Cancel
-
+      class="checkout-button"
+      id="placeOrderButton"
+      onclick="placeOrder()"
+    >
+      Place Order
     </button>
 
   </div>
 
 </div>
 
-
 <!-- SUCCESS MODAL -->
+<div id="successModal" class="modal">
 
-<div
-  id="successModal"
-  class="modal">
+  <div class="modal-content success-box">
 
-  <div class="modal-box">
+    <div class="success-icon">✅</div>
 
-    <div class="success-screen">
+    <h2>Order Received!</h2>
 
-      <div class="success-icon">
-        🎉
-      </div>
+    <p>
+      Your order has been successfully placed.
+    </p>
 
+    <p>
+      <strong>Order ID:</strong>
+      <span id="successOrderId"></span>
+    </p>
 
-      <h2 id="successTitle">
-        Order Placed Successfully!
-      </h2>
+    <p>
+      <strong>Restaurant:</strong>
+      <span id="successRestaurant"></span>
+    </p>
 
+    <p>
+      <strong>Total:</strong>
+      KSh <span id="successTotal"></span>
+    </p>
 
-      <p
-        id="successMessage"
-        style="margin-top:10px;color:#666;">
-
-        Your order has been sent to the restaurant.
-
-      </p>
-
-
-      <div
-        style="
-          margin-top:18px;
-          background:#f5f5f5;
-          padding:15px;
-          border-radius:10px;
-        ">
-
-        <strong>
-          Order #<span id="successOrderId"></span>
-        </strong>
-
-        <br>
-
-        <span id="successRestaurant"></span>
-
-        <br>
-
-        <strong id="successTotal"></strong>
-
-      </div>
-
-
-      <div
-        id="paymentStatus"
-        class="payment-status"
-        style="display:none;">
-
-      </div>
-
+    <div class="success-links">
 
       <a
         id="trackingLink"
-        class="track-btn"
-        href="#">
-
-        📦 Track My Order
-
+        class="track-link"
+        href="#"
+      >
+        Track Order
       </a>
-
 
       <a
         id="whatsappLink"
-        class="whatsapp-btn"
+        class="whatsapp-link"
         href="#"
-        target="_blank">
-
-        💬 WhatsApp Order Details
-
+        target="_blank"
+      >
+        Send Order to WhatsApp
       </a>
-
-
-      <button
-        class="cancel-btn"
-        onclick="closeSuccess()">
-
-        Done
-
-      </button>
 
     </div>
 
@@ -1235,557 +650,299 @@ footer p{
 
 </div>
 
-
-<!-- FOOTER -->
-
 <footer>
 
-  <h2>
-    🍽️ MloHub
-  </h2>
-
   <p>
-    Discover food. Order easily. Enjoy.
+    © 2026 MloHub — Discover food. Order easily.
   </p>
 
-  <div class="footer-links">
-
-    <a href="tracking.html">
-      Track Order
-    </a>
-
-    <a href="dashboard.html">
-      Restaurant
-    </a>
-
-  </div>
-
-  <p style="margin-top:20px;">
-    © 2026 MloHub. All rights reserved.
+  <p style="margin-top:15px;">
+    <a href="tracking.html">Track Order</a>
+    <a href="dashboard.html">Restaurant Dashboard</a>
   </p>
 
 </footer>
 
-
 <script>
 
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-const SUPABASE_URL =
-  "https://bhvzpycbztngtwuhxxex.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-/* =====================================================
-   M-PESA EDGE FUNCTION
-===================================================== */
-
-/*
-  IMPORTANT:
-
-  This must be the EXACT name of your deployed
-  Supabase Edge Function.
-
-  We are using:
-
-  mpesa-stk-push
-
-  If your function has another name, change only
-  the value below.
-*/
-
-const MPESA_STK_FUNCTION = "mpesa-payment";
-
-/* =====================================================
-   APP DATA
-===================================================== */
-
-let restaurants = [];
-
-let menuItems = [];
-
-let cart = [];
-
-let selectedRestaurant = null;
-
-let selectedCategory = "All";
-
-
-/* =====================================================
-   HELPERS
-===================================================== */
-
-function escapeHTML(value){
-
-  return String(value ?? "")
-
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-function money(value){
-
-  return "KSh " +
-    Number(value || 0)
-      .toLocaleString();
-
-}
-
-
-function showMessage(
-  text,
-  type="info"
-){
-
-  const box =
-    document.getElementById("message");
-
-  box.textContent = text;
-
-  box.className =
-    "message show " + type;
-
-  setTimeout(function(){
-
-    box.className = "message";
-
-    box.textContent = "";
-
-  },4500);
-
-}
-
-
-function showCheckoutMessage(
-  text,
-  type="error"
-){
-
-  const box =
-    document.getElementById("checkoutMessage");
-
-  box.textContent = text;
-
-  box.className =
-    "message show " + type;
-
-}
-
-
-/* =====================================================
-   PHONE NUMBER
-===================================================== */
-
-function normalizeKenyanPhone(phone){
-
-  let value =
-    String(phone || "")
-      .replace(/\s+/g,"")
-      .replace(/-/g,"");
-
-
-  if(value.startsWith("+254")){
-
-    return "254" +
-      value.substring(4);
-
-  }
-
-
-  if(value.startsWith("254")){
-
-    return value;
-
-  }
-
-
-  if(value.startsWith("07")){
-
-    return "254" +
-      value.substring(1);
-
-  }
-
-
-  if(value.startsWith("01")){
-
-    return "254" +
-      value.substring(1);
-
-  }
-
-
-  return value;
-
-}
-
-
-function validKenyanPhone(phone){
-
-  const normalized =
-    normalizeKenyanPhone(phone);
-
-  return /^254(7|1)\d{8}$/.test(
-    normalized
-  );
-
-}
-
-
-/* =====================================================
-   CART TOTALS
-===================================================== */
-
-function getCartCount(){
-
-  return cart.reduce(
-    function(total,item){
-
-      return total +
-        item.quantity;
-
-    },
-    0
-  );
-
-}
-
-
-function getCartTotal(){
-
-  return cart.reduce(
-    function(total,item){
-
-      return total +
-        (
-          Number(item.price || 0) *
-          item.quantity
-        );
-
-    },
-    0
-  );
-
-}
-
-
-/* =====================================================
-   LOAD RESTAURANTS
-===================================================== */
-
-async function loadRestaurants(){
-
-  const box =
-    document.getElementById(
-      "restaurantList"
+  /* =========================
+     SUPABASE
+  ========================= */
+
+  const SUPABASE_URL =
+    "https://bhvzpycbztngtwuhxxex.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+
+  const supabaseClient =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
     );
 
+  const MPESA_STK_FUNCTION = "mpesa-payment";
 
-  box.innerHTML = `
 
-    <div class="loading">
+  /* =========================
+     GLOBAL VARIABLES
+  ========================= */
 
-      <div class="spinner"></div>
+  let restaurants = [];
+  let selectedRestaurant = null;
 
-      Loading restaurants...
+  let menuItems = [];
 
-    </div>
+  let cart = [];
 
-  `;
 
+  /* =========================
+     INITIAL LOAD
+  ========================= */
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-
-      .from("restaurants")
-
-      .select("*")
-
-      .order(
-        "id",
-        {ascending:true}
-      );
-
-
-  if(error){
-
-    console.error(error);
-
-    box.innerHTML = `
-
-      <div class="empty">
-
-        Unable to load restaurants.
-
-        <br><br>
-
-        ${escapeHTML(error.message)}
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  restaurants =
-    data || [];
-
-
-  displayRestaurants(
-    restaurants
-  );
-
-}
-
-
-/* =====================================================
-   DISPLAY RESTAURANTS
-===================================================== */
-
-function displayRestaurants(items){
-
-  const box =
-    document.getElementById(
-      "restaurantList"
-    );
-
-
-  box.innerHTML = "";
-
-
-  if(items.length === 0){
-
-    box.innerHTML =
-      `<div class="empty">
-        No restaurants available yet.
-      </div>`;
-
-    return;
-
-  }
-
-
-  items.forEach(
-    function(restaurant){
-
-      const card =
-        document.createElement(
-          "div"
-        );
-
-
-      card.className =
-        "restaurant-card";
-
-
-      const image =
-        restaurant.image_url ||
-        restaurant.image;
-
-
-      card.innerHTML = `
-
-        <div class="restaurant-image">
-
-          ${
-            image
-
-            ?
-
-            `<img
-              src="${escapeHTML(image)}"
-              alt="${escapeHTML(
-                restaurant.name
-              )}"
-              onerror="
-                this.style.display='none'
-              "
-            >`
-
-            :
-
-            "🍽️"
-          }
-
-        </div>
-
-
-        <div class="restaurant-info">
-
-          <h3>
-            ${escapeHTML(
-              restaurant.name ||
-              "Restaurant"
-            )}
-          </h3>
-
-
-          <p class="restaurant-location">
-
-            📍
-
-            ${escapeHTML(
-              restaurant.location ||
-              restaurant.address ||
-              "Nairobi"
-            )}
-
-          </p>
-
-
-          <button
-            class="open-btn"
-            onclick="openRestaurant(
-              ${restaurant.id}
-            )">
-
-            View Menu →
-
-          </button>
-
-        </div>
-
-      `;
-
-
-      box.appendChild(card);
-
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+      loadRestaurants();
     }
   );
 
-}
 
+  /* =========================
+     LOAD RESTAURANTS
+  ========================= */
 
-/* =====================================================
-   OPEN RESTAURANT
-===================================================== */
+  async function loadRestaurants() {
 
-async function openRestaurant(id){
+    const restaurantList =
+      document.getElementById("restaurantList");
 
-  selectedRestaurant =
-    restaurants.find(
-      function(r){
+    restaurantList.innerHTML =
+      `<div class="loading">
+        Loading restaurants...
+      </div>`;
 
-        return Number(r.id) ===
-          Number(id);
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("restaurants")
+      .select("*")
+      .order("id", {
+        ascending: true
+      });
 
-      }
-    );
+    if (error) {
 
+      console.error(error);
 
-  if(!selectedRestaurant){
+      restaurantList.innerHTML =
+        `<div class="empty">
+          Unable to load restaurants.
+          <br><br>
+          ${error.message}
+        </div>`;
 
-    showMessage(
-      "Restaurant not found.",
-      "error"
-    );
+      return;
+    }
 
-    return;
+    restaurants = data || [];
 
+    renderRestaurants(restaurants);
   }
 
 
-  document.getElementById(
-    "restaurantsSection"
-  ).style.display = "none";
+  /* =========================
+     RENDER RESTAURANTS
+  ========================= */
+
+  function renderRestaurants(list) {
+
+    const restaurantList =
+      document.getElementById("restaurantList");
+
+    if (!list.length) {
+
+      restaurantList.innerHTML =
+        `<div class="empty">
+          No restaurants available.
+        </div>`;
+
+      return;
+    }
+
+    restaurantList.innerHTML =
+      list.map(restaurant => {
+
+        const image =
+          restaurant.image_url ||
+          "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80";
+
+        return `
+
+          <div
+            class="restaurant-card"
+            onclick="openRestaurant(${restaurant.id})"
+          >
+
+            <img
+              src="${image}"
+              alt="${escapeHtml(restaurant.name || "Restaurant")}"
+            >
+
+            <div class="restaurant-info">
+
+              <h3>
+                ${escapeHtml(restaurant.name || "Restaurant")}
+              </h3>
+
+              <p>
+                📍
+                ${escapeHtml(
+                  restaurant.location ||
+                  restaurant.address ||
+                  ""
+                )}
+              </p>
+
+              ${
+                restaurant.description
+                ? `
+                  <p>
+                    ${escapeHtml(restaurant.description)}
+                  </p>
+                `
+                : ""
+              }
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("");
+  }
 
 
-  document.getElementById(
-    "restaurantSection"
-  ).style.display = "block";
+  /* =========================
+     SEARCH RESTAURANTS
+  ========================= */
+
+  function searchRestaurants() {
+
+    const search =
+      document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    if (!search) {
+
+      renderRestaurants(restaurants);
+
+      return;
+    }
+
+    const filtered =
+      restaurants.filter(restaurant => {
+
+        const name =
+          (restaurant.name || "")
+            .toLowerCase();
+
+        const location =
+          (
+            restaurant.location ||
+            restaurant.address ||
+            ""
+          ).toLowerCase();
+
+        const description =
+          (
+            restaurant.description ||
+            ""
+          ).toLowerCase();
+
+        return (
+          name.includes(search) ||
+          location.includes(search) ||
+          description.includes(search)
+        );
+
+      });
+
+    renderRestaurants(filtered);
+  }
 
 
-  document.getElementById(
-    "selectedRestaurantName"
-  ).textContent =
-    selectedRestaurant.name ||
-    "Restaurant";
+  /* =========================
+     OPEN RESTAURANT
+  ========================= */
 
+  async function openRestaurant(id) {
 
-  document.getElementById(
-    "selectedRestaurantLocation"
-  ).textContent =
-    "📍 " +
-    (
+    selectedRestaurant =
+      restaurants.find(
+        restaurant =>
+          Number(restaurant.id) === Number(id)
+      );
+
+    if (!selectedRestaurant) {
+
+      alert("Restaurant not found.");
+
+      return;
+    }
+
+    document.getElementById(
+      "restaurantSection"
+    ).style.display = "none";
+
+    document.getElementById(
+      "menuSection"
+    ).style.display = "block";
+
+    document.getElementById(
+      "selectedRestaurantName"
+    ).textContent =
+      selectedRestaurant.name || "Restaurant";
+
+    document.getElementById(
+      "selectedRestaurantLocation"
+    ).textContent =
       selectedRestaurant.location ||
       selectedRestaurant.address ||
-      "Nairobi"
+      "";
+
+    await loadRestaurantMenu(
+      selectedRestaurant.id
     );
+  }
 
 
-  document.getElementById(
-    "menuSearch"
-  ).value = "";
+  /* =========================
+     LOAD MENU
+  ========================= */
 
+  async function loadRestaurantMenu(
+    restaurantId
+  ) {
 
-  selectedCategory = "All";
+    const menuList =
+      document.getElementById("menuList");
 
+    menuList.innerHTML =
+      `<div class="loading">
+        Loading menu...
+      </div>`;
 
-  await loadRestaurantMenu();
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =====================================================
-   LOAD MENU
-===================================================== */
-
-async function loadRestaurantMenu(){
-
-  const box =
-    document.getElementById(
-      "menuList"
-    );
-
-
-  box.innerHTML = `
-
-    <div class="loading">
-
-      <div class="spinner"></div>
-
-      Loading menu...
-
-    </div>
-
-  `;
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-
+    const {
+      data,
+      error
+    } = await supabaseClient
       .from("menu_items")
-
       .select(`
         id,
         restaurant_id,
@@ -1797,1653 +954,1109 @@ async function loadRestaurantMenu(){
         created_at,
         category
       `)
-
       .eq(
         "restaurant_id",
-        selectedRestaurant.id
+        restaurantId
       )
+      .order("id", {
+        ascending: true
+      });
 
-      .order(
-        "created_at",
-        {ascending:true}
-      );
+    if (error) {
 
+      console.error(error);
 
-  if(error){
+      menuList.innerHTML =
+        `<div class="empty">
+          Unable to load menu.
+          <br><br>
+          ${error.message}
+        </div>`;
 
-    console.error(error);
-
-    box.innerHTML = `
-
-      <div class="empty">
-
-        Unable to load menu.
-
-        <br><br>
-
-        ${escapeHTML(error.message)}
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  menuItems =
-    data || [];
-
-
-  buildCategories();
-
-  displayMenu(
-    menuItems
-  );
-
-}
-
-
-/* =====================================================
-   CATEGORIES
-===================================================== */
-
-function buildCategories(){
-
-  const box =
-    document.getElementById(
-      "categoryBar"
-    );
-
-
-  box.innerHTML = "";
-
-
-  const categories = [
-
-    "All",
-
-    ...new Set(
-
-      menuItems
-
-        .map(
-          item => item.category
-        )
-
-        .filter(Boolean)
-
-    )
-
-  ];
-
-
-  categories.forEach(
-    function(category){
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.className =
-        "category-btn " +
-        (
-          category ===
-          selectedCategory
-            ? "active"
-            : ""
-        );
-
-
-      button.textContent =
-        category;
-
-
-      button.onclick =
-        function(){
-
-          selectedCategory =
-            category;
-
-
-          document
-            .querySelectorAll(
-              ".category-btn"
-            )
-            .forEach(
-              function(btn){
-
-                btn.classList.remove(
-                  "active"
-                );
-
-              }
-            );
-
-
-          button.classList.add(
-            "active"
-          );
-
-
-          filterMenu();
-
-        };
-
-
-      box.appendChild(
-        button
-      );
-
+      return;
     }
-  );
 
-}
+    menuItems = data || [];
 
-
-/* =====================================================
-   DISPLAY MENU
-===================================================== */
-
-function displayMenu(items){
-
-  const box =
-    document.getElementById(
-      "menuList"
-    );
-
-
-  box.innerHTML = "";
-
-
-  if(items.length === 0){
-
-    box.innerHTML =
-      `<div class="empty">
-        No menu items found.
-      </div>`;
-
-    return;
-
+    renderMenu(menuItems);
   }
 
 
-  items.forEach(
-    function(item){
+  /* =========================
+     RENDER MENU
+  ========================= */
 
-      const card =
-        document.createElement(
-          "div"
-        );
+  function renderMenu(items) {
 
+    const menuList =
+      document.getElementById("menuList");
 
-      card.className =
-        "menu-card";
+    const availableItems =
+      items.filter(
+        item =>
+          item.available !== false
+      );
 
+    if (!availableItems.length) {
 
-      const image =
-        item.image_url;
+      menuList.innerHTML =
+        `<div class="empty">
+          No menu items available.
+        </div>`;
 
+      return;
+    }
 
-      card.innerHTML = `
+    menuList.innerHTML =
+      availableItems.map(item => {
 
-        <div class="menu-image">
+        const image =
+          item.image_url ||
+          "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80";
 
-          ${
-            image
+        return `
 
-            ?
+          <div class="menu-card">
 
-            `<img
-              src="${escapeHTML(image)}"
-              alt="${escapeHTML(
-                item.name
-              )}"
-              onerror="
-                this.style.display='none'
-              "
-            >`
+            <img
+              src="${image}"
+              alt="${escapeHtml(item.name)}"
+            >
 
-            :
+            <div class="menu-content">
 
-            "🍔"
-          }
+              <h3>
+                ${escapeHtml(item.name)}
+              </h3>
 
-        </div>
+              <p>
+                ${escapeHtml(
+                  item.description || ""
+                )}
+              </p>
 
+              <div class="price">
+                KSh ${formatMoney(item.price)}
+              </div>
 
-        <div class="menu-content">
+              <button
+                class="add-button"
+                onclick="addToCart(${item.id})"
+              >
+                Add to Cart
+              </button>
 
-          <h3>
-            ${escapeHTML(
-              item.name
-            )}
-          </h3>
-
-
-          <p class="menu-description">
-
-            ${escapeHTML(
-              item.description || ""
-            )}
-
-          </p>
-
-
-          <div class="menu-bottom">
-
-            <span class="price">
-
-              ${money(item.price)}
-
-            </span>
-
-
-            ${
-              item.available
-
-              ?
-
-              `<button
-                class="add-btn"
-                onclick="addToCart(
-                  ${item.id}
-                )">
-
-                + Add
-
-              </button>`
-
-              :
-
-              `<span
-                class="unavailable">
-
-                Not Available
-
-              </span>`
-            }
+            </div>
 
           </div>
 
-        </div>
+        `;
 
-      `;
+      }).join("");
+  }
 
 
-      box.appendChild(
-        card
+  /* =========================
+     ADD TO CART
+  ========================= */
+
+  function addToCart(itemId) {
+
+    const item =
+      menuItems.find(
+        menuItem =>
+          Number(menuItem.id) === Number(itemId)
       );
 
-    }
-  );
+    if (!item) return;
 
-}
 
+    /*
+      MloHub currently allows one
+      restaurant per cart.
+    */
 
-/* =====================================================
-   FILTER MENU
-===================================================== */
-
-function filterMenu(){
-
-  const search =
-    document.getElementById(
-      "menuSearch"
-    )
-    .value
-    .toLowerCase()
-    .trim();
-
-
-  const filtered =
-    menuItems.filter(
-      function(item){
-
-        const matchesSearch =
-
-          !search ||
-
-          String(
-            item.name || ""
-          )
-          .toLowerCase()
-          .includes(search)
-
-          ||
-
-          String(
-            item.description || ""
-          )
-          .toLowerCase()
-          .includes(search)
-
-          ||
-
-          String(
-            item.category || ""
-          )
-          .toLowerCase()
-          .includes(search);
-
-
-        const matchesCategory =
-
-          selectedCategory ===
-          "All"
-
-          ||
-
-          item.category ===
-          selectedCategory;
-
-
-        return (
-          matchesSearch &&
-          matchesCategory
-        );
-
-      }
-    );
-
-
-  displayMenu(
-    filtered
-  );
-
-}
-
-
-/* =====================================================
-   GLOBAL SEARCH
-===================================================== */
-
-function globalSearch(){
-
-  const term =
-    document.getElementById(
-      "globalSearch"
-    )
-    .value
-    .toLowerCase()
-    .trim();
-
-
-  if(!term){
-
-    displayRestaurants(
-      restaurants
-    );
-
-    return;
-
-  }
-
-
-  const filtered =
-    restaurants.filter(
-      function(restaurant){
-
-        return (
-
-          String(
-            restaurant.name || ""
-          )
-          .toLowerCase()
-          .includes(term)
-
-          ||
-
-          String(
-            restaurant.location ||
-            restaurant.address ||
-            ""
-          )
-          .toLowerCase()
-          .includes(term)
-
-        );
-
-      }
-    );
-
-
-  displayRestaurants(
-    filtered
-  );
-
-}
-
-
-/* =====================================================
-   BACK TO RESTAURANTS
-===================================================== */
-
-function backToRestaurants(){
-
-  document.getElementById(
-    "restaurantSection"
-  ).style.display = "none";
-
-
-  document.getElementById(
-    "restaurantsSection"
-  ).style.display = "block";
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =====================================================
-   ADD TO CART
-===================================================== */
-
-function addToCart(itemId){
-
-  const item =
-    menuItems.find(
-      function(x){
-
-        return Number(x.id) ===
-          Number(itemId);
-
-      }
-    );
-
-
-  if(!item){
-
-    showMessage(
-      "Food item not found.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(!item.available){
-
-    showMessage(
-      "This item is currently unavailable.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-
-    selectedRestaurant &&
-
-    cart.length > 0 &&
-
-    Number(
-      cart[0].restaurant_id
-    ) !== Number(
+    if (
+      cart.length &&
+      selectedRestaurant &&
+      cart[0].restaurant_id !==
       selectedRestaurant.id
-    )
-
-  ){
-
-    const replace =
-      confirm(
-
-        "Your cart contains food from another restaurant. Clear the cart and add this item?"
-
-      );
-
-
-    if(!replace) return;
-
-
-    cart = [];
-
-  }
-
-
-  const existing =
-    cart.find(
-      function(x){
-
-        return Number(x.id) ===
-          Number(item.id);
-
-      }
-    );
-
-
-  if(existing){
-
-    existing.quantity += 1;
-
-  }else{
-
-    cart.push({
-
-      id:item.id,
-
-      restaurant_id:
-        item.restaurant_id,
-
-      name:item.name,
-
-      description:
-        item.description,
-
-      price:
-        Number(item.price || 0),
-
-      quantity:1
-
-    });
-
-  }
-
-
-  updateCartUI();
-
-
-  showMessage(
-    item.name +
-    " added to cart.",
-    "success"
-  );
-
-}
-
-
-/* =====================================================
-   UPDATE CART UI
-===================================================== */
-
-function updateCartUI(){
-
-  const count =
-    getCartCount();
-
-
-  const total =
-    getCartTotal();
-
-
-  document.getElementById(
-    "headerCartCount"
-  ).textContent =
-    count;
-
-
-  document.getElementById(
-    "cartCount"
-  ).textContent =
-    count;
-
-
-  document.getElementById(
-    "cartBarTotal"
-  ).textContent =
-    money(total);
-
-
-  const bar =
-    document.getElementById(
-      "cartBar"
-    );
-
-
-  if(count > 0){
-
-    bar.style.display =
-      "block";
-
-  }else{
-
-    bar.style.display =
-      "none";
-
-  }
-
-}
-
-
-/* =====================================================
-   OPEN CART
-===================================================== */
-
-function openCart(){
-
-  renderCart();
-
-  document.getElementById(
-    "cartModal"
-  ).classList.add(
-    "show"
-  );
-
-}
-
-
-/* =====================================================
-   CLOSE CART
-===================================================== */
-
-function closeCart(){
-
-  document.getElementById(
-    "cartModal"
-  ).classList.remove(
-    "show"
-  );
-
-}
-
-
-/* =====================================================
-   RENDER CART
-===================================================== */
-
-function renderCart(){
-
-  const box =
-    document.getElementById(
-      "cartItems"
-    );
-
-
-  const empty =
-    document.getElementById(
-      "cartEmpty"
-    );
-
-
-  const totalBox =
-    document.getElementById(
-      "cartTotalBox"
-    );
-
-
-  const checkout =
-    document.getElementById(
-      "checkoutButton"
-    );
-
-
-  box.innerHTML = "";
-
-
-  if(cart.length === 0){
-
-    empty.style.display =
-      "block";
-
-
-    totalBox.style.display =
-      "none";
-
-
-    checkout.style.display =
-      "none";
-
-
-    return;
-
-  }
-
-
-  empty.style.display =
-    "none";
-
-
-  totalBox.style.display =
-    "flex";
-
-
-  checkout.style.display =
-    "block";
-
-
-  cart.forEach(
-    function(item){
-
-      const div =
-        document.createElement(
-          "div"
+    ) {
+
+      const confirmChange =
+        confirm(
+          "Your cart contains items from another restaurant. Clear cart and add this item?"
         );
 
+      if (!confirmChange) return;
 
-      div.className =
-        "cart-item";
-
-
-      div.innerHTML = `
-
-        <div class="cart-item-info">
-
-          <h4>
-            ${escapeHTML(
-              item.name
-            )}
-          </h4>
-
-          <p>
-            ${money(item.price)}
-          </p>
-
-        </div>
+      cart = [];
+    }
 
 
-        <div class="qty-controls">
-
-          <button
-            class="qty-btn"
-            onclick="changeQuantity(
-              ${item.id},
-              -1
-            )">
-
-            −
-
-          </button>
-
-
-          <strong>
-            ${item.quantity}
-          </strong>
-
-
-          <button
-            class="qty-btn"
-            onclick="changeQuantity(
-              ${item.id},
-              1
-            )">
-
-            +
-
-          </button>
-
-        </div>
-
-      `;
-
-
-      box.appendChild(
-        div
+    const existing =
+      cart.find(
+        cartItem =>
+          Number(cartItem.id) === Number(item.id)
       );
+
+    if (existing) {
+
+      existing.quantity += 1;
+
+    } else {
+
+      cart.push({
+        id: item.id,
+        restaurant_id: item.restaurant_id,
+        name: item.name,
+        price: Number(item.price),
+        quantity: 1
+      });
 
     }
-  );
+
+    updateCartUI();
+  }
 
 
-  document.getElementById(
-    "cartTotal"
-  ).textContent =
-    money(
-      getCartTotal()
-    );
+  /* =========================
+     UPDATE CART UI
+  ========================= */
 
-}
+  function updateCartUI() {
 
-
-/* =====================================================
-   CHANGE QUANTITY
-===================================================== */
-
-function changeQuantity(
-  id,
-  change
-){
-
-  const item =
-    cart.find(
-      function(x){
-
-        return Number(x.id) ===
-          Number(id);
-
-      }
-    );
-
-
-  if(!item) return;
-
-
-  item.quantity +=
-    change;
-
-
-  if(item.quantity <= 0){
-
-    cart =
-      cart.filter(
-        function(x){
-
-          return Number(x.id) !==
-            Number(id);
-
-        }
+    const count =
+      cart.reduce(
+        (sum, item) =>
+          sum + item.quantity,
+        0
       );
 
+    const total =
+      cart.reduce(
+        (sum, item) =>
+          sum +
+          item.price *
+          item.quantity,
+        0
+      );
+
+
+    document.getElementById(
+      "cartCount"
+    ).textContent = count;
+
+    document.getElementById(
+      "cartBarCount"
+    ).textContent = count;
+
+    document.getElementById(
+      "cartBarTotal"
+    ).textContent =
+      formatMoney(total);
+
+
+    const cartBar =
+      document.getElementById("cartBar");
+
+    cartBar.style.display =
+      count > 0
+        ? "flex"
+        : "none";
   }
 
 
-  updateCartUI();
+  /* =========================
+     OPEN CART
+  ========================= */
 
-  renderCart();
+  function openCart() {
 
-}
+    if (!cart.length) {
 
+      alert("Your cart is empty.");
 
-/* =====================================================
-   CHECKOUT
-===================================================== */
+      return;
+    }
 
-function openCheckout(){
+    renderCart();
 
-  if(cart.length === 0){
-
-    showMessage(
-      "Your cart is empty.",
-      "error"
-    );
-
-    return;
-
+    document.getElementById(
+      "cartModal"
+    ).style.display = "block";
   }
 
 
-  document.getElementById(
-    "checkoutTotal"
-  ).textContent =
-    money(
-      getCartTotal()
+  /* =========================
+     RENDER CART
+  ========================= */
+
+  function renderCart() {
+
+    const container =
+      document.getElementById("cartItems");
+
+    if (!cart.length) {
+
+      container.innerHTML =
+        `<div class="empty">
+          Your cart is empty.
+        </div>`;
+
+      return;
+    }
+
+    container.innerHTML =
+      cart.map(item => {
+
+        return `
+
+          <div class="cart-item">
+
+            <div class="cart-item-info">
+
+              <strong>
+                ${escapeHtml(item.name)}
+              </strong>
+
+              <span>
+                KSh ${formatMoney(item.price)}
+              </span>
+
+            </div>
+
+            <div class="cart-controls">
+
+              <button
+                onclick="changeQuantity(${item.id}, -1)"
+              >
+                −
+              </button>
+
+              <strong>
+                ${item.quantity}
+              </strong>
+
+              <button
+                onclick="changeQuantity(${item.id}, 1)"
+              >
+                +
+              </button>
+
+            </div>
+
+            <strong>
+              KSh
+              ${formatMoney(
+                item.price *
+                item.quantity
+              )}
+            </strong>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+
+    document.getElementById(
+      "cartTotal"
+    ).textContent =
+      formatMoney(getCartTotal());
+  }
+
+
+  /* =========================
+     CHANGE QUANTITY
+  ========================= */
+
+  function changeQuantity(
+    itemId,
+    change
+  ) {
+
+    const item =
+      cart.find(
+        cartItem =>
+          Number(cartItem.id) === Number(itemId)
+      );
+
+    if (!item) return;
+
+    item.quantity += change;
+
+    if (item.quantity <= 0) {
+
+      cart =
+        cart.filter(
+          cartItem =>
+            Number(cartItem.id) !==
+            Number(itemId)
+        );
+
+    }
+
+    updateCartUI();
+
+    if (cart.length) {
+
+      renderCart();
+
+    } else {
+
+      closeModal("cartModal");
+    }
+  }
+
+
+  /* =========================
+     CART TOTAL
+  ========================= */
+
+  function getCartTotal() {
+
+    return cart.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
     );
+  }
 
 
-  closeCart();
+  /* =========================
+     CHECKOUT
+  ========================= */
+
+  function openCheckout() {
+
+    if (!cart.length) {
+
+      alert("Your cart is empty.");
+
+      return;
+    }
+
+    document.getElementById(
+      "checkoutTotal"
+    ).textContent =
+      formatMoney(getCartTotal());
+
+    closeModal("cartModal");
+
+    document.getElementById(
+      "checkoutModal"
+    ).style.display = "block";
+  }
 
 
-  document.getElementById(
-    "checkoutModal"
-  ).classList.add(
-    "show"
-  );
+  /* =========================
+     ORDER TYPE
+  ========================= */
 
-}
+  function handleOrderType() {
 
+    const orderType =
+      document.getElementById(
+        "orderType"
+      ).value;
 
-/* =====================================================
-   CLOSE CHECKOUT
-===================================================== */
-
-function closeCheckout(){
-
-  document.getElementById(
-    "checkoutModal"
-  ).classList.remove(
-    "show"
-  );
-
-}
-
-
-/* =====================================================
-   ORDER TYPE
-===================================================== */
-
-document.getElementById(
-  "orderType"
-).addEventListener(
-  "change",
-  function(){
-
-    const group =
+    const addressGroup =
       document.getElementById(
         "addressGroup"
       );
 
+    const address =
+      document.getElementById(
+        "deliveryAddress"
+      );
 
-    if(this.value === "pickup"){
+    if (orderType === "pickup") {
 
-      group.style.display =
+      addressGroup.style.display =
         "none";
 
-    }else{
+      address.value =
+        "Pickup";
 
-      group.style.display =
+    } else {
+
+      addressGroup.style.display =
         "block";
 
+      address.value = "";
+
+    }
+  }
+
+
+  /* =========================
+     PLACE ORDER
+  ========================= */
+
+  async function placeOrder() {
+
+    if (!cart.length) {
+
+      alert("Your cart is empty.");
+
+      return;
     }
 
-  }
-);
+    const name =
+      document
+        .getElementById("customerName")
+        .value
+        .trim();
+
+    const rawPhone =
+      document
+        .getElementById("customerPhone")
+        .value
+        .trim();
+
+    const orderType =
+      document
+        .getElementById("orderType")
+        .value;
+
+    const address =
+      document
+        .getElementById("deliveryAddress")
+        .value
+        .trim();
+
+    const payment =
+      document
+        .getElementById("paymentMethod")
+        .value;
 
 
-/* =====================================================
-   PAYMENT METHOD DISPLAY
-===================================================== */
+    if (!name) {
 
-document
-  .querySelectorAll(
-    'input[name="payment"]'
-  )
-  .forEach(
-    function(radio){
+      alert("Please enter your name.");
 
-      radio.addEventListener(
-        "change",
-        function(){
-
-          const note =
-            document.getElementById(
-              "mpesaNote"
-            );
+      return;
+    }
 
 
-          if(this.value === "mpesa"){
+    const phone =
+      normalizeKenyanPhone(rawPhone);
 
-            note.style.display =
-              "block";
+    if (!validKenyanPhone(phone)) {
 
-          }else{
-
-            note.style.display =
-              "none";
-
-          }
-
-        }
+      alert(
+        "Please enter a valid Kenyan phone number."
       );
 
+      return;
     }
-  );
 
 
-/* =====================================================
-   START M-PESA STK PUSH
-===================================================== */
+    if (
+      orderType === "delivery" &&
+      !address
+    ) {
 
-async function startMpesaPayment(
-  order,
-  phone,
-  amount
-){
-
-  const normalizedPhone =
-    normalizeKenyanPhone(
-      phone
-    );
-
-
-  console.log(
-    "Starting M-Pesa STK Push...",
-    {
-      order_id:order.id,
-      phone:normalizedPhone,
-      amount:amount
-    }
-  );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .functions
-      .invoke(
-        MPESA_STK_FUNCTION,
-        {
-          body:{
-
-            phone:
-              normalizedPhone,
-
-            amount:
-              Math.round(amount),
-
-            order_id:
-              order.id,
-
-            account_reference:
-              "MloHub-" +
-              order.id,
-
-            transaction_desc:
-              "MloHub order " +
-              order.id
-
-          }
-        }
+      alert(
+        "Please enter your delivery address."
       );
 
-
-  if(error){
-
-    console.error(
-      "M-Pesa Function Error:",
-      error
-    );
-
-    throw new Error(
-      error.message ||
-      "Could not connect to M-Pesa."
-    );
-
-  }
-
-
-  console.log(
-    "M-Pesa response:",
-    data
-  );
-
-
-  /*
-    The Edge Function may return:
-
-    {
-      success: true
+      return;
     }
 
-    OR a Daraja response such as:
 
-    {
-      ResponseCode: "0"
+    if (!selectedRestaurant) {
+
+      alert(
+        "Please select a restaurant."
+      );
+
+      return;
     }
-  */
-
-
-  if(
-    data &&
-    data.success === false
-  ){
-
-    throw new Error(
-      data.message ||
-      data.error ||
-      "M-Pesa payment request failed."
-    );
-
-  }
-
-
-  if(
-    data &&
-    data.error
-  ){
-
-    throw new Error(
-      data.error
-    );
-
-  }
-
-
-  const responseCode =
-    data?.ResponseCode ??
-    data?.response?.ResponseCode;
-
-
-  if(
-    responseCode &&
-    String(responseCode) !== "0"
-  ){
-
-    throw new Error(
-      data?.ResponseDescription ||
-      data?.response?.ResponseDescription ||
-      "M-Pesa rejected the payment request."
-    );
-
-  }
-
-
-  return data;
-
-}
-
-
-/* =====================================================
-   PLACE ORDER
-===================================================== */
-
-async function placeOrder(){
-
-  if(cart.length === 0){
-
-    showCheckoutMessage(
-      "Your cart is empty.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const name =
-    document.getElementById(
-      "customerName"
-    )
-    .value
-    .trim();
-
-
-  const phone =
-    document.getElementById(
-      "customerPhone"
-    )
-    .value
-    .trim();
-
-
-  const orderType =
-    document.getElementById(
-      "orderType"
-    ).value;
-
-
-  const address =
-    document.getElementById(
-      "deliveryAddress"
-    )
-    .value
-    .trim();
-
-
-  const payment =
-    document.querySelector(
-      'input[name="payment"]:checked'
-    )?.value ||
-    "cash";
-
-
-  /* VALIDATION */
-
-  if(!name){
-
-    showCheckoutMessage(
-      "Please enter your name.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(!phone){
-
-    showCheckoutMessage(
-      "Please enter your phone number.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(!validKenyanPhone(phone)){
-
-    showCheckoutMessage(
-      "Please enter a valid Kenyan phone number, for example 0712345678.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    orderType === "delivery" &&
-    !address
-  ){
-
-    showCheckoutMessage(
-      "Please enter your delivery address.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const btn =
-    document.getElementById(
-      "placeOrderBtn"
-    );
-
-
-  btn.disabled = true;
-
-
-  if(payment === "mpesa"){
-
-    btn.textContent =
-      "📱 Starting M-Pesa...";
-
-  }else{
-
-    btn.textContent =
-      "⏳ Placing Order...";
-
-  }
-
-
-  try{
-
-    const restaurantId =
-      cart[0].restaurant_id;
 
 
     const total =
       getCartTotal();
 
 
-    /* =================================================
+    const button =
+      document.getElementById(
+        "placeOrderButton"
+      );
+
+    button.disabled = true;
+
+    button.textContent =
+      "Placing Order...";
+
+
+    try {
+
+      /*
+       IMPORTANT:
+       order_type and payment_method
+       are now saved in the orders table.
+      */
+
+      const orderData = {
+
+        restaurant_id:
+          selectedRestaurant.id,
+
+        customer_name:
+          name,
+
+        customer_phone:
+          phone,
+
+        delivery_address:
+          orderType === "delivery"
+            ? address
+            : "Pickup",
+
+        order_type:
+          orderType,
+
+        payment_method:
+          payment,
+
+        order_status:
+          "pending",
+
+        total_amount:
+          total
+
+      };
+
+
+      /*
        CREATE ORDER
-    ================================================= */
+      */
 
-    const orderData = {
-
-      restaurant_id:
-        restaurantId,
-
-      customer_name:
-        name,
-
-      customer_phone:
-        phone,
-
-      delivery_address:
-        orderType === "delivery"
-          ? address
-          : "Pickup",
-
-      order_status:
-        "pending",
-
-      total_amount:
-        total
-
-    };
-
-
-    const {
-      data:order,
-      error:orderError
-    } =
-      await supabaseClient
-
+      const {
+        data: order,
+        error: orderError
+      } = await supabaseClient
         .from("orders")
-
         .insert(orderData)
-
         .select()
-
         .single();
 
 
-    if(orderError){
+      if (orderError) {
 
-      throw orderError;
+        console.error(
+          "Order creation error:",
+          orderError
+        );
 
-    }
+        throw new Error(
+          orderError.message
+        );
+      }
 
 
-    /* =================================================
+      /*
        CREATE ORDER ITEMS
-    ================================================= */
+      */
 
-    const orderItems =
-      cart.map(
-        function(item){
+      const orderItems =
+        cart.map(item => ({
 
-          return {
+          order_id:
+            order.id,
 
-            order_id:
-              order.id,
+          menu_item_id:
+            item.id,
 
-            menu_item_id:
-              item.id,
+          quantity:
+            item.quantity,
 
-            quantity:
-              item.quantity,
+          price:
+            item.price
 
-            price:
-              item.price
-
-          };
-
-        }
-      );
+        }));
 
 
-    const {
-      error:itemError
-    } =
-      await supabaseClient
-
+      const {
+        error: itemsError
+      } = await supabaseClient
         .from("order_items")
-
         .insert(orderItems);
 
 
-    if(itemError){
+      if (itemsError) {
 
-      throw itemError;
+        console.error(
+          "Order items error:",
+          itemsError
+        );
 
-    }
+        throw new Error(
+          itemsError.message
+        );
+      }
 
 
-    /* =================================================
-       FIND RESTAURANT
-    ================================================= */
+      /*
+       M-PESA
+       
+       We are NOT fixing M-Pesa
+       right now.
+       
+       Cash orders continue normally.
+      */
 
-    const restaurant =
-      restaurants.find(
-        function(r){
+      if (payment === "mpesa") {
 
-          return Number(r.id) ===
-            Number(restaurantId);
+        try {
+
+          const {
+            data: mpesaData,
+            error: mpesaError
+          } =
+            await supabaseClient
+              .functions
+              .invoke(
+                MPESA_STK_FUNCTION,
+                {
+                  body: {
+
+                    order_id:
+                      order.id,
+
+                    amount:
+                      total,
+
+                    phone:
+                      phone
+
+                  }
+                }
+              );
+
+
+          if (mpesaError) {
+
+            console.error(
+              "M-Pesa error:",
+              mpesaError
+            );
+
+            /*
+             The order has already been
+             created. We don't delete it.
+             
+             Show the customer that the
+             order was received and
+             M-Pesa can be handled later.
+            */
+
+          } else {
+
+            console.log(
+              "M-Pesa response:",
+              mpesaData
+            );
+
+          }
+
+        } catch (mpesaException) {
+
+          console.error(
+            "M-Pesa exception:",
+            mpesaException
+          );
 
         }
-      );
+
+      }
 
 
-    const restaurantName =
-      restaurant?.name ||
-      "MloHub Restaurant";
+      /*
+       SHOW SUCCESS
+      */
 
-
-    /* =================================================
-       M-PESA PAYMENT
-    ================================================= */
-
-    if(payment === "mpesa"){
-
-      btn.textContent =
-        "📱 Sending M-Pesa request...";
-
-
-      await startMpesaPayment(
-        order,
-        phone,
+      showOrderSuccess(
+        order.id,
         total
       );
 
 
       /*
-        STK PUSH was accepted by the
-        M-Pesa Edge Function.
-
-        The customer must now enter
-        their M-Pesa PIN on the phone.
+       CLEAR CART
       */
 
+      cart = [];
+
+      updateCartUI();
+
+
+      /*
+       RESET FORM
+      */
 
       document.getElementById(
-        "successTitle"
-      ).textContent =
-        "📱 M-Pesa Request Sent";
-
+        "customerName"
+      ).value = "";
 
       document.getElementById(
-        "successMessage"
-      ).textContent =
-        "Check your phone and enter your M-Pesa PIN to complete the payment.";
-
-
-      const status =
-        document.getElementById(
-          "paymentStatus"
-        );
-
-
-      status.style.display =
-        "block";
-
-
-      status.innerHTML =
-        "📱 Waiting for M-Pesa payment";
-
-
-    }else{
-
-      /* CASH ORDER */
+        "customerPhone"
+      ).value = "";
 
       document.getElementById(
-        "successTitle"
-      ).textContent =
-        "Order Placed Successfully!";
-
+        "deliveryAddress"
+      ).value = "";
 
       document.getElementById(
-        "successMessage"
-      ).textContent =
-        "Your order has been sent to the restaurant.";
-
+        "orderType"
+      ).value = "delivery";
 
       document.getElementById(
-        "paymentStatus"
-      ).style.display =
-        "none";
+        "paymentMethod"
+      ).value = "cash";
 
+      handleOrderType();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Unable to place order:\n\n" +
+        error.message
+      );
+
+    } finally {
+
+      button.disabled = false;
+
+      button.textContent =
+        "Place Order";
     }
 
+  }
 
-    /* =================================================
-       SUCCESS INFORMATION
-    ================================================= */
+
+  /* =========================
+     SHOW ORDER SUCCESS
+  ========================= */
+
+  function showOrderSuccess(
+    orderId,
+    total
+  ) {
+
+    closeModal("checkoutModal");
+
 
     document.getElementById(
       "successOrderId"
     ).textContent =
-      order.id;
-
+      orderId;
 
     document.getElementById(
       "successRestaurant"
     ).textContent =
-      restaurantName;
-
+      selectedRestaurant.name;
 
     document.getElementById(
       "successTotal"
     ).textContent =
-      money(total);
+      formatMoney(total);
 
 
-    /* TRACKING */
+    /*
+     TRACKING LINK
+    */
 
     document.getElementById(
       "trackingLink"
     ).href =
       "tracking.html?order=" +
-      encodeURIComponent(
-        order.id
+      encodeURIComponent(orderId);
+
+
+    /*
+     WHATSAPP
+    */
+
+    const restaurantWhatsApp =
+      selectedRestaurant.whatsapp;
+
+
+    const whatsappLink =
+      document.getElementById(
+        "whatsappLink"
       );
 
 
-    /* WHATSAPP */
+    if (!restaurantWhatsApp) {
 
-    const whatsappText =
+      whatsappLink.style.display =
+        "none";
 
-      `Hello MloHub!\n\n` +
+    } else {
 
-      `I placed Order #${order.id}\n` +
-
-      `Restaurant: ${restaurantName}\n` +
-
-      `Customer: ${name}\n` +
-
-      `Phone: ${phone}\n` +
-
-      `Order Type: ${orderType}\n` +
-
-      `Payment: ${payment === "mpesa" ? "M-Pesa" : "Cash"}\n` +
-
-      `Total: KSh ${total.toLocaleString()}`;
+      const cleanWhatsApp =
+        restaurantWhatsApp
+          .toString()
+          .replace(/\D/g, "");
 
 
-const restaurantWhatsApp = restaurant.whatsapp;
-
-if (!restaurantWhatsApp) {
-  alert("This restaurant has no WhatsApp number registered.");
-  return;
-}
-
-const cleanWhatsApp = restaurantWhatsApp
-  .toString()
-  .replace(/\D/g, "");
-
-document.getElementById("whatsappLink").href =
-  "https://wa.me/" + cleanWhatsApp + "?text=" +
-  encodeURIComponent(whatsappText);
+      const whatsappText =
+        createWhatsAppMessage(
+          orderId,
+          total
+        );
 
 
-    /* =================================================
-       CLEAN CART
-    ================================================= */
+      whatsappLink.href =
+        "https://wa.me/" +
+        cleanWhatsApp +
+        "?text=" +
+        encodeURIComponent(
+          whatsappText
+        );
 
-    closeCheckout();
+      whatsappLink.style.display =
+        "block";
+    }
 
-
-    cart = [];
-
-
-    updateCartUI();
-
-
-    /* =================================================
-       SHOW SUCCESS
-    ================================================= */
 
     document.getElementById(
       "successModal"
-    ).classList.add(
-      "show"
-    );
-
-
-    /* CLEAR FORM */
-
-    document.getElementById(
-      "customerName"
-    ).value = "";
-
-
-    document.getElementById(
-      "customerPhone"
-    ).value = "";
-
-
-    document.getElementById(
-      "deliveryAddress"
-    ).value = "";
-
-
-  }catch(error){
-
-    console.error(
-      "Order error:",
-      error
-    );
-
-
-    showCheckoutMessage(
-
-      "Could not place order: " +
-      (
-        error.message ||
-        "Unknown error"
-      ),
-
-      "error"
-
-    );
-
-  }finally{
-
-    btn.disabled = false;
-
-    btn.textContent =
-      "📦 Place Order";
-
+    ).style.display =
+      "block";
   }
 
-}
+
+  /* =========================
+     WHATSAPP MESSAGE
+  ========================= */
+
+  function createWhatsAppMessage(
+    orderId,
+    total
+  ) {
+
+    let message =
+      "Hello " +
+      selectedRestaurant.name +
+      ", I placed an order through MloHub.%0A";
+
+    message =
+      "Hello " +
+      selectedRestaurant.name +
+      ", I placed an order through MloHub.\n\n";
+
+    message +=
+      "Order ID: " +
+      orderId +
+      "\n";
+
+    message +=
+      "Customer: " +
+      document
+        .getElementById(
+          "successOrderId"
+        )
+        .textContent +
+      "\n";
+
+    message +=
+      "Total: KSh " +
+      formatMoney(total) +
+      "\n\n";
+
+    message +=
+      "Items:\n";
+
+    cart.forEach(item => {
+
+      message +=
+        item.quantity +
+        " x " +
+        item.name +
+        " - KSh " +
+        formatMoney(
+          item.price *
+          item.quantity
+        ) +
+        "\n";
+
+    });
+
+    return message;
+  }
 
 
-/* =====================================================
-   CLOSE SUCCESS
-===================================================== */
+  /* =========================
+     BACK TO RESTAURANTS
+  ========================= */
 
-function closeSuccess(){
+  function backToRestaurants() {
 
-  document.getElementById(
-    "successModal"
-  ).classList.remove(
-    "show"
+    document.getElementById(
+      "menuSection"
+    ).style.display = "none";
+
+    document.getElementById(
+      "restaurantSection"
+    ).style.display = "block";
+
+    selectedRestaurant = null;
+
+    menuItems = [];
+  }
+
+
+  /* =========================
+     CLOSE MODAL
+  ========================= */
+
+  function closeModal(id) {
+
+    document.getElementById(
+      id
+    ).style.display = "none";
+  }
+
+
+  /* =========================
+     PHONE NORMALIZATION
+  ========================= */
+
+  function normalizeKenyanPhone(
+    phone
+  ) {
+
+    let value =
+      phone.replace(/\s+/g, "");
+
+    if (value.startsWith("+254")) {
+
+      return value.substring(1);
+
+    }
+
+    if (value.startsWith("254")) {
+
+      return value;
+
+    }
+
+    if (
+      value.startsWith("07") ||
+      value.startsWith("01")
+    ) {
+
+      return "254" +
+        value.substring(1);
+
+    }
+
+    return value;
+  }
+
+
+  /* =========================
+     PHONE VALIDATION
+  ========================= */
+
+  function validKenyanPhone(
+    phone
+  ) {
+
+    return /^254(7|1)\d{8}$/.test(
+      phone
+    );
+  }
+
+
+  /* =========================
+     FORMAT MONEY
+  ========================= */
+
+  function formatMoney(
+    amount
+  ) {
+
+    return Number(
+      amount || 0
+    ).toLocaleString(
+      "en-KE"
+    );
+  }
+
+
+  /* =========================
+     ESCAPE HTML
+  ========================= */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(
+      value ?? ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+  }
+
+
+  /* =========================
+     CLOSE MODALS WHEN CLICKING
+     OUTSIDE
+  ========================= */
+
+  window.addEventListener(
+    "click",
+    function(event) {
+
+      const modals =
+        document.querySelectorAll(
+          ".modal"
+        );
+
+      modals.forEach(modal => {
+
+        if (
+          event.target === modal
+        ) {
+
+          modal.style.display =
+            "none";
+        }
+
+      });
+
+    }
   );
-
-}
-
-
-/* =====================================================
-   OUTSIDE MODAL CLOSE
-===================================================== */
-
-function closeModalOutside(
-  event,
-  modalId
-){
-
-  if(
-    event.target.id ===
-    modalId
-  ){
-
-    document.getElementById(
-      modalId
-    ).classList.remove(
-      "show"
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   START APP
-===================================================== */
-
-async function startApp(){
-
-  updateCartUI();
-
-  await loadRestaurants();
-
-}
-
-
-startApp();
 
 </script>
 
