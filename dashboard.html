@@ -1,1915 +1,1817 @@
-<!DOCTYPE html>
-
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>MloHub - Restaurant Dashboard</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-  background:#f4f6f9;
-  color:#222;
-}
-
-header{
-  background:linear-gradient(135deg,#ff7a00,#ff3d00);
-  color:white;
-  padding:20px;
-  position:sticky;
-  top:0;
-  z-index:100;
-  box-shadow:0 3px 12px rgba(0,0,0,.15);
-}
-
-.header-inner{
-  max-width:1200px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-}
-
-.logo{
-  font-size:26px;
-  font-weight:bold;
-}
-
-.restaurant-name{
-  margin-top:5px;
-  opacity:.95;
-}
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-}
-
-.message{
-  padding:14px;
-  border-radius:10px;
-  margin-bottom:18px;
-  display:none;
-}
-
-.message.show{
-  display:block;
-}
-
-.info{
-  background:#e7f1ff;
-  color:#084298;
-}
-
-.error{
-  background:#f8d7da;
-  color:#842029;
-}
-
-.success-message{
-  background:#d1e7dd;
-  color:#0f5132;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-bottom:25px;
-}
-
-.stat{
-  background:white;
-  border-radius:15px;
-  padding:20px;
-  box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.stat-icon{
-  font-size:28px;
-}
-
-.stat h3{
-  margin:8px 0;
-  font-size:27px;
-}
-
-.stat p{
-  color:#777;
-}
-
-.tabs{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-  overflow:auto;
-}
-
-.tab{
-  border:0;
-  background:white;
-  padding:12px 18px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-  white-space:nowrap;
-}
-
-.tab.active{
-  background:#ff5a00;
-  color:white;
-}
-
-.panel{
-  display:none;
-}
-
-.panel.active{
-  display:block;
-}
-
-.card{
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.card h2{
-  margin-bottom:18px;
-}
-
-input,
-textarea,
-select{
-  width:100%;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:9px;
-  font-size:15px;
-  margin-bottom:12px;
-}
-
-button{
-  cursor:pointer;
-}
-
-.primary{
-  background:#ff5a00;
-  color:white;
-  border:0;
-  padding:11px 16px;
-  border-radius:9px;
-  font-weight:bold;
-}
-
-.secondary{
-  background:#eee;
-  border:0;
-  padding:11px 16px;
-  border-radius:9px;
-}
-
-.success{
-  background:#168c39;
-  color:white;
-  border:0;
-  padding:11px 16px;
-  border-radius:9px;
-  font-weight:bold;
-}
-
-.danger{
-  background:#dc3545;
-  color:white;
-  border:0;
-  padding:11px 16px;
-  border-radius:9px;
-}
-
-.menu-list{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:15px;
-}
-
-.menu-card{
-  border:1px solid #eee;
-  border-radius:13px;
-  padding:16px;
-  background:#fff;
-}
-
-.menu-card h3{
-  margin-bottom:7px;
-}
-
-.menu-description{
-  color:#777;
-  font-size:14px;
-  margin-bottom:10px;
-}
-
-.menu-price{
-  color:#e84d00;
-  font-weight:bold;
-  font-size:18px;
-  margin-bottom:10px;
-}
-
-.menu-category{
-  color:#666;
-  font-size:13px;
-  margin-bottom:10px;
-}
-
-.menu-actions{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-}
-
-.image-preview{
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-bottom:12px;
-}
-
-.available{
-  color:#168c39;
-  font-weight:bold;
-}
-
-.unavailable{
-  color:#dc3545;
-  font-weight:bold;
-}
-
-.order{
-  border:1px solid #eee;
-  border-radius:14px;
-  padding:17px;
-  margin-bottom:13px;
-}
-
-.order-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:10px;
-}
-
-.order-info{
-  line-height:1.7;
-}
-
-.order-items{
-  background:#f8f8f8;
-  padding:12px;
-  border-radius:10px;
-  margin:12px 0;
-}
-
-.status{
-  display:inline-block;
-  padding:6px 11px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:bold;
-}
-
-.pending{
-  background:#fff3cd;
-  color:#856404;
-}
-
-.preparing{
-  background:#cfe2ff;
-  color:#084298;
-}
-
-.ready{
-  background:#d1e7dd;
-  color:#0f5132;
-}
-
-.completed{
-  background:#d1e7dd;
-  color:#0f5132;
-}
-
-.cancelled{
-  background:#f8d7da;
-  color:#842029;
-}
-
-.order-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.loading{
-  padding:20px;
-  text-align:center;
-  color:#777;
-}
-
-.empty{
-  padding:25px;
-  text-align:center;
-  color:#777;
-  background:#f8f8f8;
-  border-radius:10px;
-}
-
-@media(max-width:800px){
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-}
-
-@media(max-width:500px){
-
-  .stats{
-    grid-template-columns:1fr;
-  }
-
-  .container{
-    padding:12px;
-  }
-
-  .logo{
-    font-size:21px;
-  }
-
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MloHub | Restaurant Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #f59e0b;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+    }
+
+    .restaurant-name {
+      color: #fbbf24;
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .btn-refresh {
+      background: #f59e0b;
+      color: #111;
+    }
+
+    .btn-logout {
+      background: #dc2626;
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      font-size: 18px;
+      color: #666;
+    }
+
+    .error-box {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .welcome {
+      margin-bottom: 22px;
+    }
+
+    .welcome h2 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .welcome p {
+      color: #777;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    }
+
+    .stat-title {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 12px 18px;
+      border-radius: 9px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: #f59e0b;
+      border-color: #f59e0b;
+      color: #111;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+
+    .panel-header h2 {
+      font-size: 21px;
+    }
+
+    .search {
+      width: 280px;
+      max-width: 100%;
+      padding: 11px 13px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      background: white;
+    }
+
+    .order-list,
+    .menu-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .order-card,
+    .menu-card {
+      background: white;
+      border-radius: 13px;
+      padding: 18px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .order-id {
+      font-weight: 900;
+      font-size: 17px;
+    }
+
+    .order-time {
+      color: #777;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .status.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status.confirmed {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status.preparing {
+      background: #fce7f3;
+      color: #9d174d;
+    }
+
+    .status.ready {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status.delivered {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status.cancelled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .order-details {
+      display: grid;
+      gap: 7px;
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .order-total {
+      font-size: 18px;
+      font-weight: 900;
+      margin: 10px 0;
+    }
+
+    .order-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-select {
+      padding: 9px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .menu-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .menu-image {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      background: #eee;
+      display: block;
+    }
+
+    .menu-content {
+      padding: 16px;
+    }
+
+    .menu-name {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .menu-category {
+      color: #f59e0b;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .menu-description {
+      color: #777;
+      font-size: 13px;
+      min-height: 38px;
+      margin-bottom: 10px;
+    }
+
+    .menu-price {
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .menu-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      padding: 8px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .btn-edit {
+      background: #e0f2fe;
+      color: #075985;
+    }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn-toggle {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .btn-toggle.off {
+      background: #f3f4f6;
+      color: #555;
+    }
+
+    .form-card {
+      max-width: 700px;
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-family: inherit;
+      background: white;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .btn-primary {
+      background: #f59e0b;
+      color: #111;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 900;
+    }
+
+    .btn-secondary {
+      background: #eee;
+      color: #333;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      margin-left: 7px;
+    }
+
+    .empty {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #777;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 15px;
+      padding: 24px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close {
+      background: #eee;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 20px;
+    }
+
+    .notice {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .notice.success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .notice.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-value {
+        font-size: 22px;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 17px;
+      }
+
+      .btn-refresh {
+        display: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-
-  <div class="header-inner">
-
-```
-<div>
-
-  <div class="logo">
-    🍽️ MloHub
+  <div class="brand">
+    <div class="brand-logo">M</div>
+    <div>
+      <h1>MloHub Restaurant</h1>
+      <div class="restaurant-name" id="restaurantName">Loading...</div>
+    </div>
   </div>
 
-  <div
-    class="restaurant-name"
-    id="restaurantTitle"
-  >
-    Loading restaurant...
+  <div class="header-actions">
+    <button class="btn btn-refresh" onclick="loadDashboard()">Refresh</button>
+    <button class="btn btn-logout" onclick="logout()">Logout</button>
   </div>
-
-</div>
-
-<button
-  class="secondary"
-  onclick="refreshAll()"
->
-  🔄 Refresh
-</button>
-```
-
-  </div>
-
 </header>
 
 <div class="container">
 
-  <div
-    id="message"
-    class="message"
-  ></div>
-
-  <!-- STATS -->
-
-  <div class="stats">
-
-```
-<div class="stat">
-
-  <div class="stat-icon">
-    📦
+  <div id="loading" class="loading">
+    Checking restaurant account...
   </div>
 
-  <h3 id="totalOrders">
-    0
-  </h3>
+  <div id="errorBox" class="error-box"></div>
 
-  <p>
-    Total Orders
-  </p>
+  <main id="dashboard" style="display:none;">
 
-</div>
-
-
-<div class="stat">
-
-  <div class="stat-icon">
-    ⏳
-  </div>
-
-  <h3 id="pendingOrders">
-    0
-  </h3>
-
-  <p>
-    Pending Orders
-  </p>
-
-</div>
-
-
-<div class="stat">
-
-  <div class="stat-icon">
-    🍔
-  </div>
-
-  <h3 id="menuCount">
-    0
-  </h3>
-
-  <p>
-    Menu Items
-  </p>
-
-</div>
-
-
-<div class="stat">
-
-  <div class="stat-icon">
-    💰
-  </div>
-
-  <h3 id="salesTotal">
-    KSh 0
-  </h3>
-
-  <p>
-    Sales
-  </p>
-
-</div>
-```
-
-  </div>
-
-  <!-- TABS -->
-
-  <div class="tabs">
-
-```
-<button
-  class="tab active"
-  onclick="showPanel('orders',this)"
->
-  📦 Orders
-</button>
-
-<button
-  class="tab"
-  onclick="showPanel('menu',this)"
->
-  🍔 Menu
-</button>
-
-<button
-  class="tab"
-  onclick="showPanel('add',this)"
->
-  ➕ Add Menu
-</button>
-```
-
-  </div>
-
-  <!-- ORDERS -->
-
-  <section
-    id="ordersPanel"
-    class="panel active"
-  >
-
-```
-<div class="card">
-
-  <h2>
-    📦 Restaurant Orders
-  </h2>
-
-  <div
-    id="ordersLoading"
-    class="loading"
-  >
-    Loading orders...
-  </div>
-
-  <div id="ordersList"></div>
-
-</div>
-```
-
-  </section>
-
-  <!-- MENU -->
-
-  <section
-    id="menuPanel"
-    class="panel"
-  >
-
-```
-<div class="card">
-
-  <h2>
-    🍔 Manage Menu
-  </h2>
-
-  <input
-    id="menuAdminSearch"
-    placeholder="🔎 Search menu..."
-    oninput="filterAdminMenu()"
-  >
-
-  <div
-    id="adminMenuList"
-    class="menu-list"
-  >
-    <div class="loading">
-      Loading menu...
+    <div class="welcome">
+      <h2>Restaurant Dashboard</h2>
+      <p>Manage your orders and menu from one place.</p>
     </div>
-  </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-title">Total Orders</div>
+        <div class="stat-value" id="totalOrders">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Pending Orders</div>
+        <div class="stat-value" id="pendingOrders">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Today's Sales</div>
+        <div class="stat-value" id="todaySales">KSh 0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Menu Items</div>
+        <div class="stat-value" id="menuCount">0</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showPanel('orders', this)">
+        Orders
+      </button>
+
+      <button class="tab" onclick="showPanel('menu', this)">
+        Menu
+      </button>
+
+      <button class="tab" onclick="showPanel('add-menu', this)">
+        + Add Menu Item
+      </button>
+    </div>
+
+    <!-- ORDERS -->
+    <section id="ordersPanel" class="panel active">
+
+      <div class="panel-header">
+        <h2>Orders</h2>
+
+        <input
+          id="orderSearch"
+          class="search"
+          type="text"
+          placeholder="Search orders..."
+          oninput="renderOrders()"
+        >
+      </div>
+
+      <div id="ordersList" class="order-list"></div>
+
+    </section>
+
+    <!-- MENU -->
+    <section id="menuPanel" class="panel">
+
+      <div class="panel-header">
+        <h2>Menu Management</h2>
+
+        <input
+          id="menuSearch"
+          class="search"
+          type="text"
+          placeholder="Search menu..."
+          oninput="renderMenu()"
+        >
+      </div>
+
+      <div id="menuList" class="menu-grid"></div>
+
+    </section>
+
+    <!-- ADD MENU -->
+    <section id="addMenuPanel" class="panel">
+
+      <div class="panel-header">
+        <h2>Add Menu Item</h2>
+      </div>
+
+      <div class="form-card">
+
+        <div id="addNotice" class="notice"></div>
+
+        <form id="addMenuForm">
+
+          <div class="form-group">
+            <label>Food Name *</label>
+            <input
+              id="addName"
+              type="text"
+              placeholder="e.g. Chicken Burger"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea
+              id="addDescription"
+              placeholder="Describe the food..."
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+
+            <div class="form-group">
+              <label>Price (KSh) *</label>
+              <input
+                id="addPrice"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="500"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Category</label>
+              <input
+                id="addCategory"
+                type="text"
+                placeholder="Burgers"
+              >
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label>Image URL</label>
+            <input
+              id="addImage"
+              type="url"
+              placeholder="https://..."
+            >
+          </div>
+
+          <button class="btn-primary" type="submit">
+            Add Menu Item
+          </button>
+
+        </form>
+
+      </div>
+
+    </section>
+
+  </main>
 
 </div>
-```
 
-  </section>
+<!-- EDIT MENU MODAL -->
+<div id="editModal" class="modal">
 
-  <!-- ADD MENU -->
+  <div class="modal-box">
 
-  <section
-    id="addPanel"
-    class="panel"
-  >
+    <div class="modal-header">
+      <h2>Edit Menu Item</h2>
+      <button class="close" onclick="closeEditModal()">×</button>
+    </div>
 
-```
-<div class="card">
+    <div id="editNotice" class="notice"></div>
 
-  <h2 id="formTitle">
-    ➕ Add Menu Item
-  </h2>
+    <form id="editMenuForm">
 
-  <input
-    type="hidden"
-    id="editId"
-  >
+      <input type="hidden" id="editId">
 
+      <div class="form-group">
+        <label>Food Name *</label>
+        <input id="editName" type="text" required>
+      </div>
 
-  <div class="form-grid">
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="editDescription"></textarea>
+      </div>
 
-    <div>
+      <div class="form-row">
 
-      <label>
-        Menu Name
-      </label>
+        <div class="form-group">
+          <label>Price (KSh) *</label>
+          <input
+            id="editPrice"
+            type="number"
+            min="0"
+            step="1"
+            required
+          >
+        </div>
 
-      <input
-        id="itemName"
-        placeholder="Example: Chicken Burger"
+        <div class="form-group">
+          <label>Category</label>
+          <input id="editCategory" type="text">
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Image URL</label>
+        <input id="editImage" type="url">
+      </div>
+
+      <button class="btn-primary" type="submit">
+        Save Changes
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="closeEditModal()"
       >
+        Cancel
+      </button>
 
-    </div>
-
-
-    <div>
-
-      <label>
-        Price
-      </label>
-
-      <input
-        id="itemPrice"
-        type="number"
-        min="0"
-        placeholder="550"
-      >
-
-    </div>
+    </form>
 
   </div>
-
-
-  <label>
-    Description
-  </label>
-
-  <textarea
-    id="itemDescription"
-    rows="3"
-    placeholder="Describe the food..."
-  ></textarea>
-
-
-  <label>
-    Category
-  </label>
-
-  <input
-    id="itemCategory"
-    placeholder="Example: Burgers"
-  >
-
-
-  <label>
-    Image URL
-  </label>
-
-  <input
-    id="itemImage"
-    placeholder="https://..."
-  >
-
-
-  <label>
-    <input
-      id="itemAvailable"
-      type="checkbox"
-      checked
-      style="width:auto"
-    >
-
-    Available
-  </label>
-
-  <br><br>
-
-
-  <button
-    class="primary"
-    onclick="saveMenuItem()"
-  >
-    💾 Save Menu Item
-  </button>
-
-
-  <button
-    class="secondary"
-    onclick="clearForm()"
-  >
-    Clear
-  </button>
-
-</div>
-```
-
-  </section>
 
 </div>
 
 <script>
+  // ============================================================
+  // SUPABASE
+  // ============================================================
 
-/* =========================================
-   SUPABASE
-========================================= */
+  const SUPABASE_URL =
+    "https://bhvzpycbztngtwuhxxex.supabase.co";
 
-const SUPABASE_URL =
-  "https://bhvzpycbztngtwuhxxex.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
 
-const SUPABASE_KEY =
-  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-/* =========================================
-   ALBAIK
-========================================= */
-
-const RESTAURANT_ID = 2;
-
-let restaurant = null;
-
-let menuItems = [];
-
-let orders = [];
-
-
-/* =========================================
-   MESSAGE
-========================================= */
-
-function showMessage(text,type){
-
-  const box =
-    document.getElementById("message");
-
-  box.className =
-    "message show " + type;
-
-  box.textContent =
-    text;
-
-  setTimeout(function(){
-
-    box.className =
-      "message";
-
-    box.textContent =
-      "";
-
-  },4000);
-
-}
-
-
-/* =========================================
-   RESTAURANT
-========================================= */
-
-async function loadRestaurant(){
-
-  const result =
-    await supabaseClient
-      .from("restaurants")
-      .select("*")
-      .eq("id",RESTAURANT_ID)
-      .single();
-
-  if(result.error){
-
-    console.error(result.error);
-
-    showMessage(
-      "Could not load restaurant: " +
-      result.error.message,
-      "error"
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
     );
 
-    return;
+  // IMPORTANT:
+  // Restaurant ID is NOT hardcoded.
+  // It is loaded from restaurant_users after login.
 
-  }
-
-  restaurant =
-    result.data;
-
-  document.getElementById(
-    "restaurantTitle"
-  ).textContent =
-    restaurant.name +
-    " Dashboard";
-
-}
+  let RESTAURANT_ID = null;
+  let currentUser = null;
+  let restaurant = null;
+  let orders = [];
+  let menuItems = [];
 
 
-/* =========================================
-   MENU
-========================================= */
+  // ============================================================
+  // INITIALIZATION
+  // ============================================================
 
-async function loadMenu(){
-
-  const box =
-    document.getElementById(
-      "adminMenuList"
-    );
-
-  box.innerHTML =
-    '<div class="loading">Loading menu...</div>';
+  document.addEventListener("DOMContentLoaded", async () => {
+    await initializeDashboard();
+  });
 
 
-  const result =
-    await supabaseClient
-      .from("menu_items")
-      .select(
-        "id,restaurant_id,name,description,price,image_url,available,created_at,category"
-      )
-      .eq(
-        "restaurant_id",
-        RESTAURANT_ID
-      )
-      .order(
-        "created_at",
-        {ascending:false}
+  async function initializeDashboard() {
+
+    try {
+
+      const {
+        data: { session },
+        error: sessionError
+      } = await supabaseClient.auth.getSession();
+
+      if (sessionError) {
+        throw sessionError;
+      }
+
+      if (!session) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      currentUser = session.user;
+
+      // Find the restaurant belonging to this logged-in user
+      const {
+        data: restaurantUser,
+        error: restaurantUserError
+      } = await supabaseClient
+        .from("restaurant_users")
+        .select("restaurant_id")
+        .eq("user_id", currentUser.id)
+        .single();
+
+      if (restaurantUserError) {
+        console.error(restaurantUserError);
+        throw new Error(
+          "This account is not connected to a restaurant."
+        );
+      }
+
+      if (!restaurantUser || !restaurantUser.restaurant_id) {
+        throw new Error(
+          "No restaurant has been assigned to this account."
+        );
+      }
+
+      RESTAURANT_ID = restaurantUser.restaurant_id;
+
+      await loadDashboard();
+
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+
+    } catch (error) {
+
+      console.error(error);
+
+      document.getElementById("loading").style.display = "none";
+
+      showError(
+        error.message ||
+        "Unable to load restaurant dashboard."
       );
-
-
-  if(result.error){
-
-    console.error(result.error);
-
-    box.innerHTML =
-      '<div class="message show error">' +
-      escapeHTML(result.error.message) +
-      '</div>';
-
-    return;
-
+    }
   }
 
 
-  menuItems =
-    result.data || [];
+  // ============================================================
+  // LOAD DASHBOARD
+  // ============================================================
 
+  async function loadDashboard() {
 
-  document.getElementById(
-    "menuCount"
-  ).textContent =
-    menuItems.length;
-
-
-  displayAdminMenu(
-    menuItems
-  );
-
-}
-
-
-/* =========================================
-   DISPLAY MENU
-========================================= */
-
-function displayAdminMenu(items){
-
-  const box =
-    document.getElementById(
-      "adminMenuList"
-    );
-
-  box.innerHTML = "";
-
-
-  if(!items.length){
-
-    box.innerHTML =
-      '<div class="empty">' +
-      'No menu items yet.' +
-      '</div>';
-
-    return;
-
-  }
-
-
-  items.forEach(function(item){
-
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "menu-card";
-
-
-    let imageHTML = "";
-
-    if(item.image_url){
-
-      imageHTML = `
-        <img
-          class="image-preview"
-          src="${escapeHTML(item.image_url)}"
-          onerror="this.style.display='none'"
-          alt="${escapeHTML(item.name)}"
-        >
-      `;
-
+    if (!RESTAURANT_ID) {
+      return;
     }
 
+    try {
 
-    card.innerHTML = `
+      await Promise.all([
+        loadRestaurant(),
+        loadOrders(),
+        loadMenu()
+      ]);
 
-      ${imageHTML}
+      updateStats();
 
-      <h3>
-        ${escapeHTML(item.name)}
-      </h3>
+    } catch (error) {
 
-      <p class="menu-description">
-        ${escapeHTML(item.description || "")}
-      </p>
+      console.error(error);
 
-      <p class="menu-category">
-        📂 ${escapeHTML(item.category || "Other")}
-      </p>
+      showError(
+        error.message ||
+        "Unable to load dashboard data."
+      );
+    }
+  }
 
-      <p class="menu-price">
-        KSh ${Number(item.price || 0).toLocaleString()}
-      </p>
 
-      <p class="${
-        item.available
-        ? "available"
-        : "unavailable"
-      }">
+  // ============================================================
+  // RESTAURANT
+  // ============================================================
 
-        ${
-          item.available
-          ? "✅ Available"
-          : "❌ Not Available"
-        }
+  async function loadRestaurant() {
 
-      </p>
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("restaurants")
+      .select("*")
+      .eq("id", RESTAURANT_ID)
+      .single();
 
-      <br>
+    if (error) {
+      throw error;
+    }
 
-      <div class="menu-actions">
+    restaurant = data;
 
-        <button
-          class="primary"
-          onclick="editMenu(${Number(item.id)})"
-        >
-          ✏️ Edit
-        </button>
+    document.getElementById("restaurantName").textContent =
+      restaurant.name || "Restaurant";
+  }
 
-        <button
-          class="${
-            item.available
-            ? "secondary"
-            : "success"
-          }"
-          onclick="toggleAvailability(
-            ${Number(item.id)},
-            ${item.available}
-          )"
-        >
 
-          ${
-            item.available
-            ? "❌ Hide"
-            : "✅ Show"
-          }
+  // ============================================================
+  // ORDERS
+  // ============================================================
 
-        </button>
+  async function loadOrders() {
 
-        <button
-          class="danger"
-          onclick="deleteMenu(${Number(item.id)})"
-        >
-          🗑️ Delete
-        </button>
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("orders")
+      .select("*")
+      .eq("restaurant_id", RESTAURANT_ID)
+      .order("created_at", {
+        ascending: false
+      });
 
-      </div>
+    if (error) {
+      throw error;
+    }
 
+    orders = data || [];
+
+    renderOrders();
+  }
+
+
+  function renderOrders() {
+
+    const container =
+      document.getElementById("ordersList");
+
+    const search =
+      (
+        document.getElementById("orderSearch")?.value ||
+        ""
+      ).toLowerCase().trim();
+
+    let filtered = orders;
+
+    if (search) {
+
+      filtered = orders.filter(order => {
+
+        const text = [
+          order.id,
+          order.customer_name,
+          order.customer_phone,
+          order.delivery_address,
+          order.order_status
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return text.includes(search);
+      });
+    }
+
+    if (!filtered.length) {
+
+      container.innerHTML = `
+        <div class="empty">
+          <h3>No orders found</h3>
+          <p>New customer orders will appear here.</p>
+        </div>
+      `;
+
+      return;
+    }
+
+    container.innerHTML = filtered.map(order => {
+
+      const status =
+        order.order_status || "pending";
+
+      const total =
+        Number(order.total_amount || 0);
+
+      const created =
+        order.created_at
+          ? new Date(order.created_at).toLocaleString()
+          : "";
+
+      return `
+        <div class="order-card">
+
+          <div class="order-top">
+
+            <div>
+              <div class="order-id">
+                Order #${escapeHTML(order.id)}
+              </div>
+
+              <div class="order-time">
+                ${escapeHTML(created)}
+              </div>
+            </div>
+
+            <span class="status ${safeStatusClass(status)}">
+              ${escapeHTML(status)}
+            </span>
+
+          </div>
+
+          <div class="order-details">
+
+            <div>
+              <strong>Customer:</strong>
+              ${escapeHTML(order.customer_name || "Customer")}
+            </div>
+
+            <div>
+              <strong>Phone:</strong>
+              ${escapeHTML(order.customer_phone || "-")}
+            </div>
+
+            <div>
+              <strong>Address:</strong>
+              ${escapeHTML(order.delivery_address || "-")}
+            </div>
+
+          </div>
+
+          <div class="order-total">
+            KSh ${formatMoney(total)}
+          </div>
+
+          <div class="order-actions">
+
+            <select
+              class="status-select"
+              onchange="updateOrderStatus(${JSON.stringify(order.id)}, this.value)"
+            >
+
+              ${statusOption("pending", status)}
+              ${statusOption("confirmed", status)}
+              ${statusOption("preparing", status)}
+              ${statusOption("ready", status)}
+              ${statusOption("delivered", status)}
+              ${statusOption("cancelled", status)}
+
+            </select>
+
+          </div>
+
+        </div>
+      `;
+    }).join("");
+  }
+
+
+  function statusOption(value, current) {
+
+    return `
+      <option
+        value="${value}"
+        ${value === current ? "selected" : ""}
+      >
+        ${capitalize(value)}
+      </option>
     `;
+  }
 
 
-    box.appendChild(card);
+  async function updateOrderStatus(orderId, newStatus) {
 
-  });
+    try {
 
-}
+      const {
+        error
+      } = await supabaseClient
+        .from("orders")
+        .update({
+          order_status: newStatus
+        })
+        .eq("id", orderId)
+        .eq("restaurant_id", RESTAURANT_ID);
 
+      if (error) {
+        throw error;
+      }
 
-/* =========================================
-   SEARCH
-========================================= */
-
-function filterAdminMenu(){
-
-  const term =
-    document.getElementById(
-      "menuAdminSearch"
-    ).value
-    .toLowerCase()
-    .trim();
-
-
-  const filtered =
-    menuItems.filter(function(item){
-
-      return (
-
-        String(item.name || "")
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(item.category || "")
-          .toLowerCase()
-          .includes(term)
-
+      const order = orders.find(
+        item => String(item.id) === String(orderId)
       );
 
-    });
+      if (order) {
+        order.order_status = newStatus;
+      }
 
+      renderOrders();
+      updateStats();
 
-  displayAdminMenu(filtered);
+    } catch (error) {
 
-}
+      console.error(error);
 
-
-/* =========================================
-   SAVE MENU
-========================================= */
-
-async function saveMenuItem(){
-
-  const id =
-    document.getElementById(
-      "editId"
-    ).value;
-
-
-  const name =
-    document.getElementById(
-      "itemName"
-    ).value
-    .trim();
-
-
-  const price =
-    Number(
-      document.getElementById(
-        "itemPrice"
-      ).value
-    );
-
-
-  const description =
-    document.getElementById(
-      "itemDescription"
-    ).value
-    .trim();
-
-
-  const category =
-    document.getElementById(
-      "itemCategory"
-    ).value
-    .trim();
-
-
-  const image_url =
-    document.getElementById(
-      "itemImage"
-    ).value
-    .trim();
-
-
-  const available =
-    document.getElementById(
-      "itemAvailable"
-    ).checked;
-
-
-  if(!name){
-
-    alert(
-      "Please enter the menu name."
-    );
-
-    return;
-
+      alert(
+        "Could not update order: " +
+        error.message
+      );
+    }
   }
 
 
-  if(isNaN(price) || price < 0){
+  // ============================================================
+  // MENU
+  // ============================================================
 
-    alert(
-      "Please enter a valid price."
-    );
+  async function loadMenu() {
 
-    return;
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("menu_items")
+      .select("*")
+      .eq("restaurant_id", RESTAURANT_ID)
+      .order("created_at", {
+        ascending: false
+      });
 
+    if (error) {
+      throw error;
+    }
+
+    menuItems = data || [];
+
+    renderMenu();
   }
 
 
-  const itemData = {
+  function renderMenu() {
 
-    restaurant_id:
-      RESTAURANT_ID,
+    const container =
+      document.getElementById("menuList");
 
-    name:
-      name,
+    const search =
+      (
+        document.getElementById("menuSearch")?.value ||
+        ""
+      ).toLowerCase().trim();
 
-    description:
-      description || null,
+    let filtered = menuItems;
 
-    price:
-      price,
+    if (search) {
 
-    image_url:
-      image_url || null,
+      filtered = menuItems.filter(item => {
 
-    available:
-      available,
+        const text = [
+          item.name,
+          item.description,
+          item.category
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
 
-    category:
-      category || null
+        return text.includes(search);
+      });
+    }
 
-  };
+    if (!filtered.length) {
+
+      container.innerHTML = `
+        <div class="empty">
+          <h3>No menu items</h3>
+          <p>Add your first food item using the Add Menu Item tab.</p>
+        </div>
+      `;
+
+      return;
+    }
+
+    container.innerHTML = filtered.map(item => {
+
+      const image =
+        item.image_url ||
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80";
+
+      const available =
+        item.available !== false;
+
+      return `
+        <div class="menu-card">
+
+          <img
+            class="menu-image"
+            src="${escapeHTML(image)}"
+            alt="${escapeHTML(item.name || "Food")}"
+            onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80'"
+          >
+
+          <div class="menu-content">
+
+            <div class="menu-name">
+              ${escapeHTML(item.name || "Unnamed")}
+            </div>
+
+            <div class="menu-category">
+              ${escapeHTML(item.category || "Food")}
+            </div>
+
+            <div class="menu-description">
+              ${escapeHTML(item.description || "No description")}
+            </div>
+
+            <div class="menu-price">
+              KSh ${formatMoney(item.price)}
+            </div>
+
+            <div class="menu-actions">
+
+              <button
+                class="btn-small btn-edit"
+                onclick="openEditModal(${JSON.stringify(item.id)})"
+              >
+                Edit
+              </button>
+
+              <button
+                class="btn-small btn-delete"
+                onclick="deleteMenuItem(${JSON.stringify(item.id)})"
+              >
+                Delete
+              </button>
+
+              <button
+                class="btn-small btn-toggle ${available ? "" : "off"}"
+                onclick="toggleAvailability(${JSON.stringify(item.id)}, ${available})"
+              >
+                ${available ? "Available" : "Unavailable"}
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+    }).join("");
+  }
 
 
-  let result;
+  // ============================================================
+  // ADD MENU ITEM
+  // ============================================================
 
+  document
+    .getElementById("addMenuForm")
+    .addEventListener("submit", async function(event) {
 
-  if(id){
+      event.preventDefault();
 
-    result =
-      await supabaseClient
-        .from("menu_items")
-        .update(itemData)
-        .eq("id",id)
-        .eq(
-          "restaurant_id",
-          RESTAURANT_ID
+      const notice =
+        document.getElementById("addNotice");
+
+      notice.className = "notice";
+      notice.textContent = "";
+
+      const name =
+        document.getElementById("addName").value.trim();
+
+      const description =
+        document.getElementById("addDescription").value.trim();
+
+      const price =
+        Number(document.getElementById("addPrice").value);
+
+      const category =
+        document.getElementById("addCategory").value.trim();
+
+      const image =
+        document.getElementById("addImage").value.trim();
+
+      if (!name || !Number.isFinite(price)) {
+
+        showNotice(
+          notice,
+          "Please enter a food name and valid price.",
+          "error"
         );
 
-  }else{
+        return;
+      }
 
-    result =
-      await supabaseClient
+      try {
+
+        const {
+          error
+        } = await supabaseClient
+          .from("menu_items")
+          .insert({
+            restaurant_id: RESTAURANT_ID,
+            name: name,
+            description: description || null,
+            price: price,
+            category: category || null,
+            image_url: image || null,
+            available: true
+          });
+
+        if (error) {
+          throw error;
+        }
+
+        showNotice(
+          notice,
+          "Menu item added successfully.",
+          "success"
+        );
+
+        this.reset();
+
+        await loadMenu();
+        updateStats();
+
+      } catch (error) {
+
+        console.error(error);
+
+        showNotice(
+          notice,
+          error.message ||
+          "Could not add menu item.",
+          "error"
+        );
+      }
+    });
+
+
+  // ============================================================
+  // EDIT MENU ITEM
+  // ============================================================
+
+  function openEditModal(id) {
+
+    const item = menuItems.find(
+      menu => String(menu.id) === String(id)
+    );
+
+    if (!item) {
+      return;
+    }
+
+    document.getElementById("editId").value = item.id;
+    document.getElementById("editName").value =
+      item.name || "";
+
+    document.getElementById("editDescription").value =
+      item.description || "";
+
+    document.getElementById("editPrice").value =
+      item.price || "";
+
+    document.getElementById("editCategory").value =
+      item.category || "";
+
+    document.getElementById("editImage").value =
+      item.image_url || "";
+
+    document.getElementById("editNotice").className =
+      "notice";
+
+    document.getElementById("editModal")
+      .classList.add("show");
+  }
+
+
+  function closeEditModal() {
+
+    document.getElementById("editModal")
+      .classList.remove("show");
+  }
+
+
+  document
+    .getElementById("editMenuForm")
+    .addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      const id =
+        document.getElementById("editId").value;
+
+      const notice =
+        document.getElementById("editNotice");
+
+      const updates = {
+
+        name:
+          document.getElementById("editName").value.trim(),
+
+        description:
+          document.getElementById("editDescription").value.trim() ||
+          null,
+
+        price:
+          Number(document.getElementById("editPrice").value),
+
+        category:
+          document.getElementById("editCategory").value.trim() ||
+          null,
+
+        image_url:
+          document.getElementById("editImage").value.trim() ||
+          null
+      };
+
+      try {
+
+        const {
+          error
+        } = await supabaseClient
+          .from("menu_items")
+          .update(updates)
+          .eq("id", id)
+          .eq("restaurant_id", RESTAURANT_ID);
+
+        if (error) {
+          throw error;
+        }
+
+        showNotice(
+          notice,
+          "Menu item updated successfully.",
+          "success"
+        );
+
+        await loadMenu();
+
+        setTimeout(() => {
+          closeEditModal();
+        }, 700);
+
+      } catch (error) {
+
+        console.error(error);
+
+        showNotice(
+          notice,
+          error.message ||
+          "Could not update menu item.",
+          "error"
+        );
+      }
+    });
+
+
+  // ============================================================
+  // DELETE MENU ITEM
+  // ============================================================
+
+  async function deleteMenuItem(id) {
+
+    const item = menuItems.find(
+      menu => String(menu.id) === String(id)
+    );
+
+    if (!item) {
+      return;
+    }
+
+    const confirmed =
+      confirm(
+        `Delete "${item.name}" from your menu?`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+
+      const {
+        error
+      } = await supabaseClient
         .from("menu_items")
-        .insert(itemData);
+        .delete()
+        .eq("id", id)
+        .eq("restaurant_id", RESTAURANT_ID);
 
-  }
+      if (error) {
+        throw error;
+      }
 
+      await loadMenu();
+      updateStats();
 
-  if(result.error){
+    } catch (error) {
 
-    console.error(result.error);
+      console.error(error);
 
-    showMessage(
-      "Could not save menu item: " +
-      result.error.message,
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  showMessage(
-    id
-      ? "Menu item updated successfully."
-      : "Menu item added successfully.",
-    "success-message"
-  );
-
-
-  clearForm();
-
-  await loadMenu();
-
-  showPanel(
-    "menu",
-    document.querySelectorAll(".tab")[1]
-  );
-
-}
-
-
-/* =========================================
-   EDIT MENU
-========================================= */
-
-function editMenu(id){
-
-  const item =
-    menuItems.find(function(x){
-
-      return Number(x.id) === Number(id);
-
-    });
-
-
-  if(!item){
-
-    showMessage(
-      "Menu item not found.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  document.getElementById(
-    "editId"
-  ).value =
-    item.id;
-
-
-  document.getElementById(
-    "itemName"
-  ).value =
-    item.name || "";
-
-
-  document.getElementById(
-    "itemPrice"
-  ).value =
-    item.price || "";
-
-
-  document.getElementById(
-    "itemDescription"
-  ).value =
-    item.description || "";
-
-
-  document.getElementById(
-    "itemCategory"
-  ).value =
-    item.category || "";
-
-
-  document.getElementById(
-    "itemImage"
-  ).value =
-    item.image_url || "";
-
-
-  document.getElementById(
-    "itemAvailable"
-  ).checked =
-    item.available;
-
-
-  document.getElementById(
-    "formTitle"
-  ).textContent =
-    "✏️ Edit Menu Item";
-
-
-  showPanel(
-    "add",
-    document.querySelectorAll(".tab")[2]
-  );
-
-}
-
-
-/* =========================================
-   CLEAR FORM
-========================================= */
-
-function clearForm(){
-
-  document.getElementById(
-    "editId"
-  ).value = "";
-
-
-  document.getElementById(
-    "itemName"
-  ).value = "";
-
-
-  document.getElementById(
-    "itemPrice"
-  ).value = "";
-
-
-  document.getElementById(
-    "itemDescription"
-  ).value = "";
-
-
-  document.getElementById(
-    "itemCategory"
-  ).value = "";
-
-
-  document.getElementById(
-    "itemImage"
-  ).value = "";
-
-
-  document.getElementById(
-    "itemAvailable"
-  ).checked = true;
-
-
-  document.getElementById(
-    "formTitle"
-  ).textContent =
-    "➕ Add Menu Item";
-
-}
-
-
-/* =========================================
-   AVAILABILITY
-========================================= */
-
-async function toggleAvailability(
-  id,
-  current
-){
-
-  const result =
-    await supabaseClient
-      .from("menu_items")
-      .update({
-        available:!current
-      })
-      .eq("id",id)
-      .eq(
-        "restaurant_id",
-        RESTAURANT_ID
+      alert(
+        "Could not delete menu item: " +
+        error.message
       );
-
-
-  if(result.error){
-
-    showMessage(
-      "Could not update item: " +
-      result.error.message,
-      "error"
-    );
-
-    return;
-
+    }
   }
 
 
-  showMessage(
-    "Menu availability updated.",
-    "success-message"
+  // ============================================================
+  // AVAILABILITY
+  // ============================================================
+
+  async function toggleAvailability(id, currentValue) {
+
+    try {
+
+      const {
+        error
+      } = await supabaseClient
+        .from("menu_items")
+        .update({
+          available: !currentValue
+        })
+        .eq("id", id)
+        .eq("restaurant_id", RESTAURANT_ID);
+
+      if (error) {
+        throw error;
+      }
+
+      await loadMenu();
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Could not change availability: " +
+        error.message
+      );
+    }
+  }
+
+
+  // ============================================================
+  // STATS
+  // ============================================================
+
+  function updateStats() {
+
+    document.getElementById("totalOrders").textContent =
+      orders.length;
+
+    const pending =
+      orders.filter(order =>
+        ["pending", "confirmed", "preparing"].includes(
+          String(order.order_status || "").toLowerCase()
+        )
+      ).length;
+
+    document.getElementById("pendingOrders").textContent =
+      pending;
+
+    const today =
+      new Date();
+
+    const todaySales =
+      orders
+        .filter(order => {
+
+          if (!order.created_at) {
+            return false;
+          }
+
+          const date =
+            new Date(order.created_at);
+
+          return (
+            date.getFullYear() === today.getFullYear() &&
+            date.getMonth() === today.getMonth() &&
+            date.getDate() === today.getDate()
+          );
+        })
+        .filter(order =>
+          String(order.order_status || "").toLowerCase()
+          !== "cancelled"
+        )
+        .reduce(
+          (sum, order) =>
+            sum + Number(order.total_amount || 0),
+          0
+        );
+
+    document.getElementById("todaySales").textContent =
+      "KSh " + formatMoney(todaySales);
+
+    document.getElementById("menuCount").textContent =
+      menuItems.length;
+  }
+
+
+  // ============================================================
+  // TABS
+  // ============================================================
+
+  function showPanel(panel, button) {
+
+    document
+      .querySelectorAll(".panel")
+      .forEach(element => {
+        element.classList.remove("active");
+      });
+
+    document
+      .querySelectorAll(".tab")
+      .forEach(element => {
+        element.classList.remove("active");
+      });
+
+    if (panel === "orders") {
+      document
+        .getElementById("ordersPanel")
+        .classList.add("active");
+    }
+
+    if (panel === "menu") {
+      document
+        .getElementById("menuPanel")
+        .classList.add("active");
+    }
+
+    if (panel === "add-menu") {
+      document
+        .getElementById("addMenuPanel")
+        .classList.add("active");
+    }
+
+    if (button) {
+      button.classList.add("active");
+    }
+  }
+
+
+  // ============================================================
+  // LOGOUT
+  // ============================================================
+
+  async function logout() {
+
+    try {
+
+      await supabaseClient.auth.signOut();
+
+    } finally {
+
+      window.location.href = "login.html";
+    }
+  }
+
+
+  // ============================================================
+  // AUTH STATE
+  // ============================================================
+
+  supabaseClient.auth.onAuthStateChange(
+    (event, session) => {
+
+      if (
+        event === "SIGNED_OUT" ||
+        !session
+      ) {
+        window.location.href = "login.html";
+      }
+    }
   );
 
 
-  await loadMenu();
+  // ============================================================
+  // HELPERS
+  // ============================================================
 
-}
+  function showError(message) {
 
+    const box =
+      document.getElementById("errorBox");
 
-/* =========================================
-   DELETE MENU
-========================================= */
-
-async function deleteMenu(id){
-
-  if(!confirm(
-    "Are you sure you want to delete this menu item?"
-  )){
-
-    return;
-
+    box.textContent = message;
+    box.style.display = "block";
   }
 
 
-  const result =
-    await supabaseClient
-      .from("menu_items")
-      .delete()
-      .eq("id",id)
-      .eq(
-        "restaurant_id",
-        RESTAURANT_ID
-      );
+  function showNotice(element, message, type) {
 
-
-  if(result.error){
-
-    showMessage(
-      "Could not delete item: " +
-      result.error.message,
-      "error"
-    );
-
-    return;
-
+    element.textContent = message;
+    element.className =
+      "notice " + type;
   }
 
 
-  showMessage(
-    "Menu item deleted.",
-    "success-message"
-  );
+  function formatMoney(value) {
 
-
-  await loadMenu();
-
-}
-
-
-/* =========================================
-   ORDERS
-========================================= */
-
-async function loadOrders(){
-
-  const loading =
-    document.getElementById(
-      "ordersLoading"
-    );
-
-  const box =
-    document.getElementById(
-      "ordersList"
-    );
-
-
-  loading.style.display =
-    "block";
-
-
-  const result =
-    await supabaseClient
-      .from("orders")
-      .select(
-        "id,restaurant_id,customer_name,customer_phone,delivery_address,order_status,total_amount,created_at,customer_id"
-      )
-      .eq(
-        "restaurant_id",
-        RESTAURANT_ID
-      )
-      .order(
-        "created_at",
-        {ascending:false}
-      );
-
-
-  loading.style.display =
-    "none";
-
-
-  if(result.error){
-
-    console.error(result.error);
-
-    box.innerHTML =
-      '<div class="message show error">' +
-      escapeHTML(result.error.message) +
-      '</div>';
-
-    return;
-
+    return Number(value || 0)
+      .toLocaleString("en-KE");
   }
 
 
-  orders =
-    result.data || [];
+  function capitalize(value) {
 
+    if (!value) {
+      return "";
+    }
 
-  document.getElementById(
-    "totalOrders"
-  ).textContent =
-    orders.length;
-
-
-  const pending =
-    orders.filter(function(order){
-
-      return String(
-        order.order_status || ""
-      ).toLowerCase()
-      ===
-      "pending";
-
-    }).length;
-
-
-  document.getElementById(
-    "pendingOrders"
-  ).textContent =
-    pending;
-
-
-  const sales =
-    orders.reduce(
-      function(total,order){
-
-        const status =
-          String(
-            order.order_status || ""
-          ).toLowerCase();
-
-
-        if(status !== "cancelled"){
-
-          return total +
-            Number(
-              order.total_amount || 0
-            );
-
-        }
-
-
-        return total;
-
-      },
-      0
-    );
-
-
-  document.getElementById(
-    "salesTotal"
-  ).textContent =
-    "KSh " +
-    sales.toLocaleString();
-
-
-  displayOrders();
-
-}
-
-
-/* =========================================
-   DISPLAY ORDERS
-========================================= */
-
-function displayOrders(){
-
-  const box =
-    document.getElementById(
-      "ordersList"
-    );
-
-  box.innerHTML = "";
-
-
-  if(!orders.length){
-
-    box.innerHTML =
-      '<div class="empty">' +
-      'No orders yet.' +
-      '</div>';
-
-    return;
-
+    return value.charAt(0).toUpperCase() +
+      value.slice(1);
   }
 
 
-  orders.forEach(function(order){
+  function safeStatusClass(status) {
 
-    const div =
-      document.createElement("div");
+    const allowed = [
+      "pending",
+      "confirmed",
+      "preparing",
+      "ready",
+      "delivered",
+      "cancelled"
+    ];
 
-    div.className =
-      "order";
+    const value =
+      String(status || "pending")
+        .toLowerCase();
 
-
-    const status =
-      String(
-        order.order_status ||
-        "pending"
-      ).toLowerCase();
-
-
-    const total =
-      Number(
-        order.total_amount || 0
-      );
-
-
-    const date =
-      order.created_at
-      ?
-      new Date(
-        order.created_at
-      ).toLocaleString()
-      :
-      "";
-
-
-    div.innerHTML = `
-
-      <div class="order-top">
-
-        <strong>
-          📦 Order #${escapeHTML(order.id)}
-        </strong>
-
-        <span class="status ${escapeHTML(status)}">
-          ${escapeHTML(
-            order.order_status || "pending"
-          )}
-        </span>
-
-      </div>
-
-
-      <div class="order-info">
-
-        <div>
-          👤 <strong>Customer:</strong>
-          ${escapeHTML(
-            order.customer_name || "Customer"
-          )}
-        </div>
-
-        <div>
-          📞 <strong>Phone:</strong>
-          ${escapeHTML(
-            order.customer_phone || "Not provided"
-          )}
-        </div>
-
-        <div>
-          📍 <strong>Delivery:</strong>
-          ${escapeHTML(
-            order.delivery_address || "Not provided"
-          )}
-        </div>
-
-        <div>
-          🕐 <strong>Time:</strong>
-          ${escapeHTML(date)}
-        </div>
-
-      </div>
-
-
-      <div class="order-items">
-
-        <strong>
-          💰 Order Total
-        </strong>
-
-        <br><br>
-
-        KSh ${total.toLocaleString()}
-
-      </div>
-
-
-      <div class="order-actions">
-
-        ${
-          status === "pending"
-          ?
-          `
-          <button
-            class="primary"
-            onclick="changeOrderStatus(
-              ${Number(order.id)},
-              'preparing'
-            )"
-          >
-            👨‍🍳 Start Preparing
-          </button>
-          `
-          :
-          ""
-        }
-
-
-        ${
-          status === "preparing"
-          ?
-          `
-          <button
-            class="success"
-            onclick="changeOrderStatus(
-              ${Number(order.id)},
-              'ready'
-            )"
-          >
-            ✅ Mark Ready
-          </button>
-          `
-          :
-          ""
-        }
-
-
-        ${
-          status === "ready"
-          ?
-          `
-          <button
-            class="success"
-            onclick="changeOrderStatus(
-              ${Number(order.id)},
-              'completed'
-            )"
-          >
-            🏁 Complete
-          </button>
-          `
-          :
-          ""
-        }
-
-
-        ${
-          status !== "completed" &&
-          status !== "cancelled"
-          ?
-          `
-          <button
-            class="danger"
-            onclick="changeOrderStatus(
-              ${Number(order.id)},
-              'cancelled'
-            )"
-          >
-            ❌ Cancel
-          </button>
-          `
-          :
-          ""
-        }
-
-      </div>
-
-    `;
-
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =========================================
-   CHANGE ORDER STATUS
-========================================= */
-
-async function changeOrderStatus(
-  id,
-  newStatus
-){
-
-  const result =
-    await supabaseClient
-      .from("orders")
-      .update({
-        order_status:newStatus
-      })
-      .eq(
-        "id",
-        id
-      )
-      .eq(
-        "restaurant_id",
-        RESTAURANT_ID
-      );
-
-
-  if(result.error){
-
-    console.error(result.error);
-
-    showMessage(
-      "Could not update order: " +
-      result.error.message,
-      "error"
-    );
-
-    return;
-
+    return allowed.includes(value)
+      ? value
+      : "pending";
   }
 
 
-  showMessage(
-    "Order #" +
-    id +
-    " updated to " +
-    newStatus +
-    ".",
-    "success-message"
-  );
+  function escapeHTML(value) {
 
-
-  await loadOrders();
-
-}
-
-
-/* =========================================
-   TABS
-========================================= */
-
-function showPanel(
-  panel,
-  button
-){
-
-  document
-    .querySelectorAll(".panel")
-    .forEach(function(p){
-
-      p.classList.remove("active");
-
-    });
-
-
-  document.getElementById(
-    panel + "Panel"
-  ).classList.add("active");
-
-
-  document
-    .querySelectorAll(".tab")
-    .forEach(function(t){
-
-      t.classList.remove("active");
-
-    });
-
-
-  if(button){
-
-    button.classList.add("active");
-
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
-
-}
-
-
-/* =========================================
-   REFRESH
-========================================= */
-
-async function refreshAll(){
-
-  await loadRestaurant();
-
-  await loadMenu();
-
-  await loadOrders();
-
-  showMessage(
-    "Dashboard refreshed successfully.",
-    "success-message"
-  );
-
-}
-
-
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHTML(value){
-
-  return String(
-    value ?? ""
-  )
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================
-   START
-========================================= */
-
-async function startDashboard(){
-
-  await loadRestaurant();
-
-  await loadMenu();
-
-  await loadOrders();
-
-}
-
-
-startDashboard();
 
 </script>
 
