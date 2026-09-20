@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Track Your Order | MloHub</title>
 
@@ -16,22 +16,22 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f5f5;
       color: #222;
       min-height: 100vh;
     }
 
     header {
       background: #111;
-      color: white;
-      padding: 18px 20px;
+      color: #fff;
+      padding: 22px 15px;
       text-align: center;
     }
 
     header h1 {
       font-size: 28px;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     header p {
@@ -43,34 +43,34 @@
       width: 100%;
       max-width: 600px;
       margin: 30px auto;
-      padding: 0 16px;
+      padding: 0 15px;
     }
 
     .card {
-      background: white;
+      background: #fff;
       border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      padding: 25px;
       margin-bottom: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     }
 
-    .card h2 {
+    h2 {
+      font-size: 23px;
       margin-bottom: 8px;
-      font-size: 22px;
     }
 
     .subtitle {
       color: #666;
-      font-size: 14px;
-      margin-bottom: 20px;
       line-height: 1.5;
+      font-size: 14px;
+      margin-bottom: 22px;
     }
 
     label {
       display: block;
+      font-size: 14px;
       font-weight: bold;
       margin-bottom: 7px;
-      font-size: 14px;
     }
 
     input {
@@ -78,13 +78,13 @@
       padding: 14px;
       border: 1px solid #ddd;
       border-radius: 10px;
-      margin-bottom: 16px;
       font-size: 16px;
+      margin-bottom: 17px;
       outline: none;
     }
 
     input:focus {
-      border-color: #ff8a00;
+      border-color: #ff8500;
     }
 
     button {
@@ -92,7 +92,7 @@
       padding: 15px;
       border: none;
       border-radius: 10px;
-      background: #ff8a00;
+      background: #ff8500;
       color: white;
       font-size: 16px;
       font-weight: bold;
@@ -100,7 +100,7 @@
     }
 
     button:hover {
-      background: #e87800;
+      background: #e87500;
     }
 
     button:disabled {
@@ -108,31 +108,37 @@
       cursor: not-allowed;
     }
 
-    .error {
+    .message {
       display: none;
-      background: #ffe8e8;
-      color: #b00020;
+      margin-top: 15px;
       padding: 13px;
       border-radius: 10px;
-      margin-top: 15px;
       font-size: 14px;
+    }
+
+    .error {
+      background: #ffe5e5;
+      color: #a00000;
     }
 
     .success {
+      background: #e5f8eb;
+      color: #126b2d;
+    }
+
+    .loading {
       display: none;
-      background: #e9f8ee;
-      color: #147a35;
-      padding: 13px;
-      border-radius: 10px;
+      text-align: center;
+      color: #666;
       margin-top: 15px;
       font-size: 14px;
     }
 
-    .order-card {
+    #orderCard {
       display: none;
     }
 
-    .order-header {
+    .order-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -147,64 +153,62 @@
     }
 
     .status {
-      display: inline-block;
       padding: 8px 13px;
       border-radius: 20px;
-      background: #eee;
       font-size: 13px;
       font-weight: bold;
       text-transform: capitalize;
     }
 
-    .status.pending {
+    .pending {
       background: #fff3cd;
       color: #856404;
     }
 
-    .status.confirmed {
+    .confirmed {
       background: #dbeafe;
       color: #1d4ed8;
     }
 
-    .status.preparing {
+    .preparing {
       background: #fef3c7;
       color: #92400e;
     }
 
-    .status.ready {
+    .ready {
       background: #dcfce7;
       color: #166534;
     }
 
-    .status.out_for_delivery {
+    .out_for_delivery {
       background: #e0e7ff;
       color: #3730a3;
     }
 
-    .status.delivered,
-    .status.completed {
+    .delivered,
+    .completed {
       background: #dcfce7;
       color: #166534;
     }
 
-    .status.cancelled {
+    .cancelled {
       background: #fee2e2;
       color: #991b1b;
     }
 
-    .info-row {
-      padding: 13px 0;
+    .info {
       border-bottom: 1px solid #eee;
+      padding: 14px 0;
     }
 
-    .info-row:last-child {
+    .info:last-child {
       border-bottom: none;
     }
 
     .info-label {
       color: #777;
       font-size: 13px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .info-value {
@@ -216,56 +220,43 @@
     .total {
       font-size: 22px;
       font-weight: bold;
-      color: #111;
     }
 
-    .refresh-info {
+    .refresh {
       text-align: center;
-      color: #777;
+      color: #888;
       font-size: 12px;
-      margin-top: 15px;
+      margin-top: 17px;
     }
 
-    .loading {
-      display: none;
-      text-align: center;
-      margin-top: 15px;
-      color: #666;
-      font-size: 14px;
-    }
-
-    .back-link {
+    .back {
       display: block;
       text-align: center;
-      margin-top: 20px;
-      color: #ff7a00;
+      color: #ff8500;
       text-decoration: none;
       font-weight: bold;
-    }
-
-    .back-link:hover {
-      text-decoration: underline;
+      margin: 20px 0;
     }
 
     footer {
       text-align: center;
-      padding: 25px 15px;
+      padding: 25px 10px;
       color: #888;
       font-size: 13px;
     }
 
-    @media (max-width: 480px) {
-      header h1 {
-        font-size: 24px;
-      }
-
+    @media (max-width: 500px) {
       .card {
         padding: 20px;
       }
 
-      .order-header {
-        align-items: flex-start;
+      header h1 {
+        font-size: 24px;
+      }
+
+      .order-top {
         flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -273,395 +264,652 @@
 
 <body>
 
-  <header>
-    <h1>🍔 MloHub</h1>
-    <p>Discover food. Order easily. Enjoy.</p>
-  </header>
+<header>
+  <h1>🍔 MloHub</h1>
+  <p>Discover food. Order easily. Enjoy.</p>
+</header>
 
-  <main class="container">
+<div class="container">
 
-    <!-- TRACKING FORM -->
-    <div class="card">
-      <h2>📦 Track Your Order</h2>
+  <!-- TRACK ORDER FORM -->
+  <div class="card">
 
-      <p class="subtitle">
-        Enter your order number and the phone number used when placing your order.
-      </p>
+    <h2>📦 Track Your Order</h2>
 
-      <form id="trackForm">
+    <p class="subtitle">
+      Enter your order number and the phone number used when placing your order.
+    </p>
 
-        <label for="orderId">Order Number</label>
+    <form id="trackForm">
 
-        <input
-          type="number"
-          id="orderId"
-          placeholder="Example: 25"
-          required
-        />
+      <label for="orderId">
+        Order Number
+      </label>
 
-        <label for="phone">Phone Number</label>
+      <input
+        type="number"
+        id="orderId"
+        placeholder="Example: 25"
+        required
+      >
 
-        <input
-          type="tel"
-          id="phone"
-          placeholder="Example: 0712345678"
-          required
-        />
+      <label for="phone">
+        Phone Number
+      </label>
 
-        <button type="submit" id="trackButton">
-          🔎 Track Order
-        </button>
+      <input
+        type="tel"
+        id="phone"
+        placeholder="Example: 0712345678"
+        autocomplete="tel"
+        required
+      >
 
-      </form>
+      <button
+        type="submit"
+        id="trackButton"
+      >
+        🔎 Track Order
+      </button>
 
-      <div id="loading" class="loading">
-        Checking your order...
-      </div>
+    </form>
 
-      <div id="errorMessage" class="error"></div>
-
-      <div id="successMessage" class="success">
-        Order found successfully.
-      </div>
+    <div
+      id="loading"
+      class="loading"
+    >
+      Checking your order...
     </div>
 
+    <div
+      id="errorMessage"
+      class="message error"
+    ></div>
 
-    <!-- ORDER DETAILS -->
-    <div class="card order-card" id="orderCard">
+    <div
+      id="successMessage"
+      class="message success"
+    >
+      Order found successfully.
+    </div>
 
-      <div class="order-header">
+  </div>
 
-        <div class="order-number">
-          📦 Order #<span id="displayOrderId"></span>
-        </div>
 
-        <div class="status" id="orderStatus">
-          Pending
-        </div>
+  <!-- ORDER DETAILS -->
+  <div
+    class="card"
+    id="orderCard"
+  >
 
+    <div class="order-top">
+
+      <div class="order-number">
+        📦 Order #<span id="displayOrderId">-</span>
       </div>
 
-
-      <div class="info-row">
-        <div class="info-label">Customer</div>
-        <div class="info-value" id="customerName">-</div>
-      </div>
-
-
-      <div class="info-row">
-        <div class="info-label">Phone</div>
-        <div class="info-value" id="customerPhone">-</div>
-      </div>
-
-
-      <div class="info-row">
-        <div class="info-label">Restaurant</div>
-        <div class="info-value" id="restaurantName">-</div>
-      </div>
-
-
-      <div class="info-row">
-        <div class="info-label">Delivery Address</div>
-        <div class="info-value" id="deliveryAddress">-</div>
-      </div>
-
-
-      <div class="info-row">
-        <div class="info-label">Order Total</div>
-        <div class="info-value total">
-          KSh <span id="orderTotal">0</span>
-        </div>
-      </div>
-
-
-      <div class="info-row">
-        <div class="info-label">Order Date</div>
-        <div class="info-value" id="orderDate">-</div>
-      </div>
-
-
-      <div class="refresh-info">
-        🔄 Order status refreshes automatically every 10 seconds.
+      <div
+        id="orderStatus"
+        class="status pending"
+      >
+        Pending
       </div>
 
     </div>
 
 
-    <a href="index.html" class="back-link">
-      ← Back to MloHub
-    </a>
+    <div class="info">
 
-  </main>
+      <div class="info-label">
+        Customer
+      </div>
+
+      <div
+        class="info-value"
+        id="customerName"
+      >
+        -
+      </div>
+
+    </div>
 
 
-  <footer>
-    © 2026 MloHub. All rights reserved.
-  </footer>
+    <div class="info">
+
+      <div class="info-label">
+        Phone
+      </div>
+
+      <div
+        class="info-value"
+        id="customerPhone"
+      >
+        -
+      </div>
+
+    </div>
 
 
-  <script>
+    <div class="info">
 
-    // ============================================
-    // SUPABASE CONFIGURATION
-    // ============================================
+      <div class="info-label">
+        Restaurant
+      </div>
 
-    const SUPABASE_URL =
-      "https://bhvzpycbztngtwuhxxex.supabase.co";
+      <div
+        class="info-value"
+        id="restaurantName"
+      >
+        -
+      </div>
 
-    const SUPABASE_KEY =
-      "sb_publishable_ntL05XbdQtINzqOpdT8g_mJH-8aCq";
+    </div>
 
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+
+    <div class="info">
+
+      <div class="info-label">
+        Delivery Address
+      </div>
+
+      <div
+        class="info-value"
+        id="deliveryAddress"
+      >
+        -
+      </div>
+
+    </div>
+
+
+    <div class="info">
+
+      <div class="info-label">
+        Order Total
+      </div>
+
+      <div
+        class="info-value total"
+      >
+        KSh <span id="orderTotal">0</span>
+      </div>
+
+    </div>
+
+
+    <div class="info">
+
+      <div class="info-label">
+        Order Date
+      </div>
+
+      <div
+        class="info-value"
+        id="orderDate"
+      >
+        -
+      </div>
+
+    </div>
+
+
+    <div class="refresh">
+      🔄 Status automatically refreshes every 10 seconds.
+    </div>
+
+  </div>
+
+
+  <a
+    href="index.html"
+    class="back"
+  >
+    ← Back to MloHub
+  </a>
+
+</div>
+
+
+<footer>
+  © 2026 MloHub. All rights reserved.
+</footer>
+
+
+<script>
+
+  // ============================================
+  // SUPABASE
+  // ============================================
+
+  const SUPABASE_URL =
+    "https://bhvzpycbztngtwuhxxex.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_ntL05XbdQtINzqOpdT8g_mJH-8aCq";
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+  // ============================================
+  // ELEMENTS
+  // ============================================
+
+  const form =
+    document.getElementById("trackForm");
+
+  const orderIdInput =
+    document.getElementById("orderId");
+
+  const phoneInput =
+    document.getElementById("phone");
+
+  const button =
+    document.getElementById("trackButton");
+
+  const loading =
+    document.getElementById("loading");
+
+  const errorMessage =
+    document.getElementById("errorMessage");
+
+  const successMessage =
+    document.getElementById("successMessage");
+
+  const orderCard =
+    document.getElementById("orderCard");
+
+
+  // ============================================
+  // CLEAN PHONE
+  // ============================================
+
+  function cleanPhone(phone) {
+
+    return String(phone || "")
+      .trim()
+      .replace(/\s+/g, "");
+
+  }
+
+
+  // ============================================
+  // FORMAT STATUS
+  // ============================================
+
+  function formatStatus(status) {
+
+    return String(status || "pending")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, function(letter) {
+        return letter.toUpperCase();
+      });
+
+  }
+
+
+  // ============================================
+  // FORMAT DATE
+  // ============================================
+
+  function formatDate(value) {
+
+    if (!value) {
+      return "-";
+    }
+
+    try {
+
+      return new Date(value).toLocaleString(
+        "en-KE",
+        {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }
+      );
+
+    } catch (e) {
+
+      return String(value);
+
+    }
+
+  }
+
+
+  // ============================================
+  // ERROR
+  // ============================================
+
+  function showError(message) {
+
+    errorMessage.textContent =
+      message;
+
+    errorMessage.style.display =
+      "block";
+
+    successMessage.style.display =
+      "none";
+
+  }
+
+
+  // ============================================
+  // CLEAR MESSAGES
+  // ============================================
+
+  function clearMessages() {
+
+    errorMessage.style.display =
+      "none";
+
+    successMessage.style.display =
+      "none";
+
+  }
+
+
+  // ============================================
+  // DISPLAY ORDER
+  // ============================================
+
+  function displayOrder(order) {
+
+    document.getElementById(
+      "displayOrderId"
+    ).textContent =
+      order.id ?? "-";
+
+
+    document.getElementById(
+      "customerName"
+    ).textContent =
+      order.customer_name ?? "-";
+
+
+    document.getElementById(
+      "customerPhone"
+    ).textContent =
+      order.customer_phone ?? "-";
+
+
+    document.getElementById(
+      "restaurantName"
+    ).textContent =
+      order.restaurant_name ?? "-";
+
+
+    document.getElementById(
+      "deliveryAddress"
+    ).textContent =
+      order.delivery_address ?? "-";
+
+
+    document.getElementById(
+      "orderTotal"
+    ).textContent =
+      Number(
+        order.total_amount ?? 0
+      ).toLocaleString("en-KE");
+
+
+    document.getElementById(
+      "orderDate"
+    ).textContent =
+      formatDate(
+        order.created_at
       );
 
 
-    // ============================================
-    // ELEMENTS
-    // ============================================
-
-    const trackForm =
-      document.getElementById("trackForm");
-
-    const orderIdInput =
-      document.getElementById("orderId");
-
-    const phoneInput =
-      document.getElementById("phone");
-
-    const trackButton =
-      document.getElementById("trackButton");
-
-    const loading =
-      document.getElementById("loading");
-
-    const errorMessage =
-      document.getElementById("errorMessage");
-
-    const successMessage =
-      document.getElementById("successMessage");
-
-    const orderCard =
-      document.getElementById("orderCard");
-
-    const displayOrderId =
-      document.getElementById("displayOrderId");
-
-    const orderStatus =
-      document.getElementById("orderStatus");
-
-    const customerName =
-      document.getElementById("customerName");
-
-    const customerPhone =
-      document.getElementById("customerPhone");
-
-    const restaurantName =
-      document.getElementById("restaurantName");
-
-    const deliveryAddress =
-      document.getElementById("deliveryAddress");
-
-    const orderTotal =
-      document.getElementById("orderTotal");
-
-    const orderDate =
-      document.getElementById("orderDate");
+    const status =
+      String(
+        order.status || "pending"
+      ).toLowerCase();
 
 
-    // ============================================
-    // CLEAN PHONE NUMBER
-    // ============================================
+    const statusElement =
+      document.getElementById(
+        "orderStatus"
+      );
 
-    function cleanPhone(phone) {
 
-      return String(phone || "")
-        .trim()
-        .replace(/\s+/g, "");
+    statusElement.textContent =
+      formatStatus(status);
+
+
+    statusElement.className =
+      "status " + status;
+
+
+    orderCard.style.display =
+      "block";
+
+  }
+
+
+  // ============================================
+  // TRACK ORDER
+  // ============================================
+
+  async function trackOrder() {
+
+    const orderId =
+      Number(
+        orderIdInput.value
+      );
+
+
+    const phone =
+      cleanPhone(
+        phoneInput.value
+      );
+
+
+    if (!orderId) {
+
+      showError(
+        "Please enter your order number."
+      );
+
+      return;
 
     }
 
 
-    // ============================================
-    // FORMAT STATUS
-    // ============================================
+    if (!phone) {
 
-    function formatStatus(status) {
+      showError(
+        "Please enter the phone number used when placing your order."
+      );
 
-      if (!status) {
-        return "Pending";
-      }
-
-      return String(status)
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, function(letter) {
-          return letter.toUpperCase();
-        });
+      return;
 
     }
 
 
-    // ============================================
-    // SHOW ERROR
-    // ============================================
-
-    function showError(message) {
-
-      errorMessage.textContent = message;
-      errorMessage.style.display = "block";
-
-      successMessage.style.display = "none";
-
-    }
+    clearMessages();
 
 
-    // ============================================
-    // CLEAR MESSAGES
-    // ============================================
-
-    function clearMessages() {
-
-      errorMessage.style.display = "none";
-      successMessage.style.display = "none";
-
-    }
+    loading.style.display =
+      "block";
 
 
-    // ============================================
-    // FORMAT DATE
-    // ============================================
+    button.disabled =
+      true;
 
-    function formatDate(dateValue) {
 
-      if (!dateValue) {
-        return "-";
-      }
+    button.textContent =
+      "Checking...";
 
-      try {
 
-        return new Date(dateValue).toLocaleString(
-          "en-KE",
+    try {
+
+      /*
+       * SECURE CUSTOMER TRACKING
+       *
+       * We do NOT directly read the orders table.
+       * The request goes through the track_order RPC.
+       */
+
+      const result =
+        await supabaseClient.rpc(
+          "track_order",
           {
-            dateStyle: "medium",
-            timeStyle: "short"
+            p_order_id: orderId,
+            p_customer_phone: phone
           }
         );
 
-      } catch (error) {
 
-        return dateValue;
+      const data =
+        result.data;
+
+      const error =
+        result.error;
+
+
+      if (error) {
+
+        console.error(
+          "Supabase tracking error:",
+          error
+        );
+
+        throw new Error(
+          "We could not check your order. Please try again."
+        );
 
       }
 
-    }
 
+      if (!data) {
 
-    // ============================================
-    // DISPLAY ORDER
-    // ============================================
-
-    function displayOrder(order) {
-
-      displayOrderId.textContent =
-        order.id ?? "-";
-
-      customerName.textContent =
-        order.customer_name ?? "-";
-
-      customerPhone.textContent =
-        order.customer_phone ?? "-";
-
-      restaurantName.textContent =
-        order.restaurant_name ?? "-";
-
-      deliveryAddress.textContent =
-        order.delivery_address ?? "-";
-
-      orderTotal.textContent =
-        Number(order.total_amount ?? 0).toLocaleString(
-          "en-KE"
+        throw new Error(
+          "Order not found. Please check your order number and phone number."
         );
 
-      orderDate.textContent =
-        formatDate(order.created_at);
+      }
 
 
-      const status =
-        String(order.status || "pending")
-          .toLowerCase();
+      /*
+       * RPC can return one row or an array.
+       */
 
-      orderStatus.textContent =
-        formatStatus(status);
+      const order =
+        Array.isArray(data)
+          ? data[0]
+          : data;
 
-      orderStatus.className =
-        "status " + status;
+
+      if (!order) {
+
+        throw new Error(
+          "Order not found. Please check your details."
+        );
+
+      }
+
+
+      displayOrder(order);
+
+
+      successMessage.style.display =
+        "block";
+
+
+    } catch (error) {
+
+      console.error(
+        "Tracking failed:",
+        error
+      );
 
 
       orderCard.style.display =
-        "block";
+        "none";
+
+
+      showError(
+        error.message ||
+        "Order not found. Please check your details."
+      );
+
+
+    } finally {
+
+      loading.style.display =
+        "none";
+
+
+      button.disabled =
+        false;
+
+
+      button.textContent =
+        "🔎 Track Order";
 
     }
 
+  }
 
-    // ============================================
-    // TRACK ORDER
-    // ============================================
 
-    async function trackOrder() {
+  // ============================================
+  // FORM
+  // ============================================
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      trackOrder();
+
+    }
+  );
+
+
+  // ============================================
+  // AUTO REFRESH
+  // ============================================
+
+  setInterval(
+    async function() {
 
       const orderId =
-        Number(orderIdInput.value);
+        Number(
+          orderIdInput.value
+        );
+
 
       const phone =
-        cleanPhone(phoneInput.value);
-
-
-      if (!orderId) {
-
-        showError(
-          "Please enter your order number."
+        cleanPhone(
+          phoneInput.value
         );
 
-        return;
 
+      if (!orderId || !phone) {
+        return;
       }
 
 
-      if (!phone) {
+      /*
+       * Don't interfere with the initial search
+       * while the button is disabled.
+       */
 
-        showError(
-          "Please enter the phone number used when placing the order."
-        );
-
+      if (button.disabled) {
         return;
-
       }
-
-
-      clearMessages();
-
-      loading.style.display =
-        "block";
-
-      trackButton.disabled =
-        true;
-
-      trackButton.textContent =
-        "Checking...";
 
 
       try {
 
-        /*
-          IMPORTANT:
-          Customer tracking uses the secure
-          Supabase RPC instead of directly
-          exposing the orders table.
-        */
-
-        const { data, error } =
+        const result =
           await supabaseClient.rpc(
             "track_order",
             {
@@ -671,205 +919,49 @@
           );
 
 
-        if (error) {
+        if (result.error) {
 
           console.error(
-            "Track order error:",
-            error
+            "Auto refresh error:",
+            result.error
           );
 
-          throw new Error(
-            "Unable to check the order right now. Please try again."
-          );
+          return;
 
         }
 
 
-        if (!data) {
-
-          throw new Error(
-            "Order not found. Please check your order number and phone number."
-          );
-
+        if (!result.data) {
+          return;
         }
 
-
-        /*
-          The RPC may return either:
-          - a single object
-          - an array containing one object
-        */
 
         const order =
-          Array.isArray(data)
-            ? data[0]
-            : data;
+          Array.isArray(result.data)
+            ? result.data[0]
+            : result.data;
 
 
-        if (!order) {
+        if (order) {
 
-          throw new Error(
-            "Order not found. Please check your details."
-          );
+          displayOrder(order);
 
         }
-
-
-        displayOrder(order);
-
-        successMessage.style.display =
-          "block";
 
       } catch (error) {
 
-        console.error(error);
-
-        orderCard.style.display =
-          "none";
-
-        showError(
-          error.message ||
-          "Order not found. Please check your details."
-        );
-
-      } finally {
-
-        loading.style.display =
-          "none";
-
-        trackButton.disabled =
-          false;
-
-        trackButton.textContent =
-          "🔎 Track Order";
-
-      }
-
-    }
-
-
-    // ============================================
-    // FORM SUBMIT
-    // ============================================
-
-    trackForm.addEventListener(
-      "submit",
-      function(event) {
-
-        event.preventDefault();
-
-        trackOrder();
-
-      }
-    );
-
-
-    // ============================================
-    // AUTO REFRESH
-    // ============================================
-
-    let refreshTimer = null;
-
-
-    function startAutoRefresh() {
-
-      if (refreshTimer) {
-
-        clearInterval(
-          refreshTimer
+        console.error(
+          "Auto refresh failed:",
+          error
         );
 
       }
 
+    },
+    10000
+  );
 
-      refreshTimer =
-        setInterval(
-          async function() {
-
-            const orderId =
-              Number(orderIdInput.value);
-
-            const phone =
-              cleanPhone(phoneInput.value);
-
-
-            if (!orderId || !phone) {
-              return;
-            }
-
-
-            try {
-
-              const { data, error } =
-                await supabaseClient.rpc(
-                  "track_order",
-                  {
-                    p_order_id: orderId,
-                    p_customer_phone: phone
-                  }
-                );
-
-
-              if (error) {
-
-                console.error(
-                  "Auto refresh error:",
-                  error
-                );
-
-                return;
-
-              }
-
-
-              if (!data) {
-                return;
-              }
-
-
-              const order =
-                Array.isArray(data)
-                  ? data[0]
-                  : data;
-
-
-              if (order) {
-
-                displayOrder(order);
-
-              }
-
-            } catch (error) {
-
-              console.error(
-                "Auto refresh failed:",
-                error
-              );
-
-            }
-
-          },
-          10000
-        );
-
-    }
-
-
-    // ============================================
-    // START AUTO REFRESH AFTER FIRST SEARCH
-    // ============================================
-
-    trackForm.addEventListener(
-      "submit",
-      function() {
-
-        startAutoRefresh();
-
-      }
-    );
-
-
-  </script>
+</script>
 
 </body>
 </html>
