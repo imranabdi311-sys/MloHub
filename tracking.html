@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>MloHub | Track Your Order</title>
 
@@ -26,12 +26,12 @@
     header {
       background: #111;
       color: white;
-      padding: 22px 20px;
+      padding: 24px 20px;
       text-align: center;
     }
 
     header h1 {
-      font-size: 28px;
+      font-size: 29px;
       margin-bottom: 6px;
     }
 
@@ -42,7 +42,7 @@
 
     .container {
       width: 100%;
-      max-width: 650px;
+      max-width: 680px;
       margin: 35px auto;
       padding: 0 18px;
     }
@@ -55,7 +55,7 @@
     }
 
     .title {
-      font-size: 25px;
+      font-size: 26px;
       font-weight: bold;
       margin-bottom: 10px;
     }
@@ -103,7 +103,7 @@
     }
 
     button:disabled {
-      background: #999;
+      background: #888;
       cursor: not-allowed;
     }
 
@@ -115,16 +115,23 @@
       line-height: 1.5;
     }
 
+    .success {
+      background: #e8f8ed;
+      color: #176b35;
+      border: 1px solid #b7e5c4;
+    }
+
     .error {
       background: #ffe8e8;
       color: #b00020;
       border: 1px solid #ffbcbc;
     }
 
-    .success {
-      background: #e8f8ed;
-      color: #176b35;
-      border: 1px solid #b7e5c4;
+    .loading {
+      display: none;
+      text-align: center;
+      color: #666;
+      margin-top: 20px;
     }
 
     .order-card {
@@ -148,7 +155,7 @@
     }
 
     .status {
-      padding: 8px 12px;
+      padding: 8px 13px;
       border-radius: 20px;
       background: #111;
       color: white;
@@ -174,10 +181,11 @@
     .info span {
       font-size: 16px;
       color: #222;
+      word-break: break-word;
     }
 
     .items {
-      margin-top: 20px;
+      margin-top: 25px;
     }
 
     .items h3 {
@@ -188,12 +196,21 @@
       display: flex;
       justify-content: space-between;
       gap: 15px;
-      padding: 12px 0;
+      padding: 13px 0;
       border-bottom: 1px solid #eee;
     }
 
     .item:last-child {
       border-bottom: none;
+    }
+
+    .item-name {
+      font-weight: 500;
+    }
+
+    .item-price {
+      font-weight: bold;
+      white-space: nowrap;
     }
 
     .total {
@@ -207,18 +224,18 @@
     }
 
     .timeline {
-      margin-top: 25px;
+      margin-top: 28px;
     }
 
     .timeline h3 {
-      margin-bottom: 15px;
+      margin-bottom: 17px;
     }
 
     .step {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       color: #aaa;
     }
 
@@ -239,20 +256,21 @@
       background: #111;
     }
 
+    .cancelled {
+      color: #b00020 !important;
+    }
+
+    .cancelled .step-dot {
+      background: #b00020 !important;
+    }
+
     .back {
       display: block;
       text-align: center;
-      margin-top: 25px;
+      margin-top: 28px;
       color: #111;
       text-decoration: none;
       font-weight: bold;
-    }
-
-    .loading {
-      text-align: center;
-      color: #666;
-      margin-top: 20px;
-      display: none;
     }
 
     footer {
@@ -294,75 +312,101 @@
 
       <form id="trackingForm">
 
-        <label for="orderId">Order Number</label>
+        <label for="orderId">
+          Order Number
+        </label>
 
         <input
           type="number"
           id="orderId"
-          placeholder="e.g. 25"
-          required
+          placeholder="e.g. 35"
           min="1"
-        />
+          required
+        >
 
-        <label for="phone">Phone Number</label>
+        <label for="phone">
+          Phone Number
+        </label>
 
         <input
           type="tel"
           id="phone"
-          placeholder="e.g. 0712345678"
+          placeholder="e.g. 0746355403"
+          autocomplete="tel"
           required
-        />
+        >
 
-        <button type="submit" id="trackButton">
+        <button
+          type="submit"
+          id="trackButton"
+        >
           🔎 Track Order
         </button>
 
       </form>
 
-      <div id="loading" class="loading">
+      <div
+        id="loading"
+        class="loading"
+      >
         Checking your order...
       </div>
 
-      <div id="message" class="message"></div>
+      <div
+        id="message"
+        class="message"
+      ></div>
 
-      <div id="orderCard" class="order-card">
+      <div
+        id="orderCard"
+        class="order-card"
+      >
 
         <div class="order-header">
 
           <div class="order-number">
-            📦 Order #<span id="displayOrderId"></span>
+            📦 Order #<span id="displayOrderId">-</span>
           </div>
 
-          <div class="status" id="orderStatus">
+          <div
+            class="status"
+            id="orderStatus"
+          >
             Pending
           </div>
 
         </div>
+
 
         <div class="info">
           <strong>Customer</strong>
           <span id="customerName">-</span>
         </div>
 
+
         <div class="info">
           <strong>Phone</strong>
           <span id="customerPhone">-</span>
         </div>
+
 
         <div class="info">
           <strong>Delivery Address</strong>
           <span id="deliveryAddress">-</span>
         </div>
 
+
         <div class="info">
           <strong>Restaurant</strong>
           <span id="restaurantName">-</span>
         </div>
 
+
         <div class="info">
           <strong>Order Date</strong>
           <span id="orderDate">-</span>
         </div>
+
 
         <div class="items">
 
@@ -372,41 +416,68 @@
 
           <div class="total">
             <span>Total</span>
-            <span>KSh <span id="orderTotal">0</span></span>
+
+            <span>
+              KSh <span id="orderTotal">0</span>
+            </span>
           </div>
 
         </div>
+
 
         <div class="timeline">
 
           <h3>📍 Order Status</h3>
 
-          <div class="step" data-status="pending">
+          <div
+            class="step"
+            data-status="pending"
+          >
             <div class="step-dot"></div>
             <span>Order Received</span>
           </div>
 
-          <div class="step" data-status="confirmed">
+
+          <div
+            class="step"
+            data-status="confirmed"
+          >
             <div class="step-dot"></div>
             <span>Restaurant Confirmed</span>
           </div>
 
-          <div class="step" data-status="preparing">
+
+          <div
+            class="step"
+            data-status="preparing"
+          >
             <div class="step-dot"></div>
             <span>Food Being Prepared</span>
           </div>
 
-          <div class="step" data-status="ready">
+
+          <div
+            class="step"
+            data-status="ready"
+          >
             <div class="step-dot"></div>
             <span>Food Ready</span>
           </div>
 
-          <div class="step" data-status="out_for_delivery">
+
+          <div
+            class="step"
+            data-status="out_for_delivery"
+          >
             <div class="step-dot"></div>
             <span>Out for Delivery</span>
           </div>
 
-          <div class="step" data-status="delivered">
+
+          <div
+            class="step"
+            data-status="delivered"
+          >
             <div class="step-dot"></div>
             <span>Delivered</span>
           </div>
@@ -415,13 +486,18 @@
 
       </div>
 
-      <a class="back" href="https://mlohub.netlify.app/">
+
+      <a
+        class="back"
+        href="https://mlohub.netlify.app/"
+      >
         ← Back to MloHub
       </a>
 
     </div>
 
   </main>
+
 
   <footer>
     © 2026 MloHub. All rights reserved.
@@ -430,50 +506,67 @@
 
   <script>
 
-    // ============================================
-    // SUPABASE
-    // ============================================
+    // ==========================================
+    // SUPABASE CONFIGURATION
+    // ==========================================
 
-const SUPABASE_URL =
-  "https://bhvzpycbztngtwuhxxex.supabase.co";
+    const SUPABASE_URL =
+      "https://bhvzpycbztngtwuhxxex.supabase.co";
 
-const SUPABASE_KEY =
-  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+    const SUPABASE_KEY =
+      "sb_publishable_nt_lF05XbdQtINzqOpT8g_mJH-8aCq";
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-    // ============================================
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+
+    // ==========================================
     // ELEMENTS
-    // ============================================
+    // ==========================================
 
     const form =
-      document.getElementById("trackingForm");
+      document.getElementById(
+        "trackingForm"
+      );
 
     const orderIdInput =
-      document.getElementById("orderId");
+      document.getElementById(
+        "orderId"
+      );
 
     const phoneInput =
-      document.getElementById("phone");
+      document.getElementById(
+        "phone"
+      );
 
     const trackButton =
-      document.getElementById("trackButton");
+      document.getElementById(
+        "trackButton"
+      );
 
     const loading =
-      document.getElementById("loading");
+      document.getElementById(
+        "loading"
+      );
 
     const message =
-      document.getElementById("message");
+      document.getElementById(
+        "message"
+      );
 
     const orderCard =
-      document.getElementById("orderCard");
+      document.getElementById(
+        "orderCard"
+      );
 
 
-    // ============================================
+    // ==========================================
     // STATUS ORDER
-    // ============================================
+    // ==========================================
 
     const statusOrder = [
       "pending",
@@ -485,59 +578,75 @@ const supabaseClient =
     ];
 
 
-    // ============================================
-    // FORM SUBMIT
-    // ============================================
+    // ==========================================
+    // FORM
+    // ==========================================
 
-    form.addEventListener("submit", async function(event) {
+    form.addEventListener(
+      "submit",
+      async function(event) {
 
-      event.preventDefault();
+        event.preventDefault();
 
-      const orderId =
-        Number(orderIdInput.value.trim());
+        const orderId =
+          Number(
+            orderIdInput.value.trim()
+          );
 
-      const phone =
-        phoneInput.value.trim();
+        const phone =
+          phoneInput.value.trim();
 
-      if (!orderId || orderId < 1) {
 
-        showError(
-          "Please enter a valid order number."
+        if (!orderId || orderId < 1) {
+
+          showError(
+            "Please enter a valid order number."
+          );
+
+          return;
+        }
+
+
+        if (!phone) {
+
+          showError(
+            "Please enter the phone number used when placing the order."
+          );
+
+          return;
+        }
+
+
+        await trackOrder(
+          orderId,
+          phone
         );
 
-        return;
       }
-
-      if (!phone) {
-
-        showError(
-          "Please enter the phone number used when placing the order."
-        );
-
-        return;
-      }
-
-      await trackOrder(orderId, phone);
-
-    });
+    );
 
 
-    // ============================================
+    // ==========================================
     // TRACK ORDER
-    // ============================================
+    // ==========================================
 
-    async function trackOrder(orderId, phone) {
+    async function trackOrder(
+      orderId,
+      phone
+    ) {
 
       setLoading(true);
 
       hideMessage();
 
-      orderCard.style.display = "none";
+      orderCard.style.display =
+        "none";
+
 
       try {
 
         console.log(
-          "Tracking order:",
+          "MloHub tracking order:",
           orderId
         );
 
@@ -546,23 +655,29 @@ const supabaseClient =
           phone
         );
 
-        const { data, error } =
-          await supabaseClient.rpc(
-            "track_order",
-            {
-              p_order_id: Number(orderId),
-              p_customer_phone: phone
-            }
-          );
+
+        const {
+          data,
+          error
+        } = await supabaseClient.rpc(
+          "track_order_v2",
+          {
+            p_order_id:
+              Number(orderId),
+
+            p_customer_phone:
+              phone
+          }
+        );
 
 
         console.log(
-          "Tracking response:",
+          "track_order_v2 data:",
           data
         );
 
         console.log(
-          "Tracking error:",
+          "track_order_v2 error:",
           error
         );
 
@@ -570,18 +685,22 @@ const supabaseClient =
         if (error) {
 
           console.error(
-            "Supabase RPC error:",
+            "Supabase error:",
             error
           );
 
           throw new Error(
             error.message ||
-            "Unable to check your order."
+            "We could not check your order."
           );
+
         }
 
 
-        if (!data) {
+        if (
+          data === null ||
+          data === undefined
+        ) {
 
           throw new Error(
             "No order was found with that order number and phone number."
@@ -593,9 +712,9 @@ const supabaseClient =
         let order = data;
 
 
-        // ========================================
-        // HANDLE RPC ARRAY RESPONSE
-        // ========================================
+        // ======================================
+        // HANDLE ARRAY RESPONSE
+        // ======================================
 
         if (Array.isArray(data)) {
 
@@ -612,8 +731,45 @@ const supabaseClient =
         }
 
 
+        // ======================================
+        // HANDLE STRING JSON RESPONSE
+        // ======================================
+
+        if (
+          typeof order === "string"
+        ) {
+
+          try {
+
+            order =
+              JSON.parse(order);
+
+          } catch (parseError) {
+
+            console.error(
+              "JSON parse error:",
+              parseError
+            );
+
+          }
+
+        }
+
+
+        if (
+          !order ||
+          typeof order !== "object"
+        ) {
+
+          throw new Error(
+            "No order was found with that order number and phone number."
+          );
+
+        }
+
+
         console.log(
-          "Order found:",
+          "MloHub order found:",
           order
         );
 
@@ -628,6 +784,7 @@ const supabaseClient =
           "Tracking failed:",
           error
         );
+
 
         showError(
           error.message ||
@@ -645,13 +802,16 @@ const supabaseClient =
     }
 
 
-    // ============================================
+    // ==========================================
     // DISPLAY ORDER
-    // ============================================
+    // ==========================================
 
-    function displayOrder(order) {
+    function displayOrder(
+      order
+    ) {
 
-      orderCard.style.display = "block";
+      orderCard.style.display =
+        "block";
 
 
       // Order ID
@@ -706,7 +866,9 @@ const supabaseClient =
 
       // Date
 
-      if (order.created_at) {
+      if (
+        order.created_at
+      ) {
 
         document.getElementById(
           "orderDate"
@@ -730,13 +892,17 @@ const supabaseClient =
       const currentStatus =
         String(
           order.status ||
+          order.order_status ||
           "pending"
         ).toLowerCase();
+
 
       document.getElementById(
         "orderStatus"
       ).textContent =
-        formatStatus(currentStatus);
+        formatStatus(
+          currentStatus
+        );
 
 
       // Total
@@ -749,6 +915,7 @@ const supabaseClient =
           0
         );
 
+
       document.getElementById(
         "orderTotal"
       ).textContent =
@@ -757,15 +924,17 @@ const supabaseClient =
 
       // Items
 
-      displayItems(order);
+      displayItems(
+        order
+      );
 
 
       // Timeline
 
-      updateTimeline(currentStatus);
+      updateTimeline(
+        currentStatus
+      );
 
-
-      // Success message
 
       showSuccess(
         "Order found successfully."
@@ -774,18 +943,22 @@ const supabaseClient =
     }
 
 
-    // ============================================
+    // ==========================================
     // DISPLAY ITEMS
-    // ============================================
+    // ==========================================
 
-    function displayItems(order) {
+    function displayItems(
+      order
+    ) {
 
       const itemsList =
         document.getElementById(
           "itemsList"
         );
 
-      itemsList.innerHTML = "";
+
+      itemsList.innerHTML =
+        "";
 
 
       let items =
@@ -794,13 +967,19 @@ const supabaseClient =
         [];
 
 
-      if (typeof items === "string") {
+      if (
+        typeof items ===
+        "string"
+      ) {
 
         try {
 
-          items = JSON.parse(items);
+          items =
+            JSON.parse(
+              items
+            );
 
-        } catch (e) {
+        } catch (error) {
 
           items = [];
 
@@ -809,80 +988,137 @@ const supabaseClient =
       }
 
 
-      if (!Array.isArray(items) ||
-          items.length === 0) {
+      if (
+        !Array.isArray(items) ||
+        items.length === 0
+      ) {
 
-        itemsList.innerHTML =
-          `<div class="info">
-             <span>Order items are available in your restaurant order.</span>
-           </div>`;
+        itemsList.innerHTML = `
+          <div class="info">
+            <span>
+              No item details were returned for this order.
+            </span>
+          </div>
+        `;
 
         return;
 
       }
 
 
-      items.forEach(function(item) {
+      items.forEach(
+        function(item) {
 
-        const name =
-          item.name ||
-          item.item_name ||
-          item.menu_item_name ||
-          "Item";
+          const name =
+            item.name ||
+            item.item_name ||
+            item.menu_item_name ||
+            "Item";
 
 
-        const quantity =
-          Number(
-            item.quantity ||
-            1
+          const quantity =
+            Number(
+              item.quantity ||
+              1
+            );
+
+
+          const price =
+            Number(
+              item.price ||
+              item.unit_price ||
+              0
+            );
+
+
+          const itemTotal =
+            price * quantity;
+
+
+          const row =
+            document.createElement(
+              "div"
+            );
+
+
+          row.className =
+            "item";
+
+
+          row.innerHTML = `
+            <div class="item-name">
+              ${escapeHtml(name)}
+              × ${quantity}
+            </div>
+
+            <div class="item-price">
+              KSh ${itemTotal.toLocaleString()}
+            </div>
+          `;
+
+
+          itemsList.appendChild(
+            row
           );
 
-
-        const price =
-          Number(
-            item.price ||
-            item.unit_price ||
-            0
-          );
-
-
-        const itemTotal =
-          price * quantity;
-
-
-        const row =
-          document.createElement(
-            "div"
-          );
-
-        row.className =
-          "item";
-
-
-        row.innerHTML = `
-          <div>
-            ${escapeHtml(name)}
-            × ${quantity}
-          </div>
-
-          <div>
-            KSh ${itemTotal.toLocaleString()}
-          </div>
-        `;
-
-
-        itemsList.appendChild(row);
-
-      });
+        }
+      );
 
     }
 
 
-    // ============================================
-    // TIMELINE
-    // ============================================
+    // ==========================================
+    // UPDATE TIMELINE
+    // ==========================================
 
-    function updateTimeline(currentStatus) {
+    function updateTimeline(
+      currentStatus
+    ) {
+
+      const steps =
+        document.querySelectorAll(
+          ".step"
+        );
+
+
+      steps.forEach(
+        function(step) {
+
+          step.classList.remove(
+            "active"
+          );
+
+          step.classList.remove(
+            "cancelled"
+          );
+
+        }
+      );
+
+
+      if (
+        currentStatus ===
+        "cancelled"
+      ) {
+
+        document
+          .querySelectorAll(
+            ".step"
+          )
+          .forEach(
+            function(step) {
+
+              step.classList.add(
+                "cancelled"
+              );
+
+            }
+          );
+
+        return;
+
+      }
+
 
       const currentIndex =
         statusOrder.indexOf(
@@ -890,24 +1126,17 @@ const supabaseClient =
         );
 
 
-      document
-        .querySelectorAll(
-          ".step"
-        )
-        .forEach(function(step) {
+      steps.forEach(
+        function(step) {
 
           const stepStatus =
             step.dataset.status;
+
 
           const stepIndex =
             statusOrder.indexOf(
               stepStatus
             );
-
-
-          step.classList.remove(
-            "active"
-          );
 
 
           if (
@@ -922,16 +1151,19 @@ const supabaseClient =
 
           }
 
-        });
+        }
+      );
 
     }
 
 
-    // ============================================
+    // ==========================================
     // FORMAT STATUS
-    // ============================================
+    // ==========================================
 
-    function formatStatus(status) {
+    function formatStatus(
+      status
+    ) {
 
       const labels = {
 
@@ -964,20 +1196,23 @@ const supabaseClient =
 
       return (
         labels[status] ||
-        status.replaceAll(
-          "_",
-          " "
-        )
+        String(status)
+          .replaceAll(
+            "_",
+            " "
+          )
       );
 
     }
 
 
-    // ============================================
+    // ==========================================
     // LOADING
-    // ============================================
+    // ==========================================
 
-    function setLoading(isLoading) {
+    function setLoading(
+      isLoading
+    ) {
 
       loading.style.display =
         isLoading
@@ -997,29 +1232,13 @@ const supabaseClient =
     }
 
 
-    // ============================================
-    // ERROR MESSAGE
-    // ============================================
-
-    function showError(text) {
-
-      message.style.display =
-        "block";
-
-      message.className =
-        "message error";
-
-      message.textContent =
-        text;
-
-    }
-
-
-    // ============================================
+    // ==========================================
     // SUCCESS MESSAGE
-    // ============================================
+    // ==========================================
 
-    function showSuccess(text) {
+    function showSuccess(
+      text
+    ) {
 
       message.style.display =
         "block";
@@ -1033,9 +1252,29 @@ const supabaseClient =
     }
 
 
-    // ============================================
+    // ==========================================
+    // ERROR MESSAGE
+    // ==========================================
+
+    function showError(
+      text
+    ) {
+
+      message.style.display =
+        "block";
+
+      message.className =
+        "message error";
+
+      message.textContent =
+        text;
+
+    }
+
+
+    // ==========================================
     // HIDE MESSAGE
-    // ============================================
+    // ==========================================
 
     function hideMessage() {
 
@@ -1048,11 +1287,13 @@ const supabaseClient =
     }
 
 
-    // ============================================
-    // SECURITY
-    // ============================================
+    // ==========================================
+    // HTML ESCAPING
+    // ==========================================
 
-    function escapeHtml(value) {
+    function escapeHtml(
+      value
+    ) {
 
       return String(value)
 
