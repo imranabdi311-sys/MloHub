@@ -675,10 +675,30 @@
   const SUPABASE_ANON_KEY =
     "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
 
-  const supabaseClient =
-    supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
+ const { data, error } = await supabaseClient.rpc(
+  "create_customer_order",
+  {
+    p_restaurant_id: selectedRestaurant.id,
+    p_customer_name: name,
+    p_customer_phone: phone,
+    p_delivery_address:
+      orderType === "delivery" ? address : "Pickup",
+    p_order_type: orderType,
+    p_payment_method: payment,
+    p_items: cart.map(item => ({
+      menu_item_id: item.id,
+      quantity: item.quantity
+    }))
+  }
+);
+
+if (error) {
+  console.error("Order creation error:", error);
+  throw new Error(error.message);
+}
+
+const orderId = data.order_id;
+const orderTotal = Number(data.total);
     );
 
   const MPESA_STK_FUNCTION = "mpesa-payment";
