@@ -1,1176 +1,1765 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MloHub Driver Dashboard</title>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>MloHub | Rider Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-body{
-  font-family:Arial,sans-serif;
-  background:#f5f5f5;
-  color:#222;
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  min-height: 100vh;
 }
 
-header{
-  background:linear-gradient(135deg,#ff6500,#ff9d00);
-  color:white;
-  padding:18px 5%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  flex-wrap:wrap;
+/* HEADER */
+
+header {
+  background: #111;
+  color: white;
+  padding: 20px;
 }
 
-.logo{
-  font-size:28px;
-  font-weight:900;
+.header-inner {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
 }
 
-.subtitle{
-  font-size:14px;
-  opacity:.9;
+.logo {
+  font-size: 25px;
+  font-weight: bold;
 }
 
-header a{
-  color:white;
-  text-decoration:none;
-  background:rgba(255,255,255,.2);
-  padding:10px 15px;
-  border-radius:8px;
+.logo span {
+  font-size: 14px;
+  display: block;
+  color: #ccc;
+  margin-top: 4px;
 }
 
-.container{
-  width:94%;
-  max-width:1200px;
-  margin:25px auto;
+.logout-btn {
+  background: white;
+  color: #111;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.card{
-  background:white;
-  padding:20px;
-  border-radius:15px;
-  box-shadow:0 4px 15px rgba(0,0,0,.06);
-  margin-bottom:20px;
+/* CONTAINER */
+
+.container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 18px;
 }
 
-select{
-  width:100%;
-  max-width:500px;
-  padding:13px;
-  border:1px solid #ddd;
-  border-radius:8px;
-  font-size:16px;
-  background:white;
+/* LOGIN */
+
+.login-card {
+  max-width: 450px;
+  margin: 70px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.08);
 }
 
-button{
-  border:none;
-  cursor:pointer;
-  border-radius:8px;
-  font-weight:bold;
-  padding:11px 16px;
+.login-card h1 {
+  margin-bottom: 10px;
 }
 
-.refresh{
-  background:#222;
-  color:white;
-  margin-top:12px;
+.login-card p {
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.5;
 }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:15px;
-  margin-bottom:20px;
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 7px;
 }
 
-.stat{
-  background:white;
-  padding:20px;
-  border-radius:14px;
-  box-shadow:0 4px 15px rgba(0,0,0,.05);
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 9px;
+  margin-bottom: 18px;
+  font-size: 16px;
 }
 
-.stat span{
-  color:#777;
-  font-size:14px;
+.primary-btn {
+  width: 100%;
+  padding: 15px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.stat strong{
-  display:block;
-  font-size:28px;
-  margin-top:8px;
-  color:#ff6500;
+.primary-btn:disabled {
+  background: #888;
 }
 
-.orders{
-  display:grid;
-  gap:18px;
+/* DASHBOARD */
+
+.dashboard {
+  display: none;
 }
 
-.order{
-  background:white;
-  border-radius:15px;
-  padding:20px;
-  box-shadow:0 4px 15px rgba(0,0,0,.07);
-  border-left:5px solid #ff6500;
+/* PROFILE */
+
+.profile {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.06);
 }
 
-.order-top{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  flex-wrap:wrap;
-  margin-bottom:18px;
+.profile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
 }
 
-.order-number{
-  font-size:21px;
-  font-weight:bold;
+.profile h2 {
+  margin-bottom: 6px;
 }
 
-.time{
-  color:#777;
-  font-size:13px;
-  margin-top:5px;
+.profile p {
+  color: #666;
 }
 
-.status{
-  padding:7px 12px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:bold;
+.available {
+  background: #e7f8ed;
+  color: #176b35;
+  padding: 8px 13px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
 }
 
-.ready{
-  background:#e4f8ea;
-  color:#17833b;
+/* STATS */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
-.assigned{
-  background:#e4f8f7;
-  color:#087b76;
+.stat {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.05);
 }
 
-.picked{
-  background:#e4f0ff;
-  color:#1769aa;
+.stat strong {
+  display: block;
+  font-size: 26px;
+  margin-bottom: 5px;
 }
 
-.delivered{
-  background:#dff7e5;
-  color:#08752a;
+.stat span {
+  color: #777;
 }
 
-.details{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-  margin-bottom:18px;
+/* SECTION */
+
+.section {
+  margin-bottom: 30px;
 }
 
-.detail{
-  background:#f8f8f8;
-  padding:14px;
-  border-radius:9px;
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-.detail small{
-  display:block;
-  color:#777;
-  margin-bottom:5px;
+.section-title h2 {
+  font-size: 22px;
 }
 
-.detail strong{
-  word-break:break-word;
+/* DELIVERY CARD */
+
+.delivery-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.06);
 }
 
-.items{
-  border-top:1px solid #eee;
-  border-bottom:1px solid #eee;
-  padding:15px 0;
-  margin-bottom:18px;
+.delivery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-.item{
-  display:flex;
-  justify-content:space-between;
-  padding:7px 0;
-  gap:10px;
+.order-number {
+  font-size: 19px;
+  font-weight: bold;
 }
 
-.total{
-  font-size:21px;
-  font-weight:bold;
-  color:#ff6500;
-  margin-bottom:18px;
+.badge {
+  background: #111;
+  color: white;
+  padding: 7px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
+.info {
+  background: #f8f8f8;
+  border-radius: 9px;
+  padding: 13px;
+  margin-bottom: 9px;
 }
 
-.actions button,
-.actions a{
-  padding:11px 14px;
-  border-radius:8px;
-  text-decoration:none;
-  color:white;
-  display:inline-block;
-  font-size:14px;
-  border:none;
-  cursor:pointer;
-  font-weight:bold;
+.info strong {
+  display: block;
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 4px;
 }
 
-.accept{
-  background:#087b76;
+.info span {
+  word-break: break-word;
 }
 
-.pickup{
-  background:#1769aa;
+.accept-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  border: none;
+  border-radius: 9px;
+  background: #111;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.deliver{
-  background:#08752a;
+.status-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-.call{
-  background:#222;
+.status-btn {
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.whatsapp{
-  background:#25D366;
+.status-btn:disabled {
+  background: #ccc;
 }
 
-.empty,
-.loading,
-.error{
-  background:white;
-  padding:35px;
-  text-align:center;
-  border-radius:12px;
-  color:#777;
+/* EMPTY */
+
+.empty {
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  text-align: center;
+  color: #777;
 }
 
-.error{
-  color:#b00020;
+/* MESSAGE */
+
+.message {
+  display: none;
+  padding: 14px;
+  border-radius: 9px;
+  margin-bottom: 20px;
 }
 
-@media(max-width:600px){
-  .order{
-    padding:15px;
+.success {
+  display: block;
+  background: #e8f8ed;
+  color: #176b35;
+}
+
+.error {
+  display: block;
+  background: #ffe8e8;
+  color: #b00020;
+}
+
+/* LOADING */
+
+.loading {
+  text-align: center;
+  color: #777;
+  padding: 20px;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+  .stats {
+    grid-template-columns: 1fr;
   }
+
+  .profile-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .delivery-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-buttons {
+    grid-template-columns: 1fr;
+  }
+
 }
+
 </style>
 
 </head>
 
 <body>
 
+
+<!-- =========================
+     HEADER
+========================= -->
+
 <header>
 
-<div>
-  <div class="logo">MloHub</div>
-  <div class="subtitle">Driver Dashboard 🛵</div>
-</div>
+  <div class="header-inner">
 
-<a href="index.html">← Customer Site</a>
+    <div class="logo">
+      🏍️ MloHub Rider
+      <span>Delivery Partner Dashboard</span>
+    </div>
+
+    <button
+      class="logout-btn"
+      onclick="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
 
 </header>
 
-<main class="container">
 
-<div class="card">
+<!-- =========================
+     LOGIN
+========================= -->
 
-<h2>Select Driver</h2>
+<div id="loginSection">
 
-<br>
+  <div class="login-card">
 
-<select id="driverSelect" onchange="driverChanged()">
-<option value="">Loading drivers...</option>
-</select>
+    <h1>🏍️ Rider Login</h1>
 
-<br>
+    <p>
+      Login to your MloHub rider account
+      to manage deliveries.
+    </p>
 
-<button class="refresh" onclick="loadOrders()">
-🔄 Refresh Orders
-</button>
+    <label>Email</label>
 
-</div>
+    <input
+      type="email"
+      id="email"
+      placeholder="rider1@mlohub.com"
+    >
 
-<div class="stats">
+    <label>Password</label>
 
-<div class="stat">
-<span>Available</span>
-<strong id="availableCount">0</strong>
-</div>
+    <input
+      type="password"
+      id="password"
+      placeholder="Your password"
+    >
 
-<div class="stat">
-<span>My Deliveries</span>
-<strong id="myCount">0</strong>
-</div>
+    <button
+      class="primary-btn"
+      id="loginButton"
+      onclick="login()"
+    >
+      Login
+    </button>
 
-<div class="stat">
-<span>Picked Up</span>
-<strong id="pickedCount">0</strong>
-</div>
+    <div
+      id="loginMessage"
+      class="message"
+    ></div>
 
-<div class="stat">
-<span>Delivered</span>
-<strong id="deliveredCount">0</strong>
-</div>
-
-</div>
-
-<h2 style="margin-bottom:15px;">
-Delivery Orders
-</h2>
-
-<div id="orders" class="orders">
-
-<div class="empty">
-Select a driver to view deliveries.
-</div>
+  </div>
 
 </div>
 
-</main>
+
+<!-- =========================
+     DASHBOARD
+========================= -->
+
+<div
+  id="dashboard"
+  class="dashboard"
+>
+
+  <div class="container">
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+
+    <!-- PROFILE -->
+
+    <div class="profile">
+
+      <div class="profile-top">
+
+        <div>
+
+          <h2>
+            👋 Welcome,
+            <span id="driverName">
+              Rider
+            </span>
+          </h2>
+
+          <p id="driverDetails">
+            Loading rider information...
+          </p>
+
+        </div>
+
+        <div class="available">
+          🟢 AVAILABLE
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <strong id="availableCount">
+          0
+        </strong>
+
+        <span>
+          Available Deliveries
+        </span>
+
+      </div>
+
+
+      <div class="stat">
+
+        <strong id="activeCount">
+          0
+        </strong>
+
+        <span>
+          My Active Delivery
+        </span>
+
+      </div>
+
+
+      <div class="stat">
+
+        <strong id="completedCount">
+          0
+        </strong>
+
+        <span>
+          Delivered
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- AVAILABLE DELIVERIES -->
+
+    <div class="section">
+
+      <div class="section-title">
+
+        <h2>
+          📦 Available Deliveries
+        </h2>
+
+        <button
+          class="status-btn"
+          onclick="loadDashboard()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+      <div id="availableDeliveries">
+
+        <div class="loading">
+          Loading deliveries...
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- MY DELIVERY -->
+
+    <div class="section">
+
+      <div class="section-title">
+
+        <h2>
+          🚚 My Active Delivery
+        </h2>
+
+      </div>
+
+      <div id="myDelivery">
+
+        <div class="empty">
+          You have no active delivery.
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
 
 <script>
 
-const SUPABASE_URL =
-"https://bhvzpycbztngtwuhxxex.supabase.co";
+/* =====================================================
+   SUPABASE
+===================================================== */
 
-const SUPABASE_ANON_KEY =
-"sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+const SUPABASE_URL =
+  "https://bhvzpycbztngtwuhxxex.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
 
 const supabaseClient =
-supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
+
+let currentUser = null;
+let currentDriver = null;
+
+
+/* =====================================================
+   START
+===================================================== */
+
+window.addEventListener(
+  "DOMContentLoaded",
+  async function() {
+
+    const {
+      data: {
+        session
+      }
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (session) {
+
+      currentUser =
+        session.user;
+
+      await startDashboard();
+
+    }
+
+  }
 );
 
 
-let drivers = [];
+/* =====================================================
+   LOGIN
+===================================================== */
 
-let currentDriverId = null;
+async function login() {
 
-let orders = [];
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
 
-
-document.addEventListener(
-"DOMContentLoaded",
-loadDrivers
-);
-
-
-async function loadDrivers(){
-
-const select =
-document.getElementById(
-"driverSelect"
-);
-
-select.innerHTML =
-`<option value="">
-Loading drivers...
-</option>`;
+  const password =
+    document
+      .getElementById("password")
+      .value;
 
 
-const {
-data,
-error
-} =
-await supabaseClient
-.from("drivers")
-.select("*")
-.order("id");
+  const button =
+    document
+      .getElementById("loginButton");
+
+  const message =
+    document
+      .getElementById("loginMessage");
 
 
-if(error){
-
-console.error(error);
-
-select.innerHTML =
-`<option value="">
-Error loading drivers
-</option>`;
-
-document.getElementById(
-"orders"
-).innerHTML =
-`<div class="error">
-${escapeHtml(error.message)}
-</div>`;
-
-return;
-}
+  message.style.display =
+    "none";
 
 
-drivers = data || [];
+  if (!email || !password) {
+
+    message.textContent =
+      "Please enter your email and password.";
+
+    message.className =
+      "message error";
+
+    return;
+
+  }
 
 
-if(!drivers.length){
+  button.disabled =
+    true;
 
-select.innerHTML =
-`<option value="">
-No drivers found
-</option>`;
-
-return;
-}
+  button.textContent =
+    "Logging in...";
 
 
-select.innerHTML =
-`<option value="">
-Select driver...
-</option>` +
-drivers.map(driver => `
-
-<option value="${driver.id}">
-${escapeHtml(
-driver.name ||
-driver.full_name ||
-"Driver #" + driver.id
-)}
-</option>
-
-`).join("");
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
 
-select.value =
-drivers[0].id;
+  if (error) {
 
-currentDriverId =
-drivers[0].id;
+    message.textContent =
+      error.message;
 
-await loadOrders();
+    message.className =
+      "message error";
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Login";
+
+    return;
+
+  }
+
+
+  currentUser =
+    data.user;
+
+
+  await startDashboard();
+
+
+  button.disabled =
+    false;
+
+  button.textContent =
+    "Login";
 
 }
 
 
-function driverChanged(){
+/* =====================================================
+   START DASHBOARD
+===================================================== */
 
-const select =
-document.getElementById(
-"driverSelect"
-);
+async function startDashboard() {
 
-currentDriverId =
-select.value || null;
-
-loadOrders();
-
-}
+  document
+    .getElementById("loginSection")
+    .style.display =
+    "none";
 
 
-async function loadOrders(){
-
-const container =
-document.getElementById(
-"orders"
-);
+  document
+    .getElementById("dashboard")
+    .style.display =
+    "block";
 
 
-if(!currentDriverId){
-
-container.innerHTML =
-`<div class="empty">
-Select a driver first.
-</div>`;
-
-return;
-}
-
-
-container.innerHTML =
-`<div class="loading">
-Loading deliveries...
-</div>`;
-
-
-const {
-data,
-error
-} =
-await supabaseClient
-.from("orders")
-.select("*")
-.or(
-`order_status.eq.ready,driver_id.eq.${currentDriverId}`
-)
-.eq(
-"order_type",
-"delivery"
-)
-.order(
-"created_at",
-{
-ascending:false
-}
-);
-
-
-if(error){
-
-console.error(error);
-
-container.innerHTML =
-`<div class="error">
-<strong>
-Unable to load deliveries
-</strong>
-<br><br>
-${escapeHtml(error.message)}
-</div>`;
-
-return;
-}
-
-
-orders = data || [];
-
-
-for(const order of orders){
-
-order.items =
-await loadOrderItems(order.id);
+  await loadDriver();
 
 }
 
 
-updateStats();
+/* =====================================================
+   LOAD DRIVER
+===================================================== */
 
-renderOrders();
+async function loadDriver() {
 
-}
-
-
-async function loadOrderItems(orderId){
-
-const {
-data,
-error
-} =
-await supabaseClient
-.from("order_items")
-.select("*")
-.eq(
-"order_id",
-orderId
-);
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("drivers")
+      .select("*")
+      .eq(
+        "owner_id",
+        currentUser.id
+      )
+      .single();
 
 
-if(error){
+  if (error) {
 
-console.error(error);
+    showMessage(
+      "Driver profile not found. Please contact MloHub.",
+      true
+    );
 
-return [];
+    console.error(error);
 
-}
+    return;
 
-
-const items =
-data || [];
-
-
-for(const item of items){
-
-const {
-data:menu
-} =
-await supabaseClient
-.from("menu_items")
-.select("name")
-.eq(
-"id",
-item.menu_item_id
-)
-.maybeSingle();
+  }
 
 
-item.menu_name =
-menu
-? menu.name
-: "Menu item";
+  currentDriver =
+    data;
+
+
+  document
+    .getElementById("driverName")
+    .textContent =
+    data.full_name;
+
+
+  document
+    .getElementById("driverDetails")
+    .textContent =
+    `${data.phone} • ${data.vehicle_type} • ${data.vehicle_plate}`;
+
+
+  await loadDashboard();
 
 }
 
 
-return items;
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
+
+async function loadDashboard() {
+
+  if (!currentDriver) {
+    return;
+  }
+
+
+  await loadAvailableDeliveries();
+
+  await loadMyDelivery();
 
 }
 
 
-function renderOrders(){
+/* =====================================================
+   AVAILABLE DELIVERIES
+===================================================== */
 
-const container =
-document.getElementById(
-"orders"
-);
+async function loadAvailableDeliveries() {
 
-
-if(!orders.length){
-
-container.innerHTML =
-`<div class="empty">
-
-<div style="font-size:40px;">
-🛵
-</div>
-
-<br>
-
-No delivery orders available.
-
-</div>`;
-
-return;
-
-}
+  const container =
+    document
+      .getElementById(
+        "availableDeliveries"
+      );
 
 
-container.innerHTML =
-orders.map(
-order => createOrder(order)
-).join("");
-
-}
+  container.innerHTML =
+    `<div class="loading">
+       Loading deliveries...
+     </div>`;
 
 
-function createOrder(order){
-
-const status =
-order.order_status ||
-"ready";
-
-
-const phone =
-order.customer_phone ||
-"";
-
-
-const cleanPhone =
-phone
-.toString()
-.replace(/\D/g,"");
-
-
-const items =
-order.items || [];
-
-
-const itemsHtml =
-items.length
-
-? items.map(item => `
-
-<div class="item">
-
-<span>
-${item.quantity} ×
-${escapeHtml(
-item.menu_name
-)}
-</span>
-
-<strong>
-KSh
-${formatMoney(
-Number(item.price || 0) *
-Number(item.quantity || 0)
-)}
-</strong>
-
-</div>
-
-`).join("")
-
-: "No items found.";
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("deliveries")
+      .select(`
+        id,
+        order_id,
+        driver_id
+      `)
+      .is(
+        "driver_id",
+        null
+      )
+      .order(
+        "id",
+        {
+          ascending: false
+        }
+      );
 
 
-const time =
-order.created_at
-? new Date(
-order.created_at
-).toLocaleString("en-KE")
-: "";
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      `<div class="empty">
+        Unable to load deliveries.
+       </div>`;
+
+    return;
+
+  }
 
 
-let action = "";
+  document
+    .getElementById("availableCount")
+    .textContent =
+    data.length;
 
 
-if(status === "ready"){
+  if (!data.length) {
 
-action = `
+    container.innerHTML =
+      `<div class="empty">
+        📦 No deliveries are currently available.
+       </div>`;
 
-<button
-class="accept"
-onclick="acceptDelivery(${order.id})"
->
-🛵 Accept Delivery
-</button>
+    return;
 
-`;
+  }
+
+
+  container.innerHTML = "";
+
+
+  for (const delivery of data) {
+
+    const order =
+      await getOrder(delivery.order_id);
+
+
+    if (!order) {
+      continue;
+    }
+
+
+    const restaurant =
+      await getRestaurant(
+        order.restaurant_id
+      );
+
+
+    container.innerHTML +=
+      createAvailableCard(
+        delivery,
+        order,
+        restaurant
+      );
+
+  }
 
 }
 
 
-if(
-status === "assigned" &&
-Number(order.driver_id) ===
-Number(currentDriverId)
-){
+/* =====================================================
+   GET ORDER
+===================================================== */
 
-action = `
+async function getOrder(orderId) {
 
-<button
-class="pickup"
-onclick="updateStatus(
-${order.id},
-'picked_up'
-)"
->
-📦 Picked Up
-</button>
-
-`;
-
-}
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .eq(
+        "id",
+        orderId
+      )
+      .single();
 
 
-if(
-status === "picked_up" &&
-Number(order.driver_id) ===
-Number(currentDriverId)
-){
+  if (error) {
 
-action = `
+    console.error(
+      "Order error:",
+      error
+    );
 
-<button
-class="deliver"
-onclick="updateStatus(
-${order.id},
-'delivered'
-)"
->
-✓ Delivered
-</button>
+    return null;
 
-`;
+  }
+
+
+  return data;
 
 }
 
 
-return `
+/* =====================================================
+   GET RESTAURANT
+===================================================== */
 
-<div class="order">
+async function getRestaurant(
+  restaurantId
+) {
 
-<div class="order-top">
-
-<div>
-
-<div class="order-number">
-Order #${order.id}
-</div>
-
-<div class="time">
-${escapeHtml(time)}
-</div>
-
-</div>
-
-<div class="status ${status}">
-${formatStatus(status)}
-</div>
-
-</div>
+  if (!restaurantId) {
+    return null;
+  }
 
 
-<div class="details">
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("restaurants")
+      .select(
+        "id,name"
+      )
+      .eq(
+        "id",
+        restaurantId
+      )
+      .single();
 
 
-<div class="detail">
+  if (error) {
 
-<small>
-Customer
-</small>
+    console.error(
+      "Restaurant error:",
+      error
+    );
 
-<strong>
-${escapeHtml(
-order.customer_name ||
-"Customer"
-)}
-</strong>
+    return null;
 
-</div>
+  }
 
 
-<div class="detail">
-
-<small>
-Phone
-</small>
-
-<strong>
-${escapeHtml(
-phone ||
-"Not provided"
-)}
-</strong>
-
-</div>
-
-
-<div class="detail">
-
-<small>
-Delivery Address
-</small>
-
-<strong>
-${escapeHtml(
-order.delivery_address ||
-"Not provided"
-)}
-</strong>
-
-</div>
-
-
-<div class="detail">
-
-<small>
-Payment
-</small>
-
-<strong>
-${
-order.payment_method === "mpesa"
-? "📱 M-Pesa"
-: "💵 Cash"
-}
-</strong>
-
-</div>
-
-
-</div>
-
-
-<div class="items">
-
-<h3>
-🍔 Order Items
-</h3>
-
-${itemsHtml}
-
-</div>
-
-
-<div class="total">
-
-Order Total:
-KSh
-${formatMoney(
-order.total_amount
-)}
-
-</div>
-
-
-<div class="actions">
-
-${action}
-
-
-${
-cleanPhone
-? `
-
-<a
-class="call"
-href="tel:+${cleanPhone}"
->
-📞 Call
-</a>
-
-<a
-class="whatsapp"
-href="https://wa.me/${cleanPhone}"
-target="_blank"
->
-💬 WhatsApp
-</a>
-
-`
-: ""
-}
-
-
-</div>
-
-
-</div>
-
-`;
+  return data;
 
 }
 
 
-async function acceptDelivery(orderId){
+/* =====================================================
+   AVAILABLE CARD
+===================================================== */
 
-if(!currentDriverId){
+function createAvailableCard(
+  delivery,
+  order,
+  restaurant
+) {
 
-alert(
-"Please select a driver first."
-);
-
-return;
-
-}
-
-
-const confirmed =
-confirm(
-"Accept this delivery?"
-);
+  const restaurantName =
+    restaurant
+      ? restaurant.name
+      : "Restaurant";
 
 
-if(!confirmed){
-return;
-}
+  return `
 
+    <div class="delivery-card">
 
-const {
-error
-} =
-await supabaseClient
-.from("orders")
-.update({
+      <div class="delivery-header">
 
-driver_id:
-currentDriverId,
+        <div class="order-number">
+          📦 Order #${order.id}
+        </div>
 
-order_status:
-"assigned"
+        <div class="badge">
+          ${formatStatus(
+            order.order_status
+          )}
+        </div>
 
-})
-.eq(
-"id",
-orderId
-)
-.eq(
-"order_status",
-"ready"
-);
+      </div>
 
+      <div class="info">
 
-if(error){
+        <strong>
+          Restaurant
+        </strong>
 
-console.error(error);
+        <span>
+          ${escapeHtml(
+            restaurantName
+          )}
+        </span>
 
-alert(
-"Could not accept delivery:\n\n" +
-error.message
-);
+      </div>
 
-return;
+      <div class="info">
 
-}
+        <strong>
+          Customer
+        </strong>
 
+        <span>
+          ${escapeHtml(
+            order.customer_name || "-"
+          )}
+        </span>
 
-await loadOrders();
+      </div>
 
-}
+      <div class="info">
 
+        <strong>
+          Phone
+        </strong>
 
-async function updateStatus(
-orderId,
-status
-){
+        <span>
+          ${escapeHtml(
+            order.customer_phone || "-"
+          )}
+        </span>
 
-const confirmed =
-confirm(
-"Change this order to " +
-formatStatus(status) +
-"? "
-);
+      </div>
 
+      <div class="info">
 
-if(!confirmed){
-return;
-}
+        <strong>
+          Delivery Address
+        </strong>
 
+        <span>
+          ${escapeHtml(
+            order.delivery_address || "-"
+          )}
+        </span>
 
-const {
-error
-} =
-await supabaseClient
-.from("orders")
-.update({
+      </div>
 
-order_status:
-status
+      <button
+        class="accept-btn"
+        onclick="acceptDelivery(${delivery.id})"
+      >
+        ✅ Accept Delivery
+      </button>
 
-})
-.eq(
-"id",
-orderId
-)
-.eq(
-"driver_id",
-currentDriverId
-);
+    </div>
 
-
-if(error){
-
-console.error(error);
-
-alert(
-"Could not update order:\n\n" +
-error.message
-);
-
-return;
+  `;
 
 }
 
 
-await loadOrders();
+/* =====================================================
+   ACCEPT DELIVERY
+===================================================== */
+
+async function acceptDelivery(
+  deliveryId
+) {
+
+  if (!currentDriver) {
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("deliveries")
+      .update({
+        driver_id:
+          currentDriver.id
+      })
+      .eq(
+        "id",
+        deliveryId
+      )
+      .is(
+        "driver_id",
+        null
+      )
+      .select();
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message,
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    showMessage(
+      "This delivery has already been accepted by another rider.",
+      true
+    );
+
+    await loadDashboard();
+
+    return;
+
+  }
+
+
+  showMessage(
+    "Delivery accepted successfully.",
+    false
+  );
+
+
+  await loadDashboard();
 
 }
 
 
-function updateStats(){
+/* =====================================================
+   MY DELIVERY
+===================================================== */
 
-const available =
-orders.filter(
-o =>
-o.order_status ===
-"ready"
-).length;
+async function loadMyDelivery() {
 
-
-const mine =
-orders.filter(
-o =>
-Number(o.driver_id) ===
-Number(currentDriverId) &&
-o.order_status !==
-"delivered"
-).length;
+  const container =
+    document
+      .getElementById(
+        "myDelivery"
+      );
 
 
-const picked =
-orders.filter(
-o =>
-Number(o.driver_id) ===
-Number(currentDriverId) &&
-o.order_status ===
-"picked_up"
-).length;
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("deliveries")
+      .select(`
+        id,
+        order_id,
+        driver_id
+      `)
+      .eq(
+        "driver_id",
+        currentDriver.id
+      )
+      .order(
+        "id",
+        {
+          ascending: false
+        }
+      );
 
 
-const delivered =
-orders.filter(
-o =>
-Number(o.driver_id) ===
-Number(currentDriverId) &&
-o.order_status ===
-"delivered"
-).length;
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      `<div class="empty">
+        Unable to load your deliveries.
+       </div>`;
+
+    return;
+
+  }
 
 
-document.getElementById(
-"availableCount"
-).textContent =
-available;
+  let active =
+    [];
+
+  let completed =
+    0;
 
 
-document.getElementById(
-"myCount"
-).textContent =
-mine;
+  for (
+    const delivery
+    of data
+  ) {
+
+    const order =
+      await getOrder(
+        delivery.order_id
+      );
 
 
-document.getElementById(
-"pickedCount"
-).textContent =
-picked;
+    if (!order) {
+      continue;
+    }
 
 
-document.getElementById(
-"deliveredCount"
-).textContent =
-delivered;
+    const status =
+      String(
+        order.order_status ||
+        ""
+      ).toLowerCase();
+
+
+    if (
+      status === "delivered" ||
+      status === "completed"
+    ) {
+
+      completed++;
+
+    } else {
+
+      active.push({
+        delivery,
+        order
+      });
+
+    }
+
+  }
+
+
+  document
+    .getElementById("activeCount")
+    .textContent =
+    active.length;
+
+
+  document
+    .getElementById("completedCount")
+    .textContent =
+    completed;
+
+
+  if (!active.length) {
+
+    container.innerHTML =
+      `<div class="empty">
+        🚚 You have no active delivery.
+       </div>`;
+
+    return;
+
+  }
+
+
+  const item =
+    active[0];
+
+
+  const restaurant =
+    await getRestaurant(
+      item.order.restaurant_id
+    );
+
+
+  container.innerHTML =
+    createActiveCard(
+      item.delivery,
+      item.order,
+      restaurant
+    );
 
 }
 
 
-function formatStatus(status){
+/* =====================================================
+   ACTIVE CARD
+===================================================== */
 
-return String(status || "")
-.replace(/_/g," ")
-.replace(
-/\b\w/g,
-letter =>
-letter.toUpperCase()
-);
+function createActiveCard(
+  delivery,
+  order,
+  restaurant
+) {
+
+  const status =
+    String(
+      order.order_status ||
+      "pending"
+    ).toLowerCase();
+
+
+  const restaurantName =
+    restaurant
+      ? restaurant.name
+      : "Restaurant";
+
+
+  return `
+
+    <div class="delivery-card">
+
+      <div class="delivery-header">
+
+        <div class="order-number">
+          🚚 Order #${order.id}
+        </div>
+
+        <div class="badge">
+          ${formatStatus(status)}
+        </div>
+
+      </div>
+
+
+      <div class="info">
+
+        <strong>
+          Restaurant
+        </strong>
+
+        <span>
+          ${escapeHtml(
+            restaurantName
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="info">
+
+        <strong>
+          Customer
+        </strong>
+
+        <span>
+          ${escapeHtml(
+            order.customer_name || "-"
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="info">
+
+        <strong>
+          Customer Phone
+        </strong>
+
+        <span>
+          ${escapeHtml(
+            order.customer_phone || "-"
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="info">
+
+        <strong>
+          Delivery Address
+        </strong>
+
+        <span>
+          ${escapeHtml(
+            order.delivery_address || "-"
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="info">
+
+        <strong>
+          Current Status
+        </strong>
+
+        <span>
+          ${formatStatus(status)}
+        </span>
+
+      </div>
+
+
+      <div class="status-buttons">
+
+        ${statusButton(
+          order.id,
+          status,
+          "ready",
+          "🍔 Food Ready"
+        )}
+
+        ${statusButton(
+          order.id,
+          status,
+          "out_for_delivery",
+          "🏍️ Out for Delivery"
+        )}
+
+        ${statusButton(
+          order.id,
+          status,
+          "delivered",
+          "✅ Delivered"
+        )}
+
+      </div>
+
+    </div>
+
+  `;
 
 }
 
 
-function formatMoney(amount){
+/* =====================================================
+   STATUS BUTTON
+===================================================== */
 
-return Number(
-amount || 0
-).toLocaleString("en-KE");
+function statusButton(
+  orderId,
+  currentStatus,
+  targetStatus,
+  label
+) {
+
+  const statuses = [
+    "pending",
+    "confirmed",
+    "preparing",
+    "ready",
+    "out_for_delivery",
+    "delivered"
+  ];
+
+
+  const currentIndex =
+    statuses.indexOf(
+      currentStatus
+    );
+
+
+  const targetIndex =
+    statuses.indexOf(
+      targetStatus
+    );
+
+
+  let disabled = "";
+
+
+  if (
+    currentStatus === targetStatus ||
+    (
+      currentIndex >= 0 &&
+      targetIndex <= currentIndex
+    )
+  ) {
+
+    disabled = "disabled";
+
+  }
+
+
+  return `
+
+    <button
+      class="status-btn"
+      ${disabled}
+      onclick="updateOrderStatus(
+        ${orderId},
+        '${targetStatus}'
+      )"
+    >
+      ${label}
+    </button>
+
+  `;
 
 }
 
 
-function escapeHtml(value){
+/* =====================================================
+   UPDATE ORDER STATUS
+===================================================== */
 
-return String(
-value ?? ""
-)
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+async function updateOrderStatus(
+  orderId,
+  newStatus
+) {
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .update({
+        order_status:
+          newStatus
+      })
+      .eq(
+        "id",
+        orderId
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message,
+      true
+    );
+
+    return;
+
+  }
+
+
+  showMessage(
+    "Order status updated successfully.",
+    false
+  );
+
+
+  await loadDashboard();
 
 }
 
 
-setInterval(
-() => {
+/* =====================================================
+   LOGOUT
+===================================================== */
 
-if(currentDriverId){
-loadOrders();
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+
+  currentDriver = null;
+
+
+  document
+    .getElementById("dashboard")
+    .style.display =
+    "none";
+
+
+  document
+    .getElementById("loginSection")
+    .style.display =
+    "block";
+
 }
 
-},
-15000
-);
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(
+  text,
+  error
+) {
+
+  const message =
+    document.getElementById(
+      "message"
+    );
+
+
+  message.textContent =
+    text;
+
+
+  message.className =
+    error
+      ? "message error"
+      : "message success";
+
+
+  message.style.display =
+    "block";
+
+
+  setTimeout(
+    function() {
+
+      message.style.display =
+        "none";
+
+    },
+    4000
+  );
+
+}
+
+
+/* =====================================================
+   FORMAT STATUS
+===================================================== */
+
+function formatStatus(
+  status
+) {
+
+  const labels = {
+
+    pending:
+      "Pending",
+
+    confirmed:
+      "Confirmed",
+
+    preparing:
+      "Preparing",
+
+    ready:
+      "Ready",
+
+    out_for_delivery:
+      "Out for Delivery",
+
+    delivered:
+      "Delivered",
+
+    completed:
+      "Delivered",
+
+    cancelled:
+      "Cancelled"
+
+  };
+
+
+  return labels[status] ||
+    String(status)
+      .replaceAll("_", " ");
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(
+  value
+) {
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
 
 </script>
 
