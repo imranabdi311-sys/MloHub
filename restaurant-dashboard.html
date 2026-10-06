@@ -3,411 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>MloHub - Albaik Restaurant Dashboard</title>
+<title>MloHub Driver Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
 }
 
 body{
-  background:#f5f6f8;
-  color:#222;
+    background:#f4f6f8;
+    color:#222;
 }
 
 header{
-  background:#f59e0b;
-  color:white;
-  padding:18px 25px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  position:sticky;
-  top:0;
-  z-index:100;
+    background:#111827;
+    color:white;
+    padding:18px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
-.logo{
-  font-size:25px;
-  font-weight:bold;
+header h1{
+    font-size:24px;
 }
 
-.restaurant-name{
-  font-size:16px;
+.driver-status{
+    background:#16a34a;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:14px;
 }
 
-.layout{
-  display:flex;
-  min-height:calc(100vh - 65px);
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
 }
 
-.sidebar{
-  width:230px;
-  background:#222;
-  color:white;
-  padding:20px 10px;
-  flex-shrink:0;
+.profile{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
 }
 
-.sidebar h3{
-  padding:10px;
-  margin-bottom:10px;
+.profile h2{
+    margin-bottom:12px;
 }
 
-.sidebar button{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:white;
-  padding:14px 12px;
-  text-align:left;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:15px;
-  margin-bottom:5px;
+.profile-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
 }
 
-.sidebar button:hover,
-.sidebar button.active{
-  background:#f59e0b;
+.profile-box{
+    background:#f8fafc;
+    padding:14px;
+    border-radius:10px;
 }
 
-.main{
-  flex:1;
-  padding:25px;
-  overflow:auto;
+.profile-box small{
+    display:block;
+    color:#777;
+    margin-bottom:5px;
 }
 
-.page{
-  display:none;
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:25px;
 }
 
-.page.active{
-  display:block;
+.stat{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
 }
 
-h1{
-  margin-bottom:20px;
+.stat h3{
+    color:#666;
+    font-size:14px;
+    margin-bottom:8px;
 }
 
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-bottom:25px;
+.stat strong{
+    font-size:28px;
 }
 
-.card{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
+.section-title{
+    margin:25px 0 15px;
 }
 
-.card .icon{
-  font-size:28px;
+.delivery-card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
 }
 
-.card h2{
-  margin:8px 0;
+.delivery-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
 }
 
-.card p{
-  color:#666;
+.order-number{
+    font-size:20px;
+    font-weight:bold;
 }
 
-.panel{
-  background:white;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
+.badge{
+    padding:7px 12px;
+    border-radius:20px;
+    background:#fef3c7;
+    color:#92400e;
+    font-size:13px;
+    font-weight:bold;
 }
 
-.order{
-  border:1px solid #eee;
-  padding:18px;
-  border-radius:12px;
-  margin-bottom:15px;
-  background:white;
+.info{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:15px;
 }
 
-.order-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:12px;
+.info-box{
+    background:#f8fafc;
+    padding:12px;
+    border-radius:10px;
 }
 
-.order-top h3{
-  font-size:18px;
+.info-box strong{
+    display:block;
+    margin-top:4px;
 }
 
-.status{
-  padding:6px 11px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:bold;
+.buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-.status.pending{
-  background:#fff3cd;
-  color:#856404;
+button{
+    border:none;
+    padding:12px 18px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
 }
 
-.status.preparing{
-  background:#cfe2ff;
-  color:#084298;
+.accept{
+    background:#16a34a;
+    color:white;
 }
 
-.status.ready{
-  background:#d1e7dd;
-  color:#0f5132;
+.pickup{
+    background:#2563eb;
+    color:white;
 }
 
-.status.completed{
-  background:#198754;
-  color:white;
+.delivered{
+    background:#7c3aed;
+    color:white;
 }
 
-.status.cancelled{
-  background:#f8d7da;
-  color:#842029;
+.call{
+    background:#059669;
+    color:white;
 }
 
-.customer-info{
-  line-height:1.8;
-  margin-bottom:12px;
-}
-
-.order-items{
-  background:#f8f9fa;
-  padding:12px;
-  border-radius:8px;
-  margin:12px 0;
-}
-
-.order-item{
-  display:flex;
-  justify-content:space-between;
-  padding:7px 0;
-  border-bottom:1px solid #ddd;
-}
-
-.order-item:last-child{
-  border-bottom:0;
-}
-
-.order-total{
-  font-size:18px;
-  font-weight:bold;
-  margin-top:12px;
-}
-
-.order-time{
-  color:#777;
-  font-size:13px;
-  margin-top:8px;
-}
-
-.order-actions{
-  margin-top:15px;
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-button.action{
-  border:0;
-  padding:10px 14px;
-  border-radius:7px;
-  cursor:pointer;
-  font-weight:bold;
-  background:#f59e0b;
-  color:white;
-}
-
-button.action:hover{
-  opacity:.9;
-}
-
-button.green{
-  background:#198754;
-}
-
-button.blue{
-  background:#0d6efd;
-}
-
-button.dark{
-  background:#333;
-}
-
-button.red{
-  background:#dc3545;
-}
-
-button.whatsapp{
-  background:#25D366;
-  color:white;
+.maps{
+    background:#f59e0b;
+    color:white;
 }
 
 button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-
-.menu-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 0;
-  border-bottom:1px solid #eee;
-  gap:10px;
-}
-
-.menu-row:last-child{
-  border-bottom:0;
-}
-
-.price{
-  color:#f59e0b;
-  font-weight:bold;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:8px;
-  margin-top:6px;
-  margin-bottom:14px;
-  font-size:15px;
-}
-
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
-
-label{
-  font-weight:bold;
-}
-
-.form-button{
-  background:#f59e0b;
-  color:white;
-  border:0;
-  padding:12px 18px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.report-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-}
-
-.report-box{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
-}
-
-.restaurant-status{
-  display:inline-block;
-  padding:7px 12px;
-  border-radius:20px;
-  background:#d1e7dd;
-  color:#0f5132;
-  margin-bottom:15px;
-}
-
-.refresh-info{
-  color:#666;
-  font-size:13px;
-  margin-bottom:15px;
+    opacity:.5;
+    cursor:not-allowed;
 }
 
 .empty{
-  text-align:center;
-  padding:30px;
-  color:#777;
+    background:white;
+    padding:30px;
+    text-align:center;
+    border-radius:15px;
+    color:#777;
+}
+
+.loading{
+    text-align:center;
+    padding:25px;
+}
+
+.toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#111827;
+    color:white;
+    padding:14px 20px;
+    border-radius:10px;
+    display:none;
+    z-index:9999;
 }
 
 @media(max-width:800px){
 
-  .sidebar{
-    width:75px;
-  }
+    .profile-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-  .sidebar h3{
-    font-size:12px;
-    text-align:center;
-  }
-
-  .sidebar button{
-    text-align:center;
-    font-size:20px;
-    padding:12px 5px;
-  }
-
-  .sidebar button span{
-    display:none;
-  }
-
-  .cards{
-    grid-template-columns:repeat(2,1fr);
-  }
-
+    .stats{
+        grid-template-columns:1fr;
+    }
 }
 
-@media(max-width:500px){
+@media(max-width:600px){
 
-  header{
-    padding:15px;
-  }
+    header{
+        padding:15px;
+    }
 
-  .logo{
-    font-size:20px;
-  }
+    .container{
+        padding:12px;
+    }
 
-  .restaurant-name{
-    font-size:12px;
-  }
+    .profile-grid{
+        grid-template-columns:1fr;
+    }
 
-  .main{
-    padding:12px;
-  }
+    .info{
+        grid-template-columns:1fr;
+    }
 
-  .cards{
-    grid-template-columns:1fr;
-  }
-
-  .report-grid{
-    grid-template-columns:1fr;
-  }
-
-  .order-top{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
+    .buttons button{
+        width:100%;
+    }
 }
-
 </style>
 </head>
 
@@ -415,1282 +264,1124 @@ label{
 
 <header>
 
-  <div class="logo">
-    🍽️ MloHub
-  </div>
+    <h1>🛵 MloHub Driver</h1>
 
-  <div class="restaurant-name">
-    🍗 Albaik Restaurant
-  </div>
+    <div class="driver-status" id="driverStatus">
+        Loading...
+    </div>
 
 </header>
 
-<div class="layout">
 
-<aside class="sidebar">
-
-  <h3>RESTAURANT</h3>
-
-  <button class="active" onclick="showPage('dashboard',this)">
-    📊 <span>Dashboard</span>
-  </button>
-
-  <button onclick="showPage('orders',this)">
-    🛒 <span>Orders</span>
-  </button>
-
-  <button onclick="showPage('menu',this)">
-    🍔 <span>Menu</span>
-  </button>
-
-  <button onclick="showPage('sales',this)">
-    📈 <span>Sales & Reports</span>
-  </button>
-
-  <button onclick="showPage('profile',this)">
-    🏪 <span>Restaurant Profile</span>
-  </button>
-
-  <button onclick="showPage('settings',this)">
-    ⚙️ <span>Settings</span>
-  </button>
-
-</aside>
+<div class="container">
 
 
-<main class="main">
+<!-- DRIVER PROFILE -->
 
+<div class="profile">
 
-<!-- ================= DASHBOARD ================= -->
+    <h2>👤 Driver Profile</h2>
 
-<section id="dashboard" class="page active">
+    <div class="profile-grid">
 
-  <h1>Dashboard</h1>
+        <div class="profile-box">
+            <small>Name</small>
+            <strong id="driverName">Loading...</strong>
+        </div>
 
-  <div class="restaurant-status">
-    🟢 Restaurant is Open
-  </div>
+        <div class="profile-box">
+            <small>Phone</small>
+            <strong id="driverPhone">Loading...</strong>
+        </div>
 
-  <div class="refresh-info">
-    🔄 Orders refresh automatically every 5 seconds.
-  </div>
+        <div class="profile-box">
+            <small>Vehicle</small>
+            <strong id="vehicleType">Loading...</strong>
+        </div>
 
-  <div class="cards">
+        <div class="profile-box">
+            <small>Plate Number</small>
+            <strong id="vehiclePlate">Loading...</strong>
+        </div>
 
-    <div class="card">
-      <div class="icon">🛒</div>
-      <h2 id="todayOrders">0</h2>
-      <p>Today's Orders</p>
     </div>
-
-    <div class="card">
-      <div class="icon">💰</div>
-      <h2 id="todaySales">KSh 0</h2>
-      <p>Today's Sales</p>
-    </div>
-
-    <div class="card">
-      <div class="icon">⏳</div>
-      <h2 id="pendingOrders">0</h2>
-      <p>Pending Orders</p>
-    </div>
-
-    <div class="card">
-      <div class="icon">⭐</div>
-      <h2>4.8</h2>
-      <p>Restaurant Rating</p>
-    </div>
-
-  </div>
-
-
-  <div class="panel">
-
-    <h2>Recent Orders</h2>
-
-    <br>
-
-    <div id="recentOrders">
-      <p>Loading orders...</p>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= ORDERS ================= -->
-
-<section id="orders" class="page">
-
-  <h1>🛒 Orders</h1>
-
-  <div class="panel">
-
-    <h2>Albaik Orders</h2>
-
-    <br>
-
-    <div class="refresh-info">
-      Restaurant ID: <strong>2</strong>
-    </div>
-
-    <div id="allOrders">
-      <p>Loading orders...</p>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= MENU ================= -->
-
-<section id="menu" class="page">
-
-  <h1>🍔 Menu Management</h1>
-
-  <div class="panel">
-
-    <h2>Add New Food Item</h2>
-
-    <br>
-
-    <label>Food Name</label>
-
-    <input
-      id="foodName"
-      placeholder="Example: Chicken Burger"
-    >
-
-    <label>Price</label>
-
-    <input
-      id="foodPrice"
-      type="number"
-      placeholder="Example: 550"
-    >
-
-    <label>Description</label>
-
-    <textarea
-      id="foodDescription"
-      placeholder="Food description"
-    ></textarea>
-
-    <button
-      class="form-button"
-      onclick="addFood()">
-      + Add Food
-    </button>
-
-  </div>
-
-
-  <div class="panel">
-
-    <h2>Current Menu</h2>
-
-    <div id="menuList">
-      <p>Loading menu...</p>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= SALES ================= -->
-
-<section id="sales" class="page">
-
-  <h1>📈 Sales & Reports</h1>
-
-  <div class="report-grid">
-
-    <div class="report-box">
-      <h3>Today's Sales</h3>
-      <br>
-      <h2 id="reportTodaySales">KSh 0</h2>
-      <p id="reportTodayOrders">0 orders</p>
-    </div>
-
-    <div class="report-box">
-      <h3>Total Orders</h3>
-      <br>
-      <h2 id="reportTotalOrders">0</h2>
-      <p>All Albaik orders</p>
-    </div>
-
-    <div class="report-box">
-      <h3>Total Sales</h3>
-      <br>
-      <h2 id="reportTotalSales">KSh 0</h2>
-      <p>All recorded sales</p>
-    </div>
-
-    <div class="report-box">
-      <h3>Average Order</h3>
-      <br>
-      <h2 id="reportAverage">KSh 0</h2>
-      <p>Average order value</p>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= PROFILE ================= -->
-
-<section id="profile" class="page">
-
-  <h1>🏪 Restaurant Profile</h1>
-
-  <div class="panel">
-
-    <label>Restaurant Name</label>
-
-    <input value="Albaik">
-
-    <label>Location</label>
-
-    <input value="Mweni Rd, Eastleigh, Nairobi">
-
-    <label>Phone Number</label>
-
-    <input value="0742333000">
-
-    <label>Opening Hours</label>
-
-    <input value="10:00 AM - 11:00 PM">
-
-    <button
-      class="form-button"
-      onclick="alert('Profile saved')">
-      Save Changes
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- ================= SETTINGS ================= -->
-
-<section id="settings" class="page">
-
-  <h1>⚙️ Settings</h1>
-
-  <div class="panel">
-
-    <h2>Restaurant Settings</h2>
-
-    <br>
-
-    <label>Restaurant Status</label>
-
-    <select id="restaurantStatus">
-      <option>Open</option>
-      <option>Closed</option>
-    </select>
-
-    <label>Order Notifications</label>
-
-    <select>
-      <option>Enabled</option>
-      <option>Disabled</option>
-    </select>
-
-    <button
-      class="form-button"
-      onclick="saveSettings()">
-      Save Settings
-    </button>
-
-  </div>
-
-</section>
-
-
-</main>
 
 </div>
 
 
+<!-- STATISTICS -->
+
+<div class="stats">
+
+    <div class="stat">
+        <h3>Available Deliveries</h3>
+        <strong id="availableCount">0</strong>
+    </div>
+
+    <div class="stat">
+        <h3>My Active Deliveries</h3>
+        <strong id="activeCount">0</strong>
+    </div>
+
+    <div class="stat">
+        <h3>Completed Today</h3>
+        <strong id="completedCount">0</strong>
+    </div>
+
+</div>
+
+
+<!-- AVAILABLE -->
+
+<h2 class="section-title">
+    📦 Available Deliveries
+</h2>
+
+<div id="availableDeliveries">
+
+    <div class="loading">
+        Loading deliveries...
+    </div>
+
+</div>
+
+
+<!-- ACTIVE -->
+
+<h2 class="section-title">
+    🛵 My Active Deliveries
+</h2>
+
+<div id="activeDeliveries">
+
+    <div class="loading">
+        Loading active deliveries...
+    </div>
+
+</div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
 <script>
 
-/* ==========================================
-   SUPABASE CONNECTION
-========================================== */
+
+// ==================================================
+// SUPABASE
+// ==================================================
 
 const SUPABASE_URL =
-  "https://bhvzpycbztngtwuhxxex.supabase.co";
+"https://bhvzpycbztngtwuhxxex.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
+"sb_publishable_nt_lF05XbdQtINzqOpdT8g_mJH-8aCq";
 
 const supabaseClient =
-  window.supabase.createClient(
+supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
-  );
+);
 
 
-/* ==========================================
-   ALBAIK RESTAURANT ID
-========================================== */
+// ==================================================
+// TEMPORARY DRIVER
+// ==================================================
 
-const ALBAIK_ID = 2;
+const DRIVER_ID = 1;
 
 
-/* ==========================================
-   PAGE NAVIGATION
-========================================== */
+// ==================================================
+// TOAST
+// ==================================================
 
-function showPage(page,button){
+function showToast(message){
 
-  document.querySelectorAll(".page")
-    .forEach(p => p.classList.remove("active"));
+    const toast =
+        document.getElementById("toast");
 
-  const selected =
-    document.getElementById(page);
+    toast.textContent = message;
 
-  if(selected){
-    selected.classList.add("active");
-  }
+    toast.style.display = "block";
 
-  document.querySelectorAll(".sidebar button")
-    .forEach(b => b.classList.remove("active"));
+    setTimeout(()=>{
 
-  if(button){
-    button.classList.add("active");
-  }
+        toast.style.display = "none";
 
-  if(page === "orders"){
-    loadOrders();
-  }
-
-  if(page === "menu"){
-    loadMenu();
-  }
-
-  if(page === "sales"){
-    loadSales();
-  }
+    },3000);
 
 }
 
 
-/* ==========================================
-   LOAD ORDERS
-========================================== */
+// ==================================================
+// LOAD DRIVER
+// ==================================================
 
-async function loadOrders(){
+async function loadDriver(){
 
-  const recentBox =
-    document.getElementById("recentOrders");
-
-  const allBox =
-    document.getElementById("allOrders");
-
-  if(recentBox){
-    recentBox.innerHTML =
-      "<p>🔄 Loading orders...</p>";
-  }
-
-  if(allBox){
-    allBox.innerHTML =
-      "<p>🔄 Loading orders...</p>";
-  }
-
-
-  const { data: orders, error } =
-    await supabaseClient
-      .from("orders")
-      .select("*")
-      .eq("restaurant_id", ALBAIK_ID)
-      .order("created_at", {
-        ascending:false
-      });
-
-
-  if(error){
-
-    console.error("Orders error:",error);
-
-    const message =
-      `<p>❌ Could not load orders.<br>
-      ${escapeHTML(error.message)}</p>`;
-
-    if(recentBox){
-      recentBox.innerHTML = message;
-    }
-
-    if(allBox){
-      allBox.innerHTML = message;
-    }
-
-    return;
-  }
-
-
-  if(!orders || orders.length === 0){
-
-    if(recentBox){
-      recentBox.innerHTML =
-        `<div class="empty">
-          No orders yet.
-        </div>`;
-    }
-
-    if(allBox){
-      allBox.innerHTML =
-        `<div class="empty">
-          No orders yet.
-        </div>`;
-    }
-
-    updateStats([]);
-
-    return;
-  }
-
-
-  const recentOrders =
-    orders.slice(0,5);
-
-
-  if(recentBox){
-
-    recentBox.innerHTML = "";
-
-    for(const order of recentOrders){
-
-      recentBox.innerHTML +=
-        await createOrderHTML(order);
-
-    }
-
-  }
-
-
-  if(allBox){
-
-    allBox.innerHTML = "";
-
-    for(const order of orders){
-
-      allBox.innerHTML +=
-        await createOrderHTML(order);
-
-    }
-
-  }
-
-
-  updateStats(orders);
-
-}
-
-
-/* ==========================================
-   CREATE ORDER DISPLAY
-========================================== */
-
-async function createOrderHTML(order){
-
-  let itemsHTML = "";
-
-  const { data: items, error } =
-    await supabaseClient
-      .from("order_items")
-      .select("*")
-      .eq("order_id", order.id);
-
-
-  if(error){
-
-    console.error(
-      "Order items error:",
-      error
-    );
-
-    itemsHTML =
-      `<p>❌ Could not load order items.</p>`;
-
-  }
-
-  else if(!items || items.length === 0){
-
-    itemsHTML =
-      `<p>No order items found.</p>`;
-
-  }
-
-  else{
-
-    for(const item of items){
-
-      let itemName =
-        "Food item";
-
-      /*
-        Try to get the food name from menu_items.
-      */
-
-      const { data: menuItem } =
+    const {data,error} =
         await supabaseClient
-          .from("menu_items")
-          .select("name")
-          .eq("id",item.menu_item_id)
-          .maybeSingle();
+        .from("drivers")
+        .select("*")
+        .eq("id",DRIVER_ID)
+        .single();
 
-      if(menuItem && menuItem.name){
 
-        itemName = menuItem.name;
+    if(error){
 
-      }
+        console.error(error);
 
-      const quantity =
-        Number(item.quantity || 1);
+        document.getElementById("driverName")
+            .textContent = "Driver not found";
 
-      const price =
-        Number(item.price || 0);
-
-      itemsHTML += `
-
-        <div class="order-item">
-
-          <span>
-            🍔 ${quantity} ×
-            ${escapeHTML(itemName)}
-          </span>
-
-          <strong>
-            KSh ${(quantity * price).toLocaleString()}
-          </strong>
-
-        </div>
-
-      `;
+        return;
 
     }
 
-  }
+
+    document.getElementById("driverName")
+        .textContent =
+        data.full_name || "Driver";
 
 
-  const status =
-    String(order.order_status || "pending")
-      .toLowerCase();
+    document.getElementById("driverPhone")
+        .textContent =
+        data.phone || "-";
 
 
-  const statusClass =
-    status.replace(/\s+/g,"-");
+    document.getElementById("vehicleType")
+        .textContent =
+        data.vehicle_type || "-";
 
 
-  const customerName =
-    order.customer_name || "Customer";
+    document.getElementById("vehiclePlate")
+        .textContent =
+        data.vehicle_plate || "-";
 
 
-  const phone =
-    order.customer_phone || "";
+    document.getElementById("driverStatus")
+        .textContent =
+        data.status || "available";
+
+}
 
 
-  const address =
-    order.delivery_address || "No address";
+// ==================================================
+// LOAD DASHBOARD
+// ==================================================
+
+async function loadDashboard(){
+
+    await loadDriver();
+
+    await loadAvailableDeliveries();
+
+    await loadActiveDeliveries();
+
+    await loadCompletedToday();
+
+}
 
 
-  const total =
-    Number(order.total_amount || 0);
+// ==================================================
+// AVAILABLE DELIVERIES
+// ==================================================
+
+async function loadAvailableDeliveries(){
+
+    const container =
+        document.getElementById(
+            "availableDeliveries"
+        );
 
 
-  const created =
-    order.created_at
-      ? new Date(order.created_at)
-          .toLocaleString()
-      : "";
+    container.innerHTML =
+        '<div class="loading">Loading...</div>';
 
 
-  let nextButton = "";
+    // Get READY orders
+    const {data:orders,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .eq("status","ready")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
 
 
-  if(status === "pending"){
+    if(error){
 
-    nextButton = `
-      <button
-        class="action green"
-        onclick="updateOrderStatus(${order.id},'preparing')">
-        Accept Order
-      </button>
-    `;
+        console.error(error);
 
-  }
+        container.innerHTML =
+            '<div class="empty">Unable to load deliveries.</div>';
 
+        return;
 
-  else if(status === "preparing"){
-
-    nextButton = `
-      <button
-        class="action blue"
-        onclick="updateOrderStatus(${order.id},'ready')">
-        Mark Ready
-      </button>
-    `;
-
-  }
+    }
 
 
-  else if(status === "ready"){
-
-    nextButton = `
-      <button
-        class="action green"
-        onclick="updateOrderStatus(${order.id},'completed')">
-        Complete
-      </button>
-    `;
-
-  }
+    // Get deliveries already assigned
+    const {data:deliveries,error:deliveryError} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*");
 
 
-  let whatsappButton = "";
+    if(deliveryError){
 
-  if(phone){
+        console.error(deliveryError);
 
-    const cleanPhone =
-      phone
-        .replace(/\D/g,"")
-        .replace(/^0/,"254");
+        container.innerHTML =
+            '<div class="empty">Unable to check deliveries.</div>';
 
-    const message =
-      encodeURIComponent(
-        `Hello ${customerName}, your MloHub order #${order.id} from Albaik is currently ${status}.`
-      );
+        return;
 
-    whatsappButton = `
-      <button
-        class="action whatsapp"
-        onclick="openWhatsApp('${cleanPhone}','${message}')">
-        💬 WhatsApp
-      </button>
-    `;
-
-  }
+    }
 
 
-  return `
+    // Remove orders already assigned
+    const available =
+        orders.filter(order => {
 
-    <div class="order">
+            const alreadyAssigned =
+                deliveries.some(delivery =>
+                    Number(delivery.order_id)
+                    === Number(order.id)
+                );
 
-      <div class="order-top">
+            return !alreadyAssigned;
 
-        <h3>
-          MloHub Order #${order.id}
-        </h3>
-
-        <span class="status ${statusClass}">
-          ${escapeHTML(status)}
-        </span>
-
-      </div>
+        });
 
 
-      <div class="customer-info">
+    document.getElementById(
+        "availableCount"
+    ).textContent =
+        available.length;
 
-        <div>
-          👤 <strong>Customer:</strong>
-          ${escapeHTML(customerName)}
+
+    if(available.length === 0){
+
+        container.innerHTML =
+            '<div class="empty">No deliveries available right now.</div>';
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    available.forEach(order => {
+
+        container.innerHTML +=
+            createAvailableCard(order);
+
+    });
+
+}
+
+
+// ==================================================
+// AVAILABLE CARD
+// ==================================================
+
+function createAvailableCard(order){
+
+    const address =
+        order.delivery_address
+        || "No address provided";
+
+
+    const phone =
+        order.customer_phone || "";
+
+
+    const total =
+        Number(
+            order.total_amount
+            ?? order.total
+            ?? 0
+        );
+
+
+    return `
+
+    <div class="delivery-card">
+
+        <div class="delivery-header">
+
+            <div class="order-number">
+                Order #${order.id}
+            </div>
+
+            <div class="badge">
+                READY
+            </div>
+
         </div>
 
-        <div>
-          📞 <strong>Phone:</strong>
-          ${escapeHTML(phone || "Not provided")}
+
+        <div class="info">
+
+            <div class="info-box">
+                Customer
+                <strong>
+                    ${escapeHtml(
+                        order.customer_name
+                        || "Customer"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="info-box">
+                Phone
+                <strong>
+                    ${escapeHtml(
+                        phone || "-"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="info-box">
+                Delivery Address
+                <strong>
+                    ${escapeHtml(address)}
+                </strong>
+            </div>
+
+
+            <div class="info-box">
+                Order Total
+                <strong>
+                    KSh ${total.toLocaleString()}
+                </strong>
+            </div>
+
         </div>
 
-        <div>
-          📍 <strong>Address:</strong>
-          ${escapeHTML(address)}
+
+        <div class="buttons">
+
+            <button
+                class="accept"
+                onclick="acceptDelivery(${order.id})">
+
+                ✅ Accept Delivery
+
+            </button>
+
+
+            ${
+                phone
+                ?
+                `<button
+                    class="call"
+                    onclick="callCustomer('${phone}')">
+
+                    📞 Call Customer
+
+                </button>`
+                :
+                ""
+            }
+
+
+            <button
+                class="maps"
+                onclick="openMaps('${encodeURIComponent(address)}')">
+
+                🗺️ Open Maps
+
+            </button>
+
         </div>
-
-      </div>
-
-
-      <strong>Order Items</strong>
-
-      <div class="order-items">
-
-        ${itemsHTML}
-
-      </div>
-
-
-      <div class="order-total">
-
-        💰 Total:
-        KSh ${total.toLocaleString()}
-
-      </div>
-
-
-      <div class="order-time">
-
-        ${escapeHTML(created)}
-
-      </div>
-
-
-      <div class="order-actions">
-
-        ${nextButton}
-
-        ${whatsappButton}
-
-      </div>
 
     </div>
 
-  `;
+    `;
 
 }
 
 
-/* ==========================================
-   UPDATE ORDER STATUS
-========================================== */
+// ==================================================
+// ACCEPT DELIVERY
+// ==================================================
 
-async function updateOrderStatus(orderId,newStatus){
+async function acceptDelivery(orderId){
 
-  if(!orderId){
-    return;
-  }
-
-
-  const { error } =
-    await supabaseClient
-      .from("orders")
-      .update({
-        order_status:newStatus
-      })
-      .eq("id",orderId)
-      .eq("restaurant_id",ALBAIK_ID);
+    if(!confirm(
+        "Accept this delivery?"
+    )){
+        return;
+    }
 
 
-  if(error){
+    // Check existing delivery
 
-    console.error(
-      "Status update error:",
-      error
-    );
-
-    alert(
-      "❌ Could not update order.\n\n" +
-      error.message
-    );
-
-    return;
-
-  }
+    const {data:existing,error:checkError} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*")
+        .eq("order_id",orderId);
 
 
-  await loadOrders();
+    if(checkError){
 
-}
+        console.error(checkError);
 
+        showToast(
+            "Could not check delivery."
+        );
 
-/* ==========================================
-   WHATSAPP
-========================================== */
-
-function openWhatsApp(phone,message){
-
-  if(!phone){
-
-    alert("Customer phone number is missing.");
-
-    return;
-
-  }
-
-  const url =
-    "https://wa.me/" +
-    phone +
-    "?text=" +
-    message;
-
-  window.open(
-    url,
-    "_blank"
-  );
-
-}
-
-
-/* ==========================================
-   DASHBOARD STATISTICS
-========================================== */
-
-function updateStats(orders){
-
-  const now =
-    new Date();
-
-  const today =
-    now.toISOString()
-      .split("T")[0];
-
-
-  let todayOrders = 0;
-  let todaySales = 0;
-  let pending = 0;
-  let totalSales = 0;
-
-
-  orders.forEach(order => {
-
-    const amount =
-      Number(order.total_amount || 0);
-
-    totalSales += amount;
-
-
-    const date =
-      order.created_at
-        ? new Date(order.created_at)
-            .toISOString()
-            .split("T")[0]
-        : "";
-
-
-    if(date === today){
-
-      todayOrders++;
-      todaySales += amount;
+        return;
 
     }
 
 
-    const status =
-      String(order.order_status || "")
-        .toLowerCase();
+    if(existing && existing.length > 0){
 
+        showToast(
+            "This delivery has already been assigned."
+        );
 
-    if(status === "pending"){
+        await loadDashboard();
 
-      pending++;
+        return;
 
     }
 
-  });
+
+    // Driver
+
+    const {data:driver,error:driverError} =
+        await supabaseClient
+        .from("drivers")
+        .select("*")
+        .eq("id",DRIVER_ID)
+        .single();
 
 
-  const average =
-    orders.length
-      ? totalSales / orders.length
-      : 0;
+    if(driverError){
+
+        console.error(driverError);
+
+        showToast(
+            "Driver information not found."
+        );
+
+        return;
+
+    }
 
 
-  document.getElementById("todayOrders")
-    .textContent =
-    todayOrders;
+    // Create delivery
+
+    const {error} =
+        await supabaseClient
+        .from("deliveries")
+        .insert({
+
+            order_id:orderId,
+
+            driver_id:DRIVER_ID,
+
+            driver_name:
+                driver.full_name,
+
+            driver_phone:
+                driver.phone,
+
+            delivery_status:
+                "assigned"
+
+        });
 
 
-  document.getElementById("todaySales")
-    .textContent =
-    "KSh " +
-    todaySales.toLocaleString();
+    if(error){
+
+        console.error(error);
+
+        showToast(
+            "Could not accept delivery."
+        );
+
+        return;
+
+    }
 
 
-  document.getElementById("pendingOrders")
-    .textContent =
-    pending;
+    // Change order status
+
+    const {error:orderError} =
+        await supabaseClient
+        .from("orders")
+        .update({
+
+            status:
+                "out_for_delivery"
+
+        })
+        .eq("id",orderId);
 
 
-  const reportTodaySales =
-    document.getElementById(
-      "reportTodaySales"
+    if(orderError){
+
+        console.error(orderError);
+
+        showToast(
+            "Delivery accepted, but order status failed."
+        );
+
+        await loadDashboard();
+
+        return;
+
+    }
+
+
+    showToast(
+        "Delivery accepted! 🛵"
     );
 
-  if(reportTodaySales){
 
-    reportTodaySales.textContent =
-      "KSh " +
-      todaySales.toLocaleString();
-
-  }
-
-
-  const reportTodayOrders =
-    document.getElementById(
-      "reportTodayOrders"
-    );
-
-  if(reportTodayOrders){
-
-    reportTodayOrders.textContent =
-      todayOrders +
-      " orders";
-
-  }
-
-
-  const reportTotalOrders =
-    document.getElementById(
-      "reportTotalOrders"
-    );
-
-  if(reportTotalOrders){
-
-    reportTotalOrders.textContent =
-      orders.length;
-
-  }
-
-
-  const reportTotalSales =
-    document.getElementById(
-      "reportTotalSales"
-    );
-
-  if(reportTotalSales){
-
-    reportTotalSales.textContent =
-      "KSh " +
-      totalSales.toLocaleString();
-
-  }
-
-
-  const reportAverage =
-    document.getElementById(
-      "reportAverage"
-    );
-
-  if(reportAverage){
-
-    reportAverage.textContent =
-      "KSh " +
-      Math.round(average).toLocaleString();
-
-  }
+    await loadDashboard();
 
 }
 
 
-/* ==========================================
-   SALES
-========================================== */
+// ==================================================
+// ACTIVE DELIVERIES
+// ==================================================
 
-async function loadSales(){
+async function loadActiveDeliveries(){
 
-  await loadOrders();
+    const container =
+        document.getElementById(
+            "activeDeliveries"
+        );
+
+
+    container.innerHTML =
+        '<div class="loading">Loading...</div>';
+
+
+    const {data:deliveries,error} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*")
+        .eq("driver_id",DRIVER_ID)
+        .in(
+            "delivery_status",
+            [
+                "assigned",
+                "picked_up"
+            ]
+        )
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+
+    if(error){
+
+        console.error(error);
+
+        container.innerHTML =
+            '<div class="empty">Unable to load active deliveries.</div>';
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "activeCount"
+    ).textContent =
+        deliveries.length;
+
+
+    if(deliveries.length === 0){
+
+        container.innerHTML =
+            '<div class="empty">You have no active deliveries.</div>';
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    for(const delivery of deliveries){
+
+        const {data:order,error:orderError} =
+            await supabaseClient
+            .from("orders")
+            .select("*")
+            .eq("id",delivery.order_id)
+            .single();
+
+
+        if(orderError){
+
+            console.error(orderError);
+
+            continue;
+
+        }
+
+
+        if(order){
+
+            container.innerHTML +=
+                createActiveCard(
+                    delivery,
+                    order
+                );
+
+        }
+
+    }
 
 }
 
 
-/* ==========================================
-   LOAD MENU
-========================================== */
+// ==================================================
+// ACTIVE CARD
+// ==================================================
 
-async function loadMenu(){
+function createActiveCard(
+    delivery,
+    order
+){
 
-  const menu =
-    document.getElementById("menuList");
-
-
-  menu.innerHTML =
-    "<p>🔄 Loading menu...</p>";
-
-
-  const { data,error } =
-    await supabaseClient
-      .from("menu_items")
-      .select("*")
-      .eq("restaurant_id",ALBAIK_ID)
-      .order("created_at",{
-        ascending:false
-      });
+    const address =
+        order.delivery_address
+        || "No address provided";
 
 
-  if(error){
-
-    console.error(
-      "Menu error:",
-      error
-    );
-
-    menu.innerHTML =
-      `<p>❌ Could not load menu.<br>
-      ${escapeHTML(error.message)}</p>`;
-
-    return;
-
-  }
+    const phone =
+        order.customer_phone || "";
 
 
-  if(!data || data.length === 0){
-
-    menu.innerHTML =
-      `<div class="empty">
-        No menu items yet.
-      </div>`;
-
-    return;
-
-  }
+    const total =
+        Number(
+            order.total_amount
+            ?? order.total
+            ?? 0
+        );
 
 
-  menu.innerHTML = "";
+    let actionButton = "";
 
 
-  data.forEach(item => {
+    if(
+        delivery.delivery_status
+        === "assigned"
+    ){
 
-    menu.innerHTML += `
+        actionButton = `
 
-      <div class="menu-row">
+        <button
+            class="pickup"
+            onclick="
+                updateDelivery(
+                    ${delivery.id},
+                    ${order.id},
+                    'picked_up'
+                )
+            ">
 
-        <div>
+            🛵 Out for Delivery
 
-          <strong>
-            ${escapeHTML(item.name)}
-          </strong>
+        </button>
 
-          <br>
+        `;
 
-          <span class="price">
-            KSh ${Number(item.price || 0)
-              .toLocaleString()}
-          </span>
+    }
 
-          <br>
 
-          <small>
-            ${escapeHTML(
-              item.description || ""
-            )}
-          </small>
+    if(
+        delivery.delivery_status
+        === "picked_up"
+    ){
+
+        actionButton = `
+
+        <button
+            class="delivered"
+            onclick="
+                updateDelivery(
+                    ${delivery.id},
+                    ${order.id},
+                    'delivered'
+                )
+            ">
+
+            🏠 Mark Delivered
+
+        </button>
+
+        `;
+
+    }
+
+
+    return `
+
+    <div class="delivery-card">
+
+        <div class="delivery-header">
+
+            <div class="order-number">
+                Order #${order.id}
+            </div>
+
+            <div class="badge">
+                ${
+                    delivery.delivery_status
+                    .replace("_"," ")
+                    .toUpperCase()
+                }
+            </div>
 
         </div>
 
 
-        <button
-          class="action red"
-          onclick="deleteFood(${item.id})">
-          Delete
-        </button>
+        <div class="info">
 
-      </div>
+            <div class="info-box">
+                Customer
+                <strong>
+                    ${escapeHtml(
+                        order.customer_name
+                        || "Customer"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="info-box">
+                Phone
+                <strong>
+                    ${escapeHtml(
+                        phone || "-"
+                    )}
+                </strong>
+            </div>
+
+
+            <div class="info-box">
+                Address
+                <strong>
+                    ${escapeHtml(address)}
+                </strong>
+            </div>
+
+
+            <div class="info-box">
+                Order Total
+                <strong>
+                    KSh ${total.toLocaleString()}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            ${actionButton}
+
+
+            ${
+                phone
+                ?
+                `<button
+                    class="call"
+                    onclick="callCustomer('${phone}')">
+
+                    📞 Call Customer
+
+                </button>`
+                :
+                ""
+            }
+
+
+            <button
+                class="maps"
+                onclick="openMaps('${encodeURIComponent(address)}')">
+
+                🗺️ Open Maps
+
+            </button>
+
+        </div>
+
+    </div>
 
     `;
 
-  });
+}
+
+
+// ==================================================
+// UPDATE DELIVERY
+// ==================================================
+
+async function updateDelivery(
+    deliveryId,
+    orderId,
+    newStatus
+){
+
+    let updateData = {
+
+        delivery_status:
+            newStatus
+
+    };
+
+
+    if(
+        newStatus === "picked_up"
+    ){
+
+        updateData.picked_up_at =
+            new Date().toISOString();
+
+    }
+
+
+    if(
+        newStatus === "delivered"
+    ){
+
+        updateData.delivered_at =
+            new Date().toISOString();
+
+    }
+
+
+    // Update delivery
+
+    const {error:deliveryError} =
+        await supabaseClient
+        .from("deliveries")
+        .update(updateData)
+        .eq("id",deliveryId)
+        .eq("driver_id",DRIVER_ID);
+
+
+    if(deliveryError){
+
+        console.error(
+            deliveryError
+        );
+
+        showToast(
+            "Could not update delivery."
+        );
+
+        return;
+
+    }
+
+
+    // Update order
+
+    let orderStatus =
+        newStatus === "picked_up"
+        ? "out_for_delivery"
+        : "delivered";
+
+
+    const {error:orderError} =
+        await supabaseClient
+        .from("orders")
+        .update({
+
+            status:
+                orderStatus
+
+        })
+        .eq("id",orderId);
+
+
+    if(orderError){
+
+        console.error(
+            orderError
+        );
+
+        showToast(
+            "Delivery updated, but order tracking failed."
+        );
+
+        await loadDashboard();
+
+        return;
+
+    }
+
+
+    showToast(
+        newStatus === "picked_up"
+        ?
+        "Order is now out for delivery! 🛵"
+        :
+        "Order delivered successfully! 🎉"
+    );
+
+
+    await loadDashboard();
 
 }
 
 
-/* ==========================================
-   ADD FOOD
-========================================== */
+// ==================================================
+// COMPLETED TODAY
+// ==================================================
 
-async function addFood(){
+async function loadCompletedToday(){
 
-  const name =
-    document
-      .getElementById("foodName")
-      .value
-      .trim();
+    const startOfDay =
+        new Date();
 
-
-  const price =
-    Number(
-      document
-        .getElementById("foodPrice")
-        .value
+    startOfDay.setHours(
+        0,0,0,0
     );
 
 
-  const description =
-    document
-      .getElementById("foodDescription")
-      .value
-      .trim();
+    const {data,error} =
+        await supabaseClient
+        .from("deliveries")
+        .select("*")
+        .eq("driver_id",DRIVER_ID)
+        .eq(
+            "delivery_status",
+            "delivered"
+        )
+        .gte(
+            "delivered_at",
+            startOfDay.toISOString()
+        );
 
 
-  if(!name){
+    if(error){
 
-    alert(
-      "Please enter food name."
-    );
+        console.error(error);
 
-    return;
+        document.getElementById(
+            "completedCount"
+        ).textContent = "0";
 
-  }
+        return;
 
-
-  if(!price || price <= 0){
-
-    alert(
-      "Please enter a valid price."
-    );
-
-    return;
-
-  }
+    }
 
 
-  const { error } =
-    await supabaseClient
-      .from("menu_items")
-      .insert({
-
-        restaurant_id:ALBAIK_ID,
-
-        name:name,
-
-        description:description,
-
-        price:price,
-
-        image_url:"",
-
-        available:true
-
-      });
-
-
-  if(error){
-
-    console.error(
-      "Add food error:",
-      error
-    );
-
-    alert(
-      "❌ Food could not be added.\n\n" +
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  document
-    .getElementById("foodName")
-    .value = "";
-
-
-  document
-    .getElementById("foodPrice")
-    .value = "";
-
-
-  document
-    .getElementById("foodDescription")
-    .value = "";
-
-
-  alert(
-    "✅ Food item added!"
-  );
-
-
-  loadMenu();
+    document.getElementById(
+        "completedCount"
+    ).textContent =
+        data.length;
 
 }
 
 
-/* ==========================================
-   DELETE FOOD
-========================================== */
+// ==================================================
+// CALL CUSTOMER
+// ==================================================
 
-async function deleteFood(id){
+function callCustomer(phone){
 
-  if(!confirm(
-    "Are you sure you want to delete this food?"
-  )){
-    return;
-  }
+    window.location.href =
+        "tel:" + phone;
 
-
-  const { error } =
-    await supabaseClient
-      .from("menu_items")
-      .delete()
-      .eq("id",id)
-      .eq("restaurant_id",ALBAIK_ID);
+}
 
 
-  if(error){
+// ==================================================
+// GOOGLE MAPS
+// ==================================================
 
-    console.error(
-      "Delete food error:",
-      error
+function openMaps(address){
+
+    const url =
+        "https://www.google.com/maps/search/?api=1&query="
+        + address;
+
+    window.open(
+        url,
+        "_blank"
     );
 
-    alert(
-      "❌ Could not delete food.\n\n" +
-      error.message
-    );
-
-    return;
-
-  }
+}
 
 
-  loadMenu();
+// ==================================================
+// SECURITY
+// ==================================================
+
+function escapeHtml(value){
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
-/* ==========================================
-   SETTINGS
-========================================== */
+// ==================================================
+// START
+// ==================================================
 
-function saveSettings(){
-
-  alert(
-    "✅ Restaurant settings saved."
-  );
-
-}
+loadDashboard();
 
 
-/* ==========================================
-   SECURITY
-========================================== */
+// Refresh every 10 seconds
 
-function escapeHTML(value){
+setInterval(()=>{
 
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    loadDashboard();
 
-}
+},10000);
 
-
-/* ==========================================
-   START DASHBOARD
-========================================== */
-
-loadOrders();
-
-loadMenu();
-
-
-/*
-   Automatically check for new orders
-   every 5 seconds.
-*/
-
-setInterval(function(){
-
-  loadOrders();
-
-},5000);
 
 </script>
 
